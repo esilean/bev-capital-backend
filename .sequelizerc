@@ -1,6 +1,7 @@
 const path = require('path')
 
 module.exports = {
+  'config': path.resolve('src/e-infra/cross-cutting/utils/configs/environments', 'database.js'),
   'migrations-path': path.resolve('src/e-infra/data/sequelize', 'migrations'),
   'seeders-path':    path.resolve('src/e-infra/data/sequelize', 'seeders'),
 }

@@ -1,6 +1,6 @@
 import path from 'path'
 import { ConfigInterface } from '../../interfaces/ConfigInterface'
-import { dbConfig } from './database'
+import dbConfig from './database'
 
 export const configs = (env: string): ConfigInterface => {
     const logPath = path.join(
@@ -8,7 +8,20 @@ export const configs = (env: string): ConfigInterface => {
         `../../../../../../logs/${env.toLowerCase()}.log`
     )
 
-    const db = dbConfig(env)
+    let db: object
+    switch (env) {
+        case 'development':
+            db = dbConfig.development
+            break
+        case 'test':
+            db = dbConfig.test
+            break
+        case 'production':
+            db = dbConfig.production
+            break
+        default:
+            db = dbConfig.development
+    }
 
     const config: ConfigInterface = {
         env: env,

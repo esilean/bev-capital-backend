@@ -7,10 +7,14 @@ import { ConfigInterface } from '../e-infra/cross-cutting/utils/interfaces/Confi
 import { Logger } from 'log4js'
 import morgan from '../e-infra/cross-cutting/utils/logging/morgan'
 
+import index from '../b-controllers'
+import userController from '../b-controllers/user/userController'
+
 export default (
     config: ConfigInterface,
     logger: Logger,
-    container: any
+    container: any,
+    errorHandler: any
 ): Router => {
     const router = Router()
 
@@ -24,6 +28,11 @@ export default (
     apiRouter.use(bodyParser.json())
     apiRouter.use(container)
 
-    router.use('/api', router)
+    apiRouter.use('/', index())
+    apiRouter.use('/users', userController())
+
+    router.use('/api', apiRouter)
+
+    router.use(errorHandler)
     return router
 }

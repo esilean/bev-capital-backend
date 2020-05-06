@@ -1,13 +1,16 @@
 import { Sequelize } from 'sequelize-typescript'
 import { ConfigInterface } from '../../cross-cutting/utils/interfaces/ConfigInterface'
+import path from 'path'
 
 export default (config: ConfigInterface): Sequelize => {
-    let sequelize = null
-    if (config.env === 'production')
+    let sequelize: Sequelize
+    if (config.env === 'production') {
         sequelize = new Sequelize(config.db.url, config.db)
-    else sequelize = new Sequelize(config.db)
+    } else {
+        sequelize = new Sequelize(config.db)
+    }
 
-    sequelize.addModels([__dirname + '../models/**/*.ts'])
+    sequelize.addModels([path.join(__dirname, '../models/**/*')])
 
     return sequelize
 }
