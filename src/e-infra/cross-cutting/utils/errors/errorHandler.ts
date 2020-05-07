@@ -6,6 +6,15 @@ import {
     NextInterface,
 } from '../interfaces/ExpressInterface'
 
+export class ValidationError extends Error {
+    constructor(message: string) {
+        super()
+        this.name = 'ValidationError'
+        this.message = message
+    }
+}
+
+
 export default (
     error: Error,
     request: RequestInterface<string>,

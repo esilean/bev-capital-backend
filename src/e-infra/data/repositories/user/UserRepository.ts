@@ -4,7 +4,7 @@ import { FindOptions, CreateOptions } from 'sequelize/types'
 import { toEntity } from '../mappers/userMapper'
 import User from '../../../../d-domain/entities/User'
 
-export class UserRepository implements UserRepositoryInterface {
+export default class UserRepository implements UserRepositoryInterface {
     private userModel: UserModelInterface
 
     constructor(userModel: UserModelInterface) {
@@ -15,6 +15,13 @@ export class UserRepository implements UserRepositoryInterface {
         const users = await this.userModel.findAll(options)
 
         return users.map((user) => toEntity(user))
+    }
+
+    async getById(id: string, options?: FindOptions): Promise<User> {
+        const user = await this.userModel.findByPk(id, options)
+        if (user === null) throw new Error('User cannot be found')
+
+        return toEntity(user)
     }
 
     async create(values?: object, options?: CreateOptions): Promise<User> {

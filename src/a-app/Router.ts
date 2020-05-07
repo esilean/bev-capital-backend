@@ -9,6 +9,7 @@ import morgan from '../e-infra/cross-cutting/utils/logging/morgan'
 
 import index from '../b-controllers'
 import userController from '../b-controllers/user/userController'
+import tokenController from '../b-controllers/token/tokenController'
 
 export default (
     config: ConfigInterface,
@@ -30,6 +31,7 @@ export default (
 
     apiRouter.use('/', index())
     apiRouter.use('/users', userController())
+    apiRouter.use('/token', tokenController())
 
     router.use('/api', apiRouter)
 

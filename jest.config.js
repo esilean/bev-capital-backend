@@ -10,7 +10,6 @@ module.exports = {
     transform: {
         '^.+\\.(ts|tsx)$': 'ts-jest'
     },
-    setupFiles: ['./tests/setup.ts'],
     testEnvironment: 'node',
     // An array of regexp pattern strings used to skip coverage collection
     coveragePathIgnorePatterns: [

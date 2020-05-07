@@ -1,5 +1,5 @@
 import path from 'path'
-import { ConfigInterface } from '../../interfaces/ConfigInterface'
+import { ConfigInterface } from '../../utils/interfaces/ConfigInterface'
 import dbConfig from './database'
 
 export const configs = (env: string): ConfigInterface => {

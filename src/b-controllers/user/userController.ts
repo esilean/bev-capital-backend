@@ -13,13 +13,16 @@ import {
     NextInterface,
 } from '../../e-infra/cross-cutting/utils/interfaces/ExpressInterface'
 import User from '../../d-domain/entities/User'
+import { AuthInterface } from '../../e-infra/cross-cutting/authentication/interfaces/AuthInterface'
 
 function userController(
+    auth: AuthInterface,
     getAllUserService: GetAllUserServiceInterface,
     createUserService: CreateUserServiceInterface,
     destroyUserService: DestroyUserServiceInterface
 ): unknown {
     return {
+        authenticate: auth.authenticate(),
         getAll: (
             request: RequestInterface<User>,
             response: ResponseInterface,
@@ -48,13 +51,10 @@ function userController(
 
             createUserService
                 .on(SUCCESS, (user: User) => {
-                    response.status(Status.OK).json(user)
+                    response.status(Status.CREATED).json(user)
                 })
                 .on(VALIDATION_ERROR, (error: Error) => {
-                    response.status(Status.BAD_REQUEST).json({
-                        type: 'ValidationError',
-                        message: error,
-                    })
+                    response.status(Status.BAD_REQUEST).json(error)
                 })
                 .on(ERROR, next)
 
@@ -78,7 +78,7 @@ function userController(
                     response.status(Status.NO_CONTENT).json()
                 })
                 .on(NOT_FOUND, () => {
-                    response.status(Status.BAD_REQUEST).json({
+                    response.status(Status.NOT_FOUND).json({
                         type: 'NotFoundError',
                         message: 'User cannot be found.',
                     })
@@ -96,9 +96,9 @@ export default (): Router => {
 
     const api = makeInvoker(userController)
 
-    router.get('/', api('getAll'))
-    router.post('/', api('create'))
-    router.delete('/:id', api('delete'))
+    router.get('/', api('authenticate'), api('getAll'))
+    router.post('/', api('authenticate'), api('create'))
+    router.delete('/:id', api('authenticate'), api('delete'))
 
     return router
 }

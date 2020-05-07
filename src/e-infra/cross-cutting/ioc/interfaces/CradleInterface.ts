@@ -4,14 +4,10 @@ import { ServerInterface } from '../../../../a-app/interfaces/ServerInterface'
 import { ConfigInterface } from '../../utils/interfaces/ConfigInterface'
 import { Logger } from 'log4js'
 import { Sequelize } from 'sequelize/types'
-
-import { UserModelInterface } from '../../../data/models/user/UserModel'
-import { UserRepositoryInterface } from '../../../data/interfaces/UserRepositoryInterface'
 import {
-    GetAllUserServiceInterface,
-    CreateUserServiceInterface,
-    DestroyUserServiceInterface,
-} from '../../../../c-services/interfaces/UserServiceInterface'
+    AuthInterface,
+    JwtInterface,
+} from '../../authentication/interfaces/AuthInterface'
 
 export interface CradleInterface extends Request {
     server: ServerInterface
@@ -22,10 +18,6 @@ export interface CradleInterface extends Request {
     logger: Logger
     errorHandler: void
     database: Sequelize
-
-    userModel: UserModelInterface
-    userRepository: UserRepositoryInterface
-    getAllUserService: GetAllUserServiceInterface
-    createUserService: CreateUserServiceInterface
-    destroyUserService: DestroyUserServiceInterface
+    auth: AuthInterface
+    jwt: JwtInterface
 }

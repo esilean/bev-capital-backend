@@ -20,11 +20,13 @@ export default class User {
     @IsDate()
     private _updatedAt: Date = new Date()
 
-    constructor(id: string, name: string, email: string, password: string) {
+    constructor(id = '', name: string, email: string, password: string, createdAt?: Date, updatedAt?: Date) {
         this._id = id
         this._name = name
         this._email = email
         this._password = password
+        this._createdAt = createdAt || new Date()
+        this._updatedAt = updatedAt || new Date()
     }
 
     set createdAt(createdAt: Date) {

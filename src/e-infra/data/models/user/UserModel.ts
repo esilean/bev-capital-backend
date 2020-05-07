@@ -9,11 +9,12 @@ import {
     Length,
     BeforeCreate,
 } from 'sequelize-typescript'
+import { encryptPassword } from '../../../cross-cutting/authentication/encryption'
 
 @Table({
     tableName: 'users',
 })
-export class UserModel extends Model<UserModel> {
+export default class UserModel extends Model<UserModel> {
     @Column({
         type: DataType.UUIDV4,
         defaultValue: DataType.UUIDV4,
@@ -56,7 +57,7 @@ export class UserModel extends Model<UserModel> {
 
     @BeforeCreate
     static encryptPassword(user: UserModel): void {
-        user.password = user.password + ''
+        user.password = encryptPassword(user.password)
     }
 }
 

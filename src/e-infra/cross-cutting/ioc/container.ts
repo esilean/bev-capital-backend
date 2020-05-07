@@ -4,22 +4,19 @@ import {
     asClass,
     asFunction,
     asValue,
+    Lifetime,
 } from 'awilix'
 import { scopePerRequest } from 'awilix-express'
 import { CradleInterface } from './interfaces/CradleInterface'
 import { App } from '../../../a-app/App'
 import { Server } from '../../../a-app/Server'
 import Router from '../../../a-app/Router'
-import { config } from '../utils/configs/config'
+import { config } from '../configs/config'
 import { logger } from '../utils/logging/logger'
 import errorHandler from '../utils/errors/errorHandler'
 import database from '../../data/sequelize'
-
-import { UserModel } from '../../data/models/user/UserModel'
-import { UserRepository } from '../../data/repositories/user/UserRepository'
-import { GetAllUserService } from '../../../c-services/user/GetAllUserService'
-import { CreateUserService } from '../../../c-services/user/CreateUserService'
-import { DestroyUserService } from '../../../c-services/user/DestroyUserService'
+import Auth from '../authentication/Auth'
+import Jwt from '../authentication/Jwt'
 
 const container = createContainer<CradleInterface>({
     injectionMode: InjectionMode.CLASSIC,
@@ -34,13 +31,45 @@ container.register({
     logger: asFunction(logger),
     errorHandler: asValue(errorHandler),
     database: asFunction(database).singleton(),
+    auth: asClass(Auth).singleton(),
+    jwt: asClass(Jwt).singleton(),
+})
 
-    userModel: asValue(UserModel),
-    userRepository: asClass(UserRepository).singleton(),
+container.loadModules([['../../data/models/**/*.*', { register: asValue }]], {
+    cwd: __dirname,
+    formatName: 'camelCase',
+})
 
-    getAllUserService: asClass(GetAllUserService),
-    createUserService: asClass(CreateUserService),
-    destroyUserService: asClass(DestroyUserService),
+container.loadModules(
+    [
+        [
+            '../../data/repositories/**/*.*',
+            { register: asClass, lifetime: Lifetime.SINGLETON },
+        ],
+    ],
+    {
+        cwd: __dirname,
+        formatName: 'camelCase',
+    }
+)
+
+container.loadModules(
+    [
+        [
+            '../../../d-domain/services/**/*.*',
+            { register: asClass, lifetime: Lifetime.SINGLETON },
+        ],
+    ],
+    {
+        cwd: __dirname,
+        formatName: 'camelCase',
+    }
+)
+
+
+container.loadModules([['../../../c-services/services/**/*.*', { register: asClass }]], {
+    cwd: __dirname,
+    formatName: 'camelCase',
 })
 
 export { container }
