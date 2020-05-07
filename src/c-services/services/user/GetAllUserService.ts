@@ -21,16 +21,18 @@ export default class GetAllUserService extends Operation
     execute(): void {
         const { SUCCESS, ERROR } = this.getEventType()
 
-        this.userDomain.getAll().then(usersFound => {
-            const users = usersFound.map((user) => {
-                const { id, name, email, createdAt, updatedAt } = user
-                return { id, name, email, createdAt, updatedAt }
+        this.userDomain
+            .getAll()
+            .then((usersFound) => {
+                const users = usersFound.map((user) => {
+                    const { id, name, email, createdAt, updatedAt } = user
+                    return { id, name, email, createdAt, updatedAt }
+                })
+
+                this.emit(SUCCESS, users)
             })
-
-            this.emit(SUCCESS, users)
-        }).catch(error => {
-            this.emit(ERROR, error)
-        })
-
+            .catch((error) => {
+                this.emit(ERROR, error)
+            })
     }
 }

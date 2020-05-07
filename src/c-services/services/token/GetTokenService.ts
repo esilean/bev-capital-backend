@@ -52,9 +52,7 @@ export default class GetTokenService extends Operation
                         .getAll(options)
                         .then((usersFound) => {
                             if (usersFound.length === 0) {
-                                const error = new Error(
-                                    'Invalid credentials.'
-                                )
+                                const error = new Error('Invalid credentials.')
                                 this.emit(NOT_FOUND, error)
                             } else {
                                 const user = usersFound[0]

@@ -14,7 +14,6 @@ export class ValidationError extends Error {
     }
 }
 
-
 export default (
     error: Error,
     request: RequestInterface<string>,

@@ -35,15 +35,18 @@ container.register({
     jwt: asClass(Jwt).singleton(),
 })
 
-container.loadModules([['../../data/models/**/*.*', { register: asValue }]], {
-    cwd: __dirname,
-    formatName: 'camelCase',
-})
+container.loadModules(
+    [['../../data/models/**/*.*(ts|js)', { register: asValue }]],
+    {
+        cwd: __dirname,
+        formatName: 'camelCase',
+    }
+)
 
 container.loadModules(
     [
         [
-            '../../data/repositories/**/*.*',
+            '../../data/repositories/**/*.*(ts|js)',
             { register: asClass, lifetime: Lifetime.SINGLETON },
         ],
     ],
@@ -56,7 +59,7 @@ container.loadModules(
 container.loadModules(
     [
         [
-            '../../../d-domain/services/**/*.*',
+            '../../../d-domain/services/**/*.*(ts|js)',
             { register: asClass, lifetime: Lifetime.SINGLETON },
         ],
     ],
@@ -66,10 +69,12 @@ container.loadModules(
     }
 )
 
-
-container.loadModules([['../../../c-services/services/**/*.*', { register: asClass }]], {
-    cwd: __dirname,
-    formatName: 'camelCase',
-})
+container.loadModules(
+    [['../../../c-services/services/**/*.*(ts|js)', { register: asClass }]],
+    {
+        cwd: __dirname,
+        formatName: 'camelCase',
+    }
+)
 
 export { container }

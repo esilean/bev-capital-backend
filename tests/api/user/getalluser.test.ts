@@ -2,18 +2,20 @@ import { app, jwt } from '../../setup'
 import { userFactory } from '../../support/factory/userFactory'
 
 describe('API -> GET /api/users', () => {
-
     describe('#getAllUsers', () => {
-
         let token = ''
         beforeEach(async () => {
-
             const user = await userFactory({})
-            token = jwt.signin({ id: user.id, name: user.name, email: user.email })
+            token = jwt.signin({
+                id: user.id,
+                name: user.name,
+                email: user.email,
+            })
         })
 
         it('when there is user', async (done) => {
-            const response = await app.get('/api/users')
+            const response = await app
+                .get('/api/users')
                 .set('Authorization', `Bearer  ${token}`)
 
             expect(response.status).toEqual(200)
@@ -27,6 +29,5 @@ describe('API -> GET /api/users', () => {
             expect(response.status).toEqual(401)
             done()
         })
-
     })
 })

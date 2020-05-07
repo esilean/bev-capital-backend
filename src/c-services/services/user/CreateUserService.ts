@@ -25,20 +25,16 @@ export default class CreateUserService extends Operation
         const { name, email, password } = body
         const newUser = new User('', name, email, password)
 
-        this.userDomain.create(newUser)
-            .then(user => {
-
-
-
-
+        this.userDomain
+            .create(newUser)
+            .then((user) => {
                 const { id, name, email, createdAt, updatedAt } = user
                 this.emit(SUCCESS, { id, name, email, createdAt, updatedAt })
             })
             .catch((error: Error) => {
                 if (error.name === 'ValidationError')
                     this.emit(VALIDATION_ERROR, error)
-                else
-                    this.emit(ERROR, error)
+                else this.emit(ERROR, error)
             })
     }
 }

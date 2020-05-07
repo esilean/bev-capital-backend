@@ -22,7 +22,6 @@ export default class Auth implements AuthInterface {
 
         const strategy = new Strategy(opt, async function (payload, done) {
             try {
-
                 const user = await userRepository.getById(payload.id)
 
                 if (user !== null) done(null, user)

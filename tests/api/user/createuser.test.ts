@@ -4,26 +4,28 @@ import { UserInterface } from '../../../src/e-infra/data/interfaces/UserReposito
 import faker from 'faker'
 
 describe('API -> POST /api/users', () => {
-
     describe('#createUser', () => {
-
         let token = ''
         let email = ''
         beforeEach(async () => {
-
             const user = await userFactory({})
             email = user.email
-            token = jwt.signin({ id: user.id, name: user.name, email: user.email })
+            token = jwt.signin({
+                id: user.id,
+                name: user.name,
+                email: user.email,
+            })
         })
 
         it('when creating user is ok', async (done) => {
             const data: UserInterface = {
                 name: faker.name.firstName(),
                 email: faker.internet.email(),
-                password: faker.internet.password()
+                password: faker.internet.password(),
             }
 
-            const response = await app.post('/api/users')
+            const response = await app
+                .post('/api/users')
                 .set('Authorization', `Bearer  ${token}`)
                 .send(data)
 
@@ -32,14 +34,14 @@ describe('API -> POST /api/users', () => {
             done()
         })
 
-
         it('when user data is missing', async (done) => {
             const data = {
                 name: faker.name.firstName(),
                 email: faker.internet.email(),
             }
 
-            const response = await app.post('/api/users')
+            const response = await app
+                .post('/api/users')
                 .set('Authorization', `Bearer  ${token}`)
                 .send(data)
 
@@ -53,7 +55,8 @@ describe('API -> POST /api/users', () => {
                 email: email,
             }
 
-            const response = await app.post('/api/users')
+            const response = await app
+                .post('/api/users')
                 .set('Authorization', `Bearer  ${token}`)
                 .send(data)
 
@@ -67,12 +70,10 @@ describe('API -> POST /api/users', () => {
                 email: email,
             }
 
-            const response = await app.post('/api/users')
-                .send(data)
+            const response = await app.post('/api/users').send(data)
 
             expect(response.status).toEqual(401)
             done()
-        })        
-
+        })
     })
 })

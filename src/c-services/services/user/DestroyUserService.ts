@@ -30,6 +30,5 @@ export default class DestroyUserService extends Operation
             .catch((error) => {
                 this.emit(ERROR, error)
             })
-
     }
 }

@@ -19,7 +19,7 @@ describe('Infra -> Data -> Repositories -> User', () => {
             await userFactory({})
         })
 
-        it('when there is users', async (done) => {
+        it('when there are users', async (done) => {
             const users = await userRepo.getAll()
 
             expect(users).toHaveLength(2)

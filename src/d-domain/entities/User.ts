@@ -20,7 +20,14 @@ export default class User {
     @IsDate()
     private _updatedAt: Date = new Date()
 
-    constructor(id = '', name: string, email: string, password: string, createdAt?: Date, updatedAt?: Date) {
+    constructor(
+        id = '',
+        name: string,
+        email: string,
+        password: string,
+        createdAt?: Date,
+        updatedAt?: Date
+    ) {
         this._id = id
         this._name = name
         this._email = email
