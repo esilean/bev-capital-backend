@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsDate, ValidateNested } from 'class-validator'
-import UserStocks from './user.stocks'
+import UserStock from './user.stock'
 
 export default class Stock {
     @IsNotEmpty()
@@ -15,7 +15,7 @@ export default class Stock {
     private _website: string
 
     @ValidateNested()
-    private _userStocks: UserStocks[] = []
+    private _userStocks: UserStock[] = []
 
     @IsDate()
     private _createdAt: Date
@@ -23,14 +23,7 @@ export default class Stock {
     @IsDate()
     private _updatedAt: Date
 
-    constructor(
-        symbol: string,
-        name: string,
-        exchange: string,
-        website: string,
-        createdAt?: Date,
-        updatedAt?: Date
-    ) {
+    constructor(symbol: string, name: string, exchange: string, website: string, createdAt?: Date, updatedAt?: Date) {
         this._symbol = symbol
         this._name = name
         this._exchange = exchange
@@ -55,11 +48,11 @@ export default class Stock {
         return this._website
     }
 
-    set userStocks(userStocks: UserStocks[]) {
+    set userStocks(userStocks: UserStock[]) {
         this._userStocks = userStocks
     }
 
-    get userStocks(): UserStocks[] {
+    get userStocks(): UserStock[] {
         return this._userStocks
     }
 

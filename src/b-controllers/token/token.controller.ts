@@ -13,17 +13,8 @@ import Token from '../../d-domain/entities/token'
 
 function tokenController(getTokenService: GetTokenServiceInterface): unknown {
     return {
-        getToken: (
-            request: RequestInterface<Token>,
-            response: ResponseInterface,
-            next: NextInterface
-        ): void => {
-            const {
-                SUCCESS,
-                ERROR,
-                NOT_FOUND,
-                VALIDATION_ERROR,
-            } = getTokenService.getEventType()
+        getToken: (request: RequestInterface<Token>, response: ResponseInterface, next: NextInterface): void => {
+            const { SUCCESS, ERROR, NOT_FOUND, VALIDATION_ERROR } = getTokenService.getEventType()
 
             getTokenService
                 .on(SUCCESS, (token: TokenInterface) => {

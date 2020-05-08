@@ -1,10 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Status from 'http-status'
-import {
-    RequestInterface,
-    ResponseInterface,
-    NextInterface,
-} from '../interfaces/express.interface'
+import { RequestInterface, ResponseInterface, NextInterface } from '../interfaces/express.interface'
 
 export class ValidationError extends Error {
     constructor(message: string) {
@@ -22,12 +18,7 @@ export class NotFoundError extends Error {
     }
 }
 
-export default (
-    error: Error,
-    request: RequestInterface<string>,
-    response: ResponseInterface,
-    next: NextInterface
-): void => {
+export default (error: Error, request: RequestInterface<string>, response: ResponseInterface, next: NextInterface): void => {
     const { logger, config } = request.container.cradle
 
     logger.error(error)

@@ -4,8 +4,7 @@ import Stock from '../../../d-domain/entities/stock'
 import { StockDomainInterface } from '../../../d-domain/interfaces/stock.domain.interface'
 import { GetAllStockServiceInterface } from '../../interfaces/stock.service.interface'
 
-export default class GetAllStockService extends Operation
-    implements GetAllStockServiceInterface {
+export default class GetAllStockService extends Operation implements GetAllStockServiceInterface {
     private readonly stockDomain: StockDomainInterface
 
     constructor(stockDomain: StockDomainInterface) {
@@ -25,14 +24,7 @@ export default class GetAllStockService extends Operation
             .getAll()
             .then((stocksFound) => {
                 const stocks = stocksFound.map((stock: Stock) => {
-                    const {
-                        symbol,
-                        name,
-                        exchange,
-                        website,
-                        createdAt,
-                        updatedAt,
-                    } = stock
+                    const { symbol, name, exchange, website, createdAt, updatedAt } = stock
                     return {
                         symbol,
                         name,

@@ -6,12 +6,15 @@ import { StockDomainInterface } from '../../interfaces/stock.domain.interface'
 import Stock from '../../entities/stock'
 import { toDB } from '../../../e-infra/data/repositories/mappers/stock.mapper'
 import { StockRepositoryInterface } from '../../../e-infra/data/interfaces/stock.repository.interface'
+import { UserStockRepositoryInterface } from '../../../e-infra/data/interfaces/user.stock.repository.interface'
 
 export default class StockDomain implements StockDomainInterface {
     private readonly stockRepository: StockRepositoryInterface
+    private readonly userStockRepository: UserStockRepositoryInterface
 
-    constructor(stockRepository: StockRepositoryInterface) {
+    constructor(stockRepository: StockRepositoryInterface, userStockRepository: UserStockRepositoryInterface) {
         this.stockRepository = stockRepository
+        this.userStockRepository = userStockRepository
     }
     async getAll(options?: FindOptions): Promise<Stock[]> {
         return await this.stockRepository.getAll(options)
@@ -31,7 +34,7 @@ export default class StockDomain implements StockDomainInterface {
         }
 
         //validar stock dup
-        const opt: FindOptions = { where: { symbol: newStock.symbol } }
+        const opt: FindOptions = { limit: 1, attributes: ['symbol'], where: { symbol: newStock.symbol } }
         const stockExists = await this.stockRepository.getAll(opt)
         if (stockExists.length > 0) {
             const error: Error = new ValidationError('Stock already exists')
@@ -48,6 +51,13 @@ export default class StockDomain implements StockDomainInterface {
             })
     }
     async destroy(symbol: string): Promise<boolean> {
+        const opt: FindOptions = { limit: 1, attributes: ['symbol'], where: { symbol } }
+        const userStocks = await this.userStockRepository.getAll(opt)
+        if (userStocks.length > 0) {
+            const error: Error = new ValidationError('Stock cannot be deleted')
+            throw error
+        }
+
         return await this.stockRepository.destroy(symbol)
     }
 }

@@ -17,12 +17,7 @@ describe('Infra -> Data -> Repositories -> User', () => {
 
     describe('#createUser', () => {
         it('when user is valid', async (done) => {
-            const newUser = new User(
-                '',
-                faker.name.firstName(),
-                faker.internet.email(),
-                faker.internet.password()
-            )
+            const newUser = new User('', faker.name.firstName(), faker.internet.email(), faker.internet.password())
 
             validate(newUser).then(async () => {
                 const userCreated = await userRepo.create(toDB(newUser))

@@ -28,9 +28,7 @@ class Operation extends EventEmitter {
             return this.addListener(eventType, handler)
         }
 
-        throw new Error(
-            `Invalid eventType "${eventType}" to operation ON ${this.constructor.name}.`
-        )
+        throw new Error(`Invalid eventType "${eventType}" to operation ON ${this.constructor.name}.`)
     }
 }
 

@@ -5,6 +5,10 @@ export interface GetAllUserServiceInterface extends OperationInterface {
     execute(): void
 }
 
+export interface GetUserServiceInterface extends OperationInterface {
+    execute(id: string): void
+}
+
 export interface CreateUserServiceInterface extends OperationInterface {
     execute(body: User): void
 }

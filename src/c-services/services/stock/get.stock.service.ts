@@ -4,8 +4,7 @@ import Stock from '../../../d-domain/entities/stock'
 import { StockDomainInterface } from '../../../d-domain/interfaces/stock.domain.interface'
 import { GetStockServiceInterface } from '../../interfaces/stock.service.interface'
 
-export default class GetStockService extends Operation
-    implements GetStockServiceInterface {
+export default class GetStockService extends Operation implements GetStockServiceInterface {
     private readonly stockDomain: StockDomainInterface
 
     constructor(stockDomain: StockDomainInterface) {
@@ -24,14 +23,7 @@ export default class GetStockService extends Operation
         this.stockDomain
             .getBySymbol(symbol)
             .then((stock: Stock) => {
-                const {
-                    symbol,
-                    name,
-                    exchange,
-                    website,
-                    createdAt,
-                    updatedAt,
-                } = stock
+                const { symbol, name, exchange, website, createdAt, updatedAt } = stock
                 this.emit(SUCCESS, {
                     symbol,
                     name,
@@ -42,11 +34,8 @@ export default class GetStockService extends Operation
                 })
             })
             .catch((error) => {
-
-                if (error.name === 'NotFoundError')
-                    this.emit(NOT_FOUND, error)
-                else
-                    this.emit(ERROR, error)
+                if (error.name === 'NotFoundError') this.emit(NOT_FOUND, error)
+                else this.emit(ERROR, error)
             })
     }
 }

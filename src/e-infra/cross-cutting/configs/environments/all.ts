@@ -3,10 +3,7 @@ import { ConfigInterface } from '../../utils/interfaces/config.interface'
 import dbConfig from './database'
 
 export const configs = (env: string): ConfigInterface => {
-    const logPath = path.join(
-        __dirname,
-        `../../../../../../logs/${env.toLowerCase()}.log`
-    )
+    const logPath = path.join(__dirname, `../../../../../../logs/${env.toLowerCase()}.log`)
 
     let db: object
     switch (env) {

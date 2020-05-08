@@ -4,8 +4,7 @@ import { EventTypeInterface } from '../../interfaces/operation.interface'
 import Stock from '../../../d-domain/entities/stock'
 import { StockDomainInterface } from '../../../d-domain/interfaces/stock.domain.interface'
 
-export default class CreateStockService extends Operation
-    implements CreateStockServiceInterface {
+export default class CreateStockService extends Operation implements CreateStockServiceInterface {
     private readonly stockDomain: StockDomainInterface
 
     constructor(stockDomain: StockDomainInterface) {
@@ -27,14 +26,7 @@ export default class CreateStockService extends Operation
         this.stockDomain
             .create(newStock)
             .then((stock) => {
-                const {
-                    symbol,
-                    name,
-                    exchange,
-                    website,
-                    createdAt,
-                    updatedAt,
-                } = stock
+                const { symbol, name, exchange, website, createdAt, updatedAt } = stock
                 this.emit(SUCCESS, {
                     symbol,
                     name,
@@ -45,8 +37,7 @@ export default class CreateStockService extends Operation
                 })
             })
             .catch((error: Error) => {
-                if (error.name === 'ValidationError')
-                    this.emit(VALIDATION_ERROR, error)
+                if (error.name === 'ValidationError') this.emit(VALIDATION_ERROR, error)
                 else this.emit(ERROR, error)
             })
     }

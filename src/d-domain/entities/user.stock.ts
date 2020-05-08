@@ -1,11 +1,12 @@
-import { IsNotEmpty, IsDate } from 'class-validator'
+import { IsNotEmpty, IsDate, MaxLength } from 'class-validator'
 
-export default class UserStocks {
+export default class UserStock {
     private _id: string
 
     @IsNotEmpty()
     private _userId: string
 
+    @MaxLength(20)
     @IsNotEmpty()
     private _symbol: string
 
@@ -21,15 +22,7 @@ export default class UserStocks {
     @IsDate()
     private _updatedAt: Date
 
-    constructor(
-        id = '',
-        userId: string,
-        symbol: string,
-        qty: number,
-        avgPrice: number,
-        createdAt?: Date,
-        updatedAt?: Date
-    ) {
+    constructor(id = '', userId: string, symbol: string, qty: number, avgPrice: number, createdAt?: Date, updatedAt?: Date) {
         this._id = id
         this._userId = userId
         this._symbol = symbol

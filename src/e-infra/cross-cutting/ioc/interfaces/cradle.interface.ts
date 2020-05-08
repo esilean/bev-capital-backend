@@ -4,10 +4,7 @@ import { ServerInterface } from '../../../../a-app/interfaces/server.interface'
 import { ConfigInterface } from '../../utils/interfaces/config.interface'
 import { Logger } from 'log4js'
 import { Sequelize } from 'sequelize/types'
-import {
-    AuthInterface,
-    JwtInterface,
-} from '../../authentication/interfaces/auth.interface'
+import { AuthInterface, JwtInterface } from '../../authentication/interfaces/auth.interface'
 
 export interface CradleInterface extends Request {
     server: ServerInterface

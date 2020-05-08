@@ -6,6 +6,7 @@ import {
     GetAllUserServiceInterface,
     CreateUserServiceInterface,
     DestroyUserServiceInterface,
+    GetUserServiceInterface,
 } from '../../c-services/interfaces/user.service.interface'
 import {
     RequestInterface,
@@ -18,16 +19,13 @@ import { AuthInterface } from '../../e-infra/cross-cutting/authentication/interf
 function userController(
     auth: AuthInterface,
     getAllUserService: GetAllUserServiceInterface,
+    getUserService: GetUserServiceInterface,
     createUserService: CreateUserServiceInterface,
     destroyUserService: DestroyUserServiceInterface
 ): unknown {
     return {
         authenticate: auth.authenticate(),
-        getAll: (
-            request: RequestInterface<User>,
-            response: ResponseInterface,
-            next: NextInterface
-        ): void => {
+        getAll: (request: RequestInterface<User>, response: ResponseInterface, next: NextInterface): void => {
             const { SUCCESS, ERROR } = getAllUserService.getEventType()
 
             getAllUserService
@@ -38,16 +36,23 @@ function userController(
 
             getAllUserService.execute()
         },
-        create: (
-            request: RequestInterface<User>,
-            response: ResponseInterface,
-            next: NextInterface
-        ): void => {
-            const {
-                SUCCESS,
-                ERROR,
-                VALIDATION_ERROR,
-            } = createUserService.getEventType()
+        get: (request: RequestInterface<User>, response: ResponseInterface, next: NextInterface): void => {
+            const { SUCCESS, ERROR, NOT_FOUND } = getUserService.getEventType()
+
+            getUserService
+                .on(SUCCESS, (user: User) => {
+                    response.status(Status.OK).json(user)
+                })
+                .on(NOT_FOUND, (error: Error) => {
+                    response.status(Status.NOT_FOUND).json(error)
+                })
+                .on(ERROR, next)
+
+            const { id } = request.user
+            getUserService.execute(id)
+        },
+        create: (request: RequestInterface<User>, response: ResponseInterface, next: NextInterface): void => {
+            const { SUCCESS, ERROR, VALIDATION_ERROR } = createUserService.getEventType()
 
             createUserService
                 .on(SUCCESS, (user: User) => {
@@ -62,20 +67,15 @@ function userController(
             createUserService.execute(body)
         },
 
-        delete: (
-            request: RequestInterface<User>,
-            response: ResponseInterface,
-            next: NextInterface
-        ): void => {
-            const {
-                SUCCESS,
-                ERROR,
-                NOT_FOUND,
-            } = destroyUserService.getEventType()
+        delete: (request: RequestInterface<User>, response: ResponseInterface, next: NextInterface): void => {
+            const { SUCCESS, ERROR, NOT_FOUND, VALIDATION_ERROR } = destroyUserService.getEventType()
 
             destroyUserService
                 .on(SUCCESS, () => {
                     response.status(Status.NO_CONTENT).json()
+                })
+                .on(VALIDATION_ERROR, (error: Error) => {
+                    response.status(Status.BAD_REQUEST).json(error)
                 })
                 .on(NOT_FOUND, () => {
                     response.status(Status.NOT_FOUND).json({
@@ -97,6 +97,7 @@ export default (): Router => {
     const api = makeInvoker(userController)
 
     router.get('/', api('authenticate'), api('getAll'))
+    router.get('/:id', api('authenticate'), api('get'))
     router.post('/', api('authenticate'), api('create'))
     router.delete('/:id', api('authenticate'), api('delete'))
 

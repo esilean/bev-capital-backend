@@ -4,14 +4,7 @@ import { StockInterface } from '../../interfaces/stock.repository.interface'
 export function toEntity(values: StockInterface): Stock {
     const { symbol, name, exchange, website, createdAt, updatedAt } = values
 
-    const stock = new Stock(
-        symbol,
-        name,
-        exchange,
-        website,
-        createdAt,
-        updatedAt
-    )
+    const stock = new Stock(symbol, name, exchange, website, createdAt, updatedAt)
 
     return stock
 }

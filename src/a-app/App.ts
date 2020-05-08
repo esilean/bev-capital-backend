@@ -19,9 +19,7 @@ export class App implements AppInterface {
             this.database
                 .authenticate()
                 .then(() => {
-                    this.logger.info(
-                        'DB connection has been established successfully.'
-                    )
+                    this.logger.info('DB connection has been established successfully.')
                 })
                 .catch((error) => {
                     this.logger.error(`AppError: db.authenticate() ${error}`)

@@ -3,12 +3,11 @@ import { EventTypeInterface } from '../../interfaces/operation.interface'
 import { StockDomainInterface } from '../../../d-domain/interfaces/stock.domain.interface'
 import { DestroyStockServiceInterface } from '../../interfaces/stock.service.interface'
 
-export default class DestroyStockService extends Operation
-    implements DestroyStockServiceInterface {
+export default class DestroyStockService extends Operation implements DestroyStockServiceInterface {
     private readonly stockDomain: StockDomainInterface
 
     constructor(stockDomain: StockDomainInterface) {
-        super(['SUCCESS', 'ERROR', 'NOT_FOUND'])
+        super(['SUCCESS', 'ERROR', 'NOT_FOUND', 'VALIDATION_ERROR'])
 
         this.stockDomain = stockDomain
     }
@@ -18,7 +17,7 @@ export default class DestroyStockService extends Operation
     }
 
     execute(symbol: string): void {
-        const { SUCCESS, ERROR, NOT_FOUND } = this.getEventType()
+        const { SUCCESS, ERROR, NOT_FOUND, VALIDATION_ERROR } = this.getEventType()
 
         this.stockDomain
             .destroy(symbol)
@@ -27,7 +26,8 @@ export default class DestroyStockService extends Operation
                 else this.emit(NOT_FOUND, null)
             })
             .catch((error) => {
-                this.emit(ERROR, error)
+                if (error.name === 'ValidationError') this.emit(VALIDATION_ERROR, error)
+                else this.emit(ERROR, error)
             })
     }
 }

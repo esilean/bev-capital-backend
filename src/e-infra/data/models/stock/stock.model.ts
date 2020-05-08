@@ -1,12 +1,5 @@
-import {
-    Table,
-    Model,
-    Column,
-    CreatedAt,
-    UpdatedAt,
-    DataType,
-    Length,
-} from 'sequelize-typescript'
+import { Table, Model, Column, CreatedAt, UpdatedAt, DataType, Length, HasMany } from 'sequelize-typescript'
+import UserStockModel from '../user/user.stock..model'
 
 @Table({
     tableName: 'stocks',
@@ -40,6 +33,9 @@ export default class StockModel extends Model<StockModel> {
         allowNull: false,
     })
     website!: string
+
+    @HasMany(() => UserStockModel)
+    userStocks!: UserStockModel[]
 
     @CreatedAt
     @Column({ field: 'created_at' })

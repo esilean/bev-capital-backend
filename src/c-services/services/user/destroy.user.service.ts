@@ -4,12 +4,11 @@ import Operation from '../../operation'
 import { EventTypeInterface } from '../../interfaces/operation.interface'
 import { UserDomainInterface } from '../../../d-domain/interfaces/user.domain.interface'
 
-export default class DestroyUserService extends Operation
-    implements DestroyUserServiceInterface {
+export default class DestroyUserService extends Operation implements DestroyUserServiceInterface {
     private readonly userDomain: UserDomainInterface
 
     constructor(userDomain: UserDomainInterface) {
-        super(['SUCCESS', 'ERROR', 'NOT_FOUND'])
+        super(['SUCCESS', 'ERROR', 'NOT_FOUND', 'VALIDATION_ERROR'])
 
         this.userDomain = userDomain
     }
@@ -19,7 +18,7 @@ export default class DestroyUserService extends Operation
     }
 
     execute(id: string): void {
-        const { SUCCESS, ERROR, NOT_FOUND } = this.getEventType()
+        const { SUCCESS, ERROR, NOT_FOUND, VALIDATION_ERROR } = this.getEventType()
 
         this.userDomain
             .destroy(id)
@@ -28,7 +27,8 @@ export default class DestroyUserService extends Operation
                 else this.emit(NOT_FOUND, null)
             })
             .catch((error) => {
-                this.emit(ERROR, error)
+                if (error.name === 'ValidationError') this.emit(VALIDATION_ERROR, error)
+                else this.emit(ERROR, error)
             })
     }
 }

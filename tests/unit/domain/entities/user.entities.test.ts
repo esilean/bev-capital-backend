@@ -2,17 +2,12 @@ import faker from 'faker'
 import { validate } from 'class-validator'
 import User from '../../../../src/d-domain/entities/user'
 import Stock from '../../../../src/d-domain/entities/stock'
-import UserStocks from '../../../../src/d-domain/entities/user.stocks'
+import UserStocks from '../../../../src/d-domain/entities/user.stock'
 
 describe('Domain -> Entities -> User', () => {
     describe('#User', () => {
         it('when user is valid', async (done) => {
-            const newUser = new User(
-                '',
-                faker.name.firstName(),
-                faker.internet.email(),
-                faker.internet.password()
-            )
+            const newUser = new User('', faker.name.firstName(), faker.internet.email(), faker.internet.password())
 
             validate(newUser).then((errors) => {
                 expect(errors).toHaveLength(0)

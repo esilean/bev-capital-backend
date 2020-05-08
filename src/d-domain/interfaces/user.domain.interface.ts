@@ -3,6 +3,7 @@ import User from '../entities/user'
 
 export interface UserDomainInterface {
     getAll(options?: FindOptions): Promise<User[]>
-    create(values?: object, options?: CreateOptions): Promise<User>
+    getById(id: string, options?: FindOptions): Promise<User>
+    create(newUser: User, options?: CreateOptions): Promise<User>
     destroy(id: string): Promise<boolean>
 }

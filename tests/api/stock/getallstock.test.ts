@@ -19,9 +19,7 @@ describe('API -> GET /api/stocks', () => {
         })
 
         it('when there are stocks', async (done) => {
-            const response = await app
-                .get('/api/stocks')
-                .set('Authorization', `Bearer  ${token}`)
+            const response = await app.get('/api/stocks').set('Authorization', `Bearer  ${token}`)
 
             expect(response.status).toEqual(200)
             expect(response.body).toHaveLength(3)

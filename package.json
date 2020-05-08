@@ -11,7 +11,8 @@
         "build": "tsc --project .",
         "format": "prettier --write \"src/**/*.ts\" && prettier --write \"tests/**/*.ts\"",
         "eslint-fix": "eslint --fix \"src/**/*.ts\" && eslint --fix \"tests/**/*.ts\"",
-        "test": "cross-env NODE_ENV=test jest --coverage --testTimeout=5000 --detectOpenHandles",
+        "test": "cross-env NODE_ENV=test jest --coverage --testTimeout=10000 --detectOpenHandles",
+        "test-watch": "cross-env NODE_ENV=test jest --watch",
         "pretest": "cross-env NODE_ENV=test sequelize db:migrate"
     },
     "dependencies": {

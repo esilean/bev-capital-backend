@@ -10,12 +10,7 @@ export class Server implements ServerInterface {
     private config: ConfigInterface
     private logger: Logger
 
-    constructor(
-        router: Router,
-        auth: AuthInterface,
-        config: ConfigInterface,
-        logger: Logger
-    ) {
+    constructor(router: Router, auth: AuthInterface, config: ConfigInterface, logger: Logger) {
         this.config = config
         this.logger = logger
 

@@ -1,11 +1,5 @@
-import {
-    ValidateIf,
-    IsEmail,
-    IsDate,
-    IsNotEmpty,
-    ValidateNested,
-} from 'class-validator'
-import UserStocks from './user.stocks'
+import { ValidateIf, IsEmail, IsDate, IsNotEmpty, ValidateNested } from 'class-validator'
+import UserStock from './user.stock'
 
 export default class User {
     private _id: string
@@ -22,7 +16,7 @@ export default class User {
     private _password: string
 
     @ValidateNested()
-    private _userStocks: UserStocks[] = []
+    private _userStocks: UserStock[] = []
 
     @IsDate()
     private _createdAt: Date = new Date()
@@ -30,14 +24,7 @@ export default class User {
     @IsDate()
     private _updatedAt: Date = new Date()
 
-    constructor(
-        id = '',
-        name: string,
-        email: string,
-        password: string,
-        createdAt?: Date,
-        updatedAt?: Date
-    ) {
+    constructor(id = '', name: string, email: string, password: string, createdAt?: Date, updatedAt?: Date) {
         this._id = id
         this._name = name
         this._email = email
@@ -60,11 +47,11 @@ export default class User {
         return this._password
     }
 
-    set userStocks(userStocks: UserStocks[]) {
+    set userStocks(userStocks: UserStock[]) {
         this._userStocks = userStocks
     }
 
-    get userStocks(): UserStocks[] {
+    get userStocks(): UserStock[] {
         return this._userStocks
     }
 

@@ -5,8 +5,7 @@ import { EventTypeInterface } from '../../interfaces/operation.interface'
 import User from '../../../d-domain/entities/user'
 import { UserDomainInterface } from '../../../d-domain/interfaces/user.domain.interface'
 
-export default class CreateUserService extends Operation
-    implements CreateUserServiceInterface {
+export default class CreateUserService extends Operation implements CreateUserServiceInterface {
     private readonly userDomain: UserDomainInterface
 
     constructor(userDomain: UserDomainInterface) {
@@ -32,8 +31,7 @@ export default class CreateUserService extends Operation
                 this.emit(SUCCESS, { id, name, email, createdAt, updatedAt })
             })
             .catch((error: Error) => {
-                if (error.name === 'ValidationError')
-                    this.emit(VALIDATION_ERROR, error)
+                if (error.name === 'ValidationError') this.emit(VALIDATION_ERROR, error)
                 else this.emit(ERROR, error)
             })
     }

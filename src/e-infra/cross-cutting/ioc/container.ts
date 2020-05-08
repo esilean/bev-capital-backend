@@ -1,11 +1,4 @@
-import {
-    createContainer,
-    InjectionMode,
-    asClass,
-    asFunction,
-    asValue,
-    Lifetime,
-} from 'awilix'
+import { createContainer, InjectionMode, asClass, asFunction, asValue, Lifetime } from 'awilix'
 import { scopePerRequest } from 'awilix-express'
 import { CradleInterface } from './interfaces/cradle.interface'
 import { App } from '../../../a-app/app'
@@ -36,54 +29,32 @@ container.register({
     jwt: asClass(Jwt).singleton(),
 })
 
-container.loadModules(
-    [['../../data/models/**/*.*(ts|js)', { register: asValue }]],
-    {
-        cwd: __dirname,
-        formatName: function (name) {
-            return camelize(name)
-        }
-    }
-)
+container.loadModules([['../../data/models/**/*.*(ts|js)', { register: asValue }]], {
+    cwd: __dirname,
+    formatName: function (name) {
+        return camelize(name)
+    },
+})
 
-container.loadModules(
-    [
-        [
-            '../../data/repositories/**/*.*(ts|js)',
-            { register: asClass, lifetime: Lifetime.SINGLETON },
-        ],
-    ],
-    {
-        cwd: __dirname,
-        formatName: function (name) {
-            return camelize(name)
-        }
-    }
-)
+container.loadModules([['../../data/repositories/**/*.*(ts|js)', { register: asClass, lifetime: Lifetime.SINGLETON }]], {
+    cwd: __dirname,
+    formatName: function (name) {
+        return camelize(name)
+    },
+})
 
-container.loadModules(
-    [
-        [
-            '../../../d-domain/services/**/*.*(ts|js)',
-            { register: asClass, lifetime: Lifetime.SINGLETON },
-        ],
-    ],
-    {
-        cwd: __dirname,
-        formatName: function (name) {
-            return camelize(name)
-        }
-    }
-)
+container.loadModules([['../../../c-services/services/**/*.*(ts|js)', { register: asClass }]], {
+    cwd: __dirname,
+    formatName: function (name) {
+        return camelize(name)
+    },
+})
 
-container.loadModules(
-    [['../../../c-services/services/**/*.*(ts|js)', { register: asClass }]],
-    {
-        cwd: __dirname,
-        formatName: function (name) {
-            return camelize(name)
-        }
-    }
-)
+container.loadModules([['../../../d-domain/services/**/*.*(ts|js)', { register: asClass, lifetime: Lifetime.SINGLETON }]], {
+    cwd: __dirname,
+    formatName: function (name) {
+        return camelize(name)
+    },
+})
 
 export { container }

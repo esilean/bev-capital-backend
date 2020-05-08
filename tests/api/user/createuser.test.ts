@@ -23,10 +23,7 @@ describe('API -> POST /api/users', () => {
                 password: faker.internet.password(),
             }
 
-            const response = await app
-                .post('/api/users')
-                .set('Authorization', `Bearer  ${token}`)
-                .send(data)
+            const response = await app.post('/api/users').set('Authorization', `Bearer  ${token}`).send(data)
 
             expect(response.status).toEqual(201)
             expect(response.body).toHaveProperty('id')
@@ -39,10 +36,7 @@ describe('API -> POST /api/users', () => {
                 email: faker.internet.email(),
             }
 
-            const response = await app
-                .post('/api/users')
-                .set('Authorization', `Bearer  ${token}`)
-                .send(data)
+            const response = await app.post('/api/users').set('Authorization', `Bearer  ${token}`).send(data)
 
             expect(response.status).toEqual(400)
             done()
@@ -54,10 +48,7 @@ describe('API -> POST /api/users', () => {
                 email: email,
             }
 
-            const response = await app
-                .post('/api/users')
-                .set('Authorization', `Bearer  ${token}`)
-                .send(data)
+            const response = await app.post('/api/users').set('Authorization', `Bearer  ${token}`).send(data)
 
             expect(response.status).toEqual(400)
             done()

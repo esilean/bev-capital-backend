@@ -3,9 +3,9 @@ import { GetAllUserServiceInterface } from '../../interfaces/user.service.interf
 import Operation from '../../operation'
 import { EventTypeInterface } from '../../interfaces/operation.interface'
 import { UserDomainInterface } from '../../../d-domain/interfaces/user.domain.interface'
+import { optUserAndStocks } from './options'
 
-export default class GetAllUserService extends Operation
-    implements GetAllUserServiceInterface {
+export default class GetAllUserService extends Operation implements GetAllUserServiceInterface {
     private readonly userDomain: UserDomainInterface
 
     constructor(userDomain: UserDomainInterface) {
@@ -22,11 +22,17 @@ export default class GetAllUserService extends Operation
         const { SUCCESS, ERROR } = this.getEventType()
 
         this.userDomain
-            .getAll()
+            .getAll(optUserAndStocks)
             .then((usersFound) => {
                 const users = usersFound.map((user) => {
-                    const { id, name, email, createdAt, updatedAt } = user
-                    return { id, name, email, createdAt, updatedAt }
+                    const { id, name, email, userStocks, createdAt, updatedAt } = user
+
+                    const userStocksR = userStocks.map((us) => {
+                        const { id, symbol, qty, avgPrice } = us
+                        return { id, symbol, qty, avgPrice }
+                    })
+
+                    return { id, name, email, stocks: userStocksR, createdAt, updatedAt }
                 })
 
                 this.emit(SUCCESS, users)

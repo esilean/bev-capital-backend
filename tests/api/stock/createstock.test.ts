@@ -27,10 +27,7 @@ describe('API -> POST /api/stocks', () => {
                 website: faker.internet.url(),
             }
 
-            const response = await app
-                .post('/api/stocks')
-                .set('Authorization', `Bearer  ${token}`)
-                .send(data)
+            const response = await app.post('/api/stocks').set('Authorization', `Bearer  ${token}`).send(data)
 
             expect(response.status).toEqual(201)
             expect(response.body).toHaveProperty('symbol')
@@ -40,13 +37,10 @@ describe('API -> POST /api/stocks', () => {
         it('when stock data is missing', async (done) => {
             const data = {
                 exchange: faker.lorem.word(),
-                website: faker.internet.url()
+                website: faker.internet.url(),
             }
 
-            const response = await app
-                .post('/api/stocks')
-                .set('Authorization', `Bearer  ${token}`)
-                .send(data)
+            const response = await app.post('/api/stocks').set('Authorization', `Bearer  ${token}`).send(data)
 
             expect(response.status).toEqual(400)
             done()
@@ -60,10 +54,7 @@ describe('API -> POST /api/stocks', () => {
                 website: faker.internet.url(),
             }
 
-            const response = await app
-                .post('/api/stocks')
-                .set('Authorization', `Bearer  ${token}`)
-                .send(data)
+            const response = await app.post('/api/stocks').set('Authorization', `Bearer  ${token}`).send(data)
 
             expect(response.status).toEqual(400)
             done()

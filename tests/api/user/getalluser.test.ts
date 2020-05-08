@@ -14,9 +14,7 @@ describe('API -> GET /api/users', () => {
         })
 
         it('when there are users', async (done) => {
-            const response = await app
-                .get('/api/users')
-                .set('Authorization', `Bearer  ${token}`)
+            const response = await app.get('/api/users').set('Authorization', `Bearer  ${token}`)
 
             expect(response.status).toEqual(200)
             expect(response.body).toHaveLength(1)

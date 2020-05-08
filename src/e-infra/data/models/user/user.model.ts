@@ -8,8 +8,10 @@ import {
     IsEmail,
     Length,
     BeforeCreate,
+    HasMany,
 } from 'sequelize-typescript'
 import { encryptPassword } from '../../../cross-cutting/authentication/encryption'
+import UserStockModel from './user.stock..model'
 
 @Table({
     tableName: 'users',
@@ -46,6 +48,9 @@ export default class UserModel extends Model<UserModel> {
         unique: true,
     })
     password!: string
+
+    @HasMany(() => UserStockModel)
+    userStocks!: UserStockModel[]
 
     @CreatedAt
     @Column({ field: 'created_at' })

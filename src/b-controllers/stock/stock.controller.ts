@@ -9,7 +9,12 @@ import {
 } from '../../e-infra/cross-cutting/utils/interfaces/express.interface'
 import { AuthInterface } from '../../e-infra/cross-cutting/authentication/interfaces/auth.interface'
 import Stock from '../../d-domain/entities/stock'
-import { DestroyStockServiceInterface, GetAllStockServiceInterface, GetStockServiceInterface, CreateStockServiceInterface } from '../../c-services/interfaces/stock.service.interface'
+import {
+    DestroyStockServiceInterface,
+    GetAllStockServiceInterface,
+    GetStockServiceInterface,
+    CreateStockServiceInterface,
+} from '../../c-services/interfaces/stock.service.interface'
 
 function stockController(
     auth: AuthInterface,
@@ -20,11 +25,7 @@ function stockController(
 ): unknown {
     return {
         authenticate: auth.authenticate(),
-        getAll: (
-            request: RequestInterface<Stock>,
-            response: ResponseInterface,
-            next: NextInterface
-        ): void => {
+        getAll: (request: RequestInterface<Stock>, response: ResponseInterface, next: NextInterface): void => {
             const { SUCCESS, ERROR } = getAllStockService.getEventType()
 
             getAllStockService
@@ -35,11 +36,7 @@ function stockController(
 
             getAllStockService.execute()
         },
-        get: (
-            request: RequestInterface<Stock>,
-            response: ResponseInterface,
-            next: NextInterface
-        ): void => {
+        get: (request: RequestInterface<Stock>, response: ResponseInterface, next: NextInterface): void => {
             const { SUCCESS, ERROR, NOT_FOUND } = getStockService.getEventType()
 
             getStockService
@@ -54,16 +51,8 @@ function stockController(
             const { symbol } = request.params
             getStockService.execute(symbol)
         },
-        create: (
-            request: RequestInterface<Stock>,
-            response: ResponseInterface,
-            next: NextInterface
-        ): void => {
-            const {
-                SUCCESS,
-                ERROR,
-                VALIDATION_ERROR,
-            } = createStockService.getEventType()
+        create: (request: RequestInterface<Stock>, response: ResponseInterface, next: NextInterface): void => {
+            const { SUCCESS, ERROR, VALIDATION_ERROR } = createStockService.getEventType()
 
             createStockService
                 .on(SUCCESS, (stock: Stock) => {
@@ -78,20 +67,15 @@ function stockController(
             createStockService.execute(body)
         },
 
-        delete: (
-            request: RequestInterface<Stock>,
-            response: ResponseInterface,
-            next: NextInterface
-        ): void => {
-            const {
-                SUCCESS,
-                ERROR,
-                NOT_FOUND,
-            } = destroyStockService.getEventType()
+        delete: (request: RequestInterface<Stock>, response: ResponseInterface, next: NextInterface): void => {
+            const { SUCCESS, ERROR, NOT_FOUND, VALIDATION_ERROR } = destroyStockService.getEventType()
 
             destroyStockService
                 .on(SUCCESS, () => {
                     response.status(Status.NO_CONTENT).json()
+                })
+                .on(VALIDATION_ERROR, (error: Error) => {
+                    response.status(Status.BAD_REQUEST).json(error)
                 })
                 .on(NOT_FOUND, () => {
                     response.status(Status.NOT_FOUND).json({
