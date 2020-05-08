@@ -1,10 +1,11 @@
 import { app, jwt } from '../../setup'
 import { userFactory } from '../../support/factory/user.factory'
+import { stockFactory } from '../../support/factory/stock.factory'
 
-describe('API -> DELETE /api/users', () => {
-    describe('#destroyUser', () => {
+describe('API -> GET /api/stocks', () => {
+    describe('#getStock', () => {
         let token = ''
-        let id = ''
+        let symbol = ''
         beforeEach(async () => {
             const user = await userFactory({})
             token = jwt.signin({
@@ -12,31 +13,33 @@ describe('API -> DELETE /api/users', () => {
                 name: user.name,
                 email: user.email,
             })
-            id = user.id
+
+            const stock = await stockFactory({})
+            symbol = stock.symbol
         })
 
-        it('when delete user and return status 204', async (done) => {
+        it('when there is stock', async (done) => {
             const response = await app
-                .delete(`/api/users/${id}`)
+                .get(`/api/stocks/${symbol}`)
                 .set('Authorization', `Bearer  ${token}`)
 
-            expect(response.status).toEqual(204)
+            expect(response.status).toEqual(200)
+            expect(response.body).toHaveProperty('symbol')
             done()
         })
 
-        it('when delete user that not exists and return status 404', async (done) => {
+        it('when there is not stock', async (done) => {
             const response = await app
-                .delete('/api/users/7589290c-be32-4dba-b81c-18700d491e53')
+                .get('/api/stocks/APPL2')
                 .set('Authorization', `Bearer  ${token}`)
 
             expect(response.status).toEqual(404)
             done()
-        })
+        })        
 
         it('when no token is provided', async (done) => {
-            const response = await app.delete(
-                '/api/users/7589290c-be32-4dba-b81c-18700d491e53'
-            )
+            const response = await app
+                .get(`/api/stocks/${symbol}`)
 
             expect(response.status).toEqual(401)
             done()

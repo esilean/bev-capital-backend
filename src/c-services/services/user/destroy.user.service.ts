@@ -1,8 +1,8 @@
-import { DestroyUserServiceInterface } from '../../interfaces/UserServiceInterface'
+import { DestroyUserServiceInterface } from '../../interfaces/user.service.interface'
 
-import Operation from '../../Operation'
-import { EventTypeInterface } from '../../interfaces/OperationInterface'
-import { UserDomainInterface } from '../../../d-domain/interfaces/UserDomainInterface'
+import Operation from '../../operation'
+import { EventTypeInterface } from '../../interfaces/operation.interface'
+import { UserDomainInterface } from '../../../d-domain/interfaces/user.domain.interface'
 
 export default class DestroyUserService extends Operation
     implements DestroyUserServiceInterface {

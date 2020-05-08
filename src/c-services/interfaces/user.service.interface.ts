@@ -1,5 +1,5 @@
-import { OperationInterface } from './OperationInterface'
-import User from '../../d-domain/entities/User'
+import { OperationInterface } from './operation.interface'
+import User from '../../d-domain/entities/user'
 
 export interface GetAllUserServiceInterface extends OperationInterface {
     execute(): void

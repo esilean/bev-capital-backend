@@ -1,5 +1,5 @@
-import { AppInterface } from './interfaces/AppInterface'
-import { ServerInterface } from './interfaces/ServerInterface'
+import { AppInterface } from './interfaces/app.interface'
+import { ServerInterface } from './interfaces/server.interface'
 import { Logger } from 'log4js'
 import { Sequelize } from 'sequelize/types'
 

@@ -1,8 +1,8 @@
 import container, { db } from '../../setup'
 import faker from 'faker'
-import { UserRepositoryInterface } from '../../../src/e-infra/data/interfaces/UserRepositoryInterface'
-import User from '../../../src/d-domain/entities/User'
-import { toDB } from '../../../src/e-infra/data/repositories/mappers/userMapper'
+import { UserRepositoryInterface } from '../../../src/e-infra/data/interfaces/user.repository.interface'
+import User from '../../../src/d-domain/entities/user'
+import { toDB } from '../../../src/e-infra/data/repositories/mappers/user.mapper'
 import { validate } from 'class-validator'
 
 describe('Infra -> Data -> Repositories -> User', () => {

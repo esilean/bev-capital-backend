@@ -3,13 +3,15 @@ import { Router } from 'express'
 import compression from 'compression'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-import { ConfigInterface } from '../e-infra/cross-cutting/utils/interfaces/ConfigInterface'
+import { ConfigInterface } from '../e-infra/cross-cutting/utils/interfaces/config.interface'
 import { Logger } from 'log4js'
 import morgan from '../e-infra/cross-cutting/utils/logging/morgan'
 
 import index from '../b-controllers'
-import userController from '../b-controllers/user/userController'
-import tokenController from '../b-controllers/token/tokenController'
+import tokenController from '../b-controllers/token/token.controller'
+import userController from '../b-controllers/user/user.controller'
+import stockController from '../b-controllers/stock/stock.controller'
+
 
 export default (
     config: ConfigInterface,
@@ -30,8 +32,9 @@ export default (
     apiRouter.use(container)
 
     apiRouter.use('/', index())
-    apiRouter.use('/users', userController())
     apiRouter.use('/token', tokenController())
+    apiRouter.use('/users', userController())
+    apiRouter.use('/stocks', stockController())
 
     router.use('/api', apiRouter)
 

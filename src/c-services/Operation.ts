@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EventEmitter } from 'events'
-import { EventTypeInterface } from './interfaces/OperationInterface'
+import { EventTypeInterface } from './interfaces/operation.interface'
 
 const createEventTypes = (eventTypes: Array<string>): EventTypeInterface => {
     const obj: EventTypeInterface = eventTypes.reduce((obj, eventType) => {

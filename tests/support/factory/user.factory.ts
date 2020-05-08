@@ -1,5 +1,5 @@
 import faker from 'faker'
-import UserModel from '../../../src/e-infra/data/models/user/UserModel'
+import UserModel from '../../../src/e-infra/data/models/user/user.model'
 
 export async function userFactory({
     id = faker.random.uuid(),

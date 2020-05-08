@@ -1,63 +1,58 @@
-import {
-    ValidateIf,
-    IsEmail,
-    IsDate,
-    IsNotEmpty,
-    ValidateNested,
-} from 'class-validator'
+import { IsNotEmpty, IsDate, ValidateNested } from 'class-validator'
 import UserStocks from './user.stocks'
 
-export default class User {
-    private _id: string
+export default class Stock {
+    @IsNotEmpty()
+    private _symbol: string
 
     @IsNotEmpty()
     private _name: string
 
-    @IsEmail()
     @IsNotEmpty()
-    private _email: string
+    private _exchange: string
 
-    @ValidateIf((o) => o._id === '')
     @IsNotEmpty()
-    private _password: string
+    private _website: string
 
     @ValidateNested()
     private _userStocks: UserStocks[] = []
 
     @IsDate()
-    private _createdAt: Date = new Date()
+    private _createdAt: Date
 
     @IsDate()
-    private _updatedAt: Date = new Date()
+    private _updatedAt: Date
 
     constructor(
-        id = '',
+        symbol: string,
         name: string,
-        email: string,
-        password: string,
+        exchange: string,
+        website: string,
         createdAt?: Date,
         updatedAt?: Date
     ) {
-        this._id = id
+        this._symbol = symbol
         this._name = name
-        this._email = email
-        this._password = password
+        this._exchange = exchange
+        this._website = website
         this._createdAt = createdAt || new Date()
         this._updatedAt = updatedAt || new Date()
     }
 
-    get id(): string {
-        return this._id
+    get symbol(): string {
+        return this._symbol
     }
 
     get name(): string {
         return this._name
     }
-    get email(): string {
-        return this._email
+
+    get exchange(): string {
+        return this._exchange
     }
-    get password(): string {
-        return this._password
+
+    get website(): string {
+        return this._website
     }
 
     set userStocks(userStocks: UserStocks[]) {
@@ -74,7 +69,6 @@ export default class User {
     get createdAt(): Date {
         return this._createdAt
     }
-
     set updatedAt(updatedAt: Date) {
         this._updatedAt = updatedAt
     }

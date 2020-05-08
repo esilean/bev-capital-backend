@@ -1,6 +1,6 @@
 import { app } from '../../setup'
-import { userFactory } from '../../support/factory/userFactory'
-import Token from '../../../src/d-domain/entities/Token'
+import { userFactory } from '../../support/factory/user.factory'
+import Token from '../../../src/d-domain/entities/token'
 
 describe('API -> POST /api/token', () => {
     describe('#createUser', () => {

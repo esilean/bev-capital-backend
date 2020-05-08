@@ -7,16 +7,17 @@ import {
     Lifetime,
 } from 'awilix'
 import { scopePerRequest } from 'awilix-express'
-import { CradleInterface } from './interfaces/CradleInterface'
-import { App } from '../../../a-app/App'
-import { Server } from '../../../a-app/Server'
-import Router from '../../../a-app/Router'
+import { CradleInterface } from './interfaces/cradle.interface'
+import { App } from '../../../a-app/app'
+import { Server } from '../../../a-app/server'
+import Router from '../../../a-app/router'
 import { config } from '../configs/config'
 import { logger } from '../utils/logging/logger'
-import errorHandler from '../utils/errors/errorHandler'
+import errorHandler from '../utils/errors/error.handler'
 import database from '../../data/sequelize'
-import Auth from '../authentication/Auth'
-import Jwt from '../authentication/Jwt'
+import Auth from '../authentication/auth'
+import Jwt from '../authentication/jwt'
+import { camelize } from '../utils/js/camelize'
 
 const container = createContainer<CradleInterface>({
     injectionMode: InjectionMode.CLASSIC,
@@ -39,7 +40,9 @@ container.loadModules(
     [['../../data/models/**/*.*(ts|js)', { register: asValue }]],
     {
         cwd: __dirname,
-        formatName: 'camelCase',
+        formatName: function (name) {
+            return camelize(name)
+        }
     }
 )
 
@@ -52,7 +55,9 @@ container.loadModules(
     ],
     {
         cwd: __dirname,
-        formatName: 'camelCase',
+        formatName: function (name) {
+            return camelize(name)
+        }
     }
 )
 
@@ -65,7 +70,9 @@ container.loadModules(
     ],
     {
         cwd: __dirname,
-        formatName: 'camelCase',
+        formatName: function (name) {
+            return camelize(name)
+        }
     }
 )
 
@@ -73,7 +80,9 @@ container.loadModules(
     [['../../../c-services/services/**/*.*(ts|js)', { register: asClass }]],
     {
         cwd: __dirname,
-        formatName: 'camelCase',
+        formatName: function (name) {
+            return camelize(name)
+        }
     }
 )
 

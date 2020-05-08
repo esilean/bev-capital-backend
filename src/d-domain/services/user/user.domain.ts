@@ -1,11 +1,11 @@
-import { UserDomainInterface } from '../../interfaces/UserDomainInterface'
-import { UserRepositoryInterface } from '../../../e-infra/data/interfaces/UserRepositoryInterface'
-import User from '../../entities/User'
+import { UserDomainInterface } from '../../interfaces/user.domain.interface'
+import { UserRepositoryInterface } from '../../../e-infra/data/interfaces/user.repository.interface'
+import User from '../../entities/user'
 import { FindOptions, CreateOptions } from 'sequelize/types'
 import { validateSync } from 'class-validator'
-import { toDB } from '../../../e-infra/data/repositories/mappers/userMapper'
-import { getErrors } from '../../../e-infra/cross-cutting/utils/errors/getErrorValidation'
-import { ValidationError } from '../../../e-infra/cross-cutting/utils/errors/errorHandler'
+import { toDB } from '../../../e-infra/data/repositories/mappers/user.mapper'
+import { getErrors } from '../../../e-infra/cross-cutting/utils/errors/get.error.validation'
+import { ValidationError } from '../../../e-infra/cross-cutting/utils/errors/error.handler'
 
 export default class UserDomain implements UserDomainInterface {
     private readonly userRepository: UserRepositoryInterface

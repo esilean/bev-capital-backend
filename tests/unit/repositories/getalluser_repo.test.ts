@@ -1,7 +1,7 @@
 import container, { db } from '../../setup'
-import { userFactory } from '../../support/factory/userFactory'
-import { UserRepositoryInterface } from '../../../src/e-infra/data/interfaces/UserRepositoryInterface'
-import User from '../../../src/d-domain/entities/User'
+import { userFactory } from '../../support/factory/user.factory'
+import { UserRepositoryInterface } from '../../../src/e-infra/data/interfaces/user.repository.interface'
+import User from '../../../src/d-domain/entities/user'
 
 describe('Infra -> Data -> Repositories -> User', () => {
     let userRepo: UserRepositoryInterface

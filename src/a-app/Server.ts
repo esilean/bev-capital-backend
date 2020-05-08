@@ -1,9 +1,9 @@
 import express, { Router, Application } from 'express'
 import { AddressInfo } from 'net'
-import { ServerInterface } from './interfaces/ServerInterface'
-import { ConfigInterface } from '../e-infra/cross-cutting/utils/interfaces/ConfigInterface'
+import { ServerInterface } from './interfaces/server.interface'
+import { ConfigInterface } from '../e-infra/cross-cutting/utils/interfaces/config.interface'
 import { Logger } from 'log4js'
-import { AuthInterface } from '../e-infra/cross-cutting/authentication/interfaces/AuthInterface'
+import { AuthInterface } from '../e-infra/cross-cutting/authentication/interfaces/auth.interface'
 
 export class Server implements ServerInterface {
     private appex: express.Application

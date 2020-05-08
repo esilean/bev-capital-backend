@@ -1,17 +1,17 @@
-import { GetTokenServiceInterface } from '../../interfaces/TokenServiceInterface'
-import { UserRepositoryInterface } from '../../../e-infra/data/interfaces/UserRepositoryInterface'
+import { GetTokenServiceInterface } from '../../interfaces/token.service.interface'
+import { UserRepositoryInterface } from '../../../e-infra/data/interfaces/user.repository.interface'
 
-import Operation from '../../Operation'
-import { EventTypeInterface } from '../../interfaces/OperationInterface'
+import Operation from '../../operation'
+import { EventTypeInterface } from '../../interfaces/operation.interface'
 import { validate } from 'class-validator'
-import { getErrors } from '../../../e-infra/cross-cutting/utils/errors/getErrorValidation'
-import Token from '../../../d-domain/entities/Token'
+import { getErrors } from '../../../e-infra/cross-cutting/utils/errors/get.error.validation'
+import Token from '../../../d-domain/entities/token'
 import { FindOptions } from 'sequelize/types'
 import { comparePassword } from '../../../e-infra/cross-cutting/authentication/encryption'
 import {
     TokenInterface,
     JwtInterface,
-} from '../../../e-infra/cross-cutting/authentication/interfaces/AuthInterface'
+} from '../../../e-infra/cross-cutting/authentication/interfaces/auth.interface'
 
 export default class GetTokenService extends Operation
     implements GetTokenServiceInterface {

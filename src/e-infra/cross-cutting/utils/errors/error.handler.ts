@@ -4,12 +4,20 @@ import {
     RequestInterface,
     ResponseInterface,
     NextInterface,
-} from '../interfaces/ExpressInterface'
+} from '../interfaces/express.interface'
 
 export class ValidationError extends Error {
     constructor(message: string) {
         super()
         this.name = 'ValidationError'
+        this.message = message
+    }
+}
+
+export class NotFoundError extends Error {
+    constructor(message: string) {
+        super()
+        this.name = 'NotFoundError'
         this.message = message
     }
 }

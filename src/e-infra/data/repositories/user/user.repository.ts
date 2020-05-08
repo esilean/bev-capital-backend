@@ -1,8 +1,9 @@
-import { UserModelInterface } from '../../models/user/UserModel'
-import { UserRepositoryInterface } from '../../interfaces/UserRepositoryInterface'
+import { UserModelInterface } from '../../models/user/user.model'
+import { UserRepositoryInterface } from '../../interfaces/user.repository.interface'
 import { FindOptions, CreateOptions } from 'sequelize/types'
-import { toEntity } from '../mappers/userMapper'
-import User from '../../../../d-domain/entities/User'
+import { toEntity } from '../mappers/user.mapper'
+import User from '../../../../d-domain/entities/user'
+import { NotFoundError } from '../../../cross-cutting/utils/errors/error.handler'
 
 export default class UserRepository implements UserRepositoryInterface {
     private userModel: UserModelInterface
@@ -19,7 +20,7 @@ export default class UserRepository implements UserRepositoryInterface {
 
     async getById(id: string, options?: FindOptions): Promise<User> {
         const user = await this.userModel.findByPk(id, options)
-        if (user === null) throw new Error('User cannot be found')
+        if (user === null) throw new NotFoundError('User cannot be found')
 
         return toEntity(user)
     }

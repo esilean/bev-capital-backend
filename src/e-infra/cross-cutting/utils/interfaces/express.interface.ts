@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { CradleInterface } from '../../ioc/interfaces/CradleInterface'
+import { CradleInterface } from '../../ioc/interfaces/cradle.interface'
 
 export interface RequestInterface<T> extends Request {
     body: T

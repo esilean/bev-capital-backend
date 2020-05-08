@@ -1,9 +1,9 @@
-import { CreateUserServiceInterface } from '../../interfaces/UserServiceInterface'
+import { CreateUserServiceInterface } from '../../interfaces/user.service.interface'
 
-import Operation from '../../Operation'
-import { EventTypeInterface } from '../../interfaces/OperationInterface'
-import User from '../../../d-domain/entities/User'
-import { UserDomainInterface } from '../../../d-domain/interfaces/UserDomainInterface'
+import Operation from '../../operation'
+import { EventTypeInterface } from '../../interfaces/operation.interface'
+import User from '../../../d-domain/entities/user'
+import { UserDomainInterface } from '../../../d-domain/interfaces/user.domain.interface'
 
 export default class CreateUserService extends Operation
     implements CreateUserServiceInterface {

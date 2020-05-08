@@ -6,14 +6,14 @@ import {
     GetAllUserServiceInterface,
     CreateUserServiceInterface,
     DestroyUserServiceInterface,
-} from '../../c-services/interfaces/UserServiceInterface'
+} from '../../c-services/interfaces/user.service.interface'
 import {
     RequestInterface,
     ResponseInterface,
     NextInterface,
-} from '../../e-infra/cross-cutting/utils/interfaces/ExpressInterface'
-import User from '../../d-domain/entities/User'
-import { AuthInterface } from '../../e-infra/cross-cutting/authentication/interfaces/AuthInterface'
+} from '../../e-infra/cross-cutting/utils/interfaces/express.interface'
+import User from '../../d-domain/entities/user'
+import { AuthInterface } from '../../e-infra/cross-cutting/authentication/interfaces/auth.interface'
 
 function userController(
     auth: AuthInterface,

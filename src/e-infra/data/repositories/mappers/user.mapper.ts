@@ -1,5 +1,5 @@
-import User from '../../../../d-domain/entities/User'
-import { UserInterface } from '../../interfaces/UserRepositoryInterface'
+import User from '../../../../d-domain/entities/user'
+import { UserInterface } from '../../interfaces/user.repository.interface'
 
 export function toEntity(values: UserInterface): User {
     const { id, name, email, password, createdAt, updatedAt } = values

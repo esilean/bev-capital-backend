@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import passport, { PassportStatic } from 'passport'
 import { Strategy, ExtractJwt } from 'passport-jwt'
-import { AuthInterface } from './interfaces/AuthInterface'
-import { UserRepositoryInterface } from '../../data/interfaces/UserRepositoryInterface'
-import { ConfigInterface } from '../utils/interfaces/ConfigInterface'
+import { AuthInterface } from './interfaces/auth.interface'
+import { UserRepositoryInterface } from '../../data/interfaces/user.repository.interface'
+import { ConfigInterface } from '../utils/interfaces/config.interface'
 import { Handler } from 'express'
 
 export default class Auth implements AuthInterface {

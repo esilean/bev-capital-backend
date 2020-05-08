@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize-typescript'
-import { ConfigInterface } from '../../cross-cutting/utils/interfaces/ConfigInterface'
+import { ConfigInterface } from '../../cross-cutting/utils/interfaces/config.interface'
 import path from 'path'
 
 export default (config: ConfigInterface): Sequelize => {

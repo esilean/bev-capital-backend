@@ -1,9 +1,9 @@
 import request from 'supertest'
 import { container } from '../src/e-infra/cross-cutting/ioc/container'
-import { ServerInterface } from '../src/a-app/interfaces/ServerInterface'
+import { ServerInterface } from '../src/a-app/interfaces/server.interface'
 import { Sequelize } from 'sequelize/types'
-import cleanDb from './support/cleanDB'
-import { JwtInterface } from '../src/e-infra/cross-cutting/authentication/interfaces/AuthInterface'
+import cleanDb from './support/db'
+import { JwtInterface } from '../src/e-infra/cross-cutting/authentication/interfaces/auth.interface'
 
 beforeEach(cleanDb)
 

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import jwt from 'jsonwebtoken'
-import { TokenInterface, JwtInterface } from './interfaces/AuthInterface'
-import { ConfigInterface } from '../../cross-cutting/utils/interfaces/ConfigInterface'
+import { TokenInterface, JwtInterface } from './interfaces/auth.interface'
+import { ConfigInterface } from '../utils/interfaces/config.interface'
 
 export default class Jwt implements JwtInterface {
     private config: ConfigInterface

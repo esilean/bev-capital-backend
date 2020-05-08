@@ -6,10 +6,10 @@ import {
     RequestInterface,
     ResponseInterface,
     NextInterface,
-} from '../../e-infra/cross-cutting/utils/interfaces/ExpressInterface'
-import { GetTokenServiceInterface } from '../../c-services/interfaces/TokenServiceInterface'
-import { TokenInterface } from '../../e-infra/cross-cutting/authentication/interfaces/AuthInterface'
-import Token from '../../d-domain/entities/Token'
+} from '../../e-infra/cross-cutting/utils/interfaces/express.interface'
+import { GetTokenServiceInterface } from '../../c-services/interfaces/token.service.interface'
+import { TokenInterface } from '../../e-infra/cross-cutting/authentication/interfaces/auth.interface'
+import Token from '../../d-domain/entities/token'
 
 function tokenController(getTokenService: GetTokenServiceInterface): unknown {
     return {

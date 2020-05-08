@@ -1,5 +1,5 @@
 import { FindOptions, CreateOptions } from 'sequelize/types'
-import User from '../entities/User'
+import User from '../entities/user'
 
 export interface UserDomainInterface {
     getAll(options?: FindOptions): Promise<User[]>

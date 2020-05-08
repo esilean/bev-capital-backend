@@ -1,5 +1,5 @@
 import { FindOptions, CreateOptions } from 'sequelize/types'
-import User from '../../../d-domain/entities/User'
+import User from '../../../d-domain/entities/user'
 
 export interface UserInterface {
     id?: string
