@@ -11,7 +11,7 @@ import {
     HasMany,
 } from 'sequelize-typescript'
 import { encryptPassword } from '../../../cross-cutting/authentication/encryption'
-import UserStockModel from './user.stock..model'
+import UserStockModel from './user.stock.model'
 
 @Table({
     tableName: 'users',

@@ -1,6 +1,6 @@
 import { FindOptions, CreateOptions } from 'sequelize/types'
 import UserStock from '../../../../d-domain/entities/user.stock'
-import { UserStockModelInterface } from '../../models/user/user.stock..model'
+import { UserStockModelInterface } from '../../models/user/user.stock.model'
 import { toEntity } from '../mappers/user.stock.mapper'
 import { NotFoundError } from '../../../cross-cutting/utils/errors/error.handler'
 import { UserStockRepositoryInterface } from '../../interfaces/user.stock.repository.interface'
