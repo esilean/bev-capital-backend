@@ -13,48 +13,48 @@ import Jwt from '../authentication/jwt'
 import { camelize } from '../utils/js/camelize'
 
 const container = createContainer<CradleInterface>({
-    injectionMode: InjectionMode.CLASSIC,
+  injectionMode: InjectionMode.CLASSIC,
 })
 
 container.register({
-    application: asClass(App).singleton(),
-    server: asClass(Server).singleton(),
-    router: asFunction(Router).singleton(),
-    container: asValue(scopePerRequest(container)),
-    config: asValue(config),
-    logger: asFunction(logger),
-    errorHandler: asValue(errorHandler),
-    database: asFunction(database).singleton(),
-    auth: asClass(Auth).singleton(),
-    jwt: asClass(Jwt).singleton(),
+  application: asClass(App).singleton(),
+  server: asClass(Server).singleton(),
+  router: asFunction(Router).singleton(),
+  container: asValue(scopePerRequest(container)),
+  config: asValue(config),
+  logger: asFunction(logger),
+  errorHandler: asValue(errorHandler),
+  database: asFunction(database).singleton(),
+  auth: asClass(Auth).singleton(),
+  jwt: asClass(Jwt).singleton(),
 })
 
 container.loadModules([['../../data/models/**/*.*(ts|js)', { register: asValue }]], {
-    cwd: __dirname,
-    formatName: function (name) {
-        return camelize(name)
-    },
+  cwd: __dirname,
+  formatName: function (name) {
+    return camelize(name)
+  },
 })
 
 container.loadModules([['../../data/repositories/**/*.*(ts|js)', { register: asClass, lifetime: Lifetime.SINGLETON }]], {
-    cwd: __dirname,
-    formatName: function (name) {
-        return camelize(name)
-    },
+  cwd: __dirname,
+  formatName: function (name) {
+    return camelize(name)
+  },
 })
 
 container.loadModules([['../../../c-services/services/**/*.*(ts|js)', { register: asClass }]], {
-    cwd: __dirname,
-    formatName: function (name) {
-        return camelize(name)
-    },
+  cwd: __dirname,
+  formatName: function (name) {
+    return camelize(name)
+  },
 })
 
 container.loadModules([['../../../d-domain/services/**/*.*(ts|js)', { register: asClass, lifetime: Lifetime.SINGLETON }]], {
-    cwd: __dirname,
-    formatName: function (name) {
-        return camelize(name)
-    },
+  cwd: __dirname,
+  formatName: function (name) {
+    return camelize(name)
+  },
 })
 
 export { container }

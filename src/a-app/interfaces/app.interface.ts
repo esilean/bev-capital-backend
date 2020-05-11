@@ -1,3 +1,3 @@
 export interface AppInterface {
-    start(): void
+  start(): void
 }

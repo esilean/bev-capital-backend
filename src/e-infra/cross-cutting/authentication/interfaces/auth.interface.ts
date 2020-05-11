@@ -3,18 +3,18 @@
 import { Handler } from 'express'
 
 export interface TokenInterface {
-    id: string
-    name: string
-    email: string
-    token?: string
+  id: string
+  name: string
+  email: string
+  token?: string
 }
 
 export interface JwtInterface {
-    signin(payload: TokenInterface): string
-    verify(token: string): string | Record<string, any>
+  signin(payload: TokenInterface): string
+  verify(token: string): string | Record<string, any>
 }
 
 export interface AuthInterface {
-    initialize(): Handler
-    authenticate(): any
+  initialize(): Handler
+  authenticate(): any
 }

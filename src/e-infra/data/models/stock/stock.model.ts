@@ -1,4 +1,4 @@
-import { Table, Model, Column, CreatedAt, UpdatedAt, DataType, Length, HasMany } from 'sequelize-typescript'
+import { Table, Model, Column, CreatedAt, UpdatedAt, DataType, Length, HasMany, PrimaryKey } from 'sequelize-typescript'
 import UserStockModel from '../user/user.stock.model'
 import StockPriceModel from './stock.price.model'
 
@@ -6,10 +6,10 @@ import StockPriceModel from './stock.price.model'
   tableName: 'stocks',
 })
 export default class StockModel extends Model<StockModel> {
+  @PrimaryKey
   @Length({ max: 20 })
   @Column({
     type: DataType.STRING,
-    primaryKey: true,
     allowNull: false,
   })
   symbol!: string

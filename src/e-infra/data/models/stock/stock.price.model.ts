@@ -1,10 +1,11 @@
-import { Table, Model, Column, CreatedAt, UpdatedAt, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript'
+import { Table, Model, Column, CreatedAt, UpdatedAt, DataType, ForeignKey, BelongsTo, PrimaryKey } from 'sequelize-typescript'
 import StockModel from './stock.model'
 
 @Table({
   tableName: 'stock_prices',
 })
 export default class StockPriceModel extends Model<StockPriceModel> {
+  @PrimaryKey
   @ForeignKey(() => StockModel)
   @Column({
     type: DataType.STRING,
@@ -12,6 +13,7 @@ export default class StockPriceModel extends Model<StockPriceModel> {
   })
   symbol!: string
 
+  @PrimaryKey
   @Column({
     type: DataType.DATE,
     allowNull: false,
@@ -53,7 +55,10 @@ export default class StockPriceModel extends Model<StockPriceModel> {
   })
   latestPrice!: number
 
-  @Column({ field: 'latest_price_time' })
+  @Column({
+    type: DataType.DATE,
+    field: 'latest_price_time',
+  })
   latestPriceTime!: Date
 
   @Column({
@@ -63,7 +68,10 @@ export default class StockPriceModel extends Model<StockPriceModel> {
   })
   delayedPrice!: number
 
-  @Column({ field: 'delayed_price_time' })
+  @Column({
+    type: DataType.DATE,
+    field: 'delayed_price_time',
+  })
   delayedPriceTime!: Date
 
   @Column({

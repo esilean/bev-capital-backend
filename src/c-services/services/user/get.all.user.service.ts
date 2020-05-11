@@ -6,39 +6,39 @@ import { UserDomainInterface } from '../../../d-domain/interfaces/user.domain.in
 import { optUserAndStocks } from './options'
 
 export default class GetAllUserService extends Operation implements GetAllUserServiceInterface {
-    private readonly userDomain: UserDomainInterface
+  private readonly userDomain: UserDomainInterface
 
-    constructor(userDomain: UserDomainInterface) {
-        super(['SUCCESS', 'ERROR'])
+  constructor(userDomain: UserDomainInterface) {
+    super(['SUCCESS', 'ERROR'])
 
-        this.userDomain = userDomain
-    }
+    this.userDomain = userDomain
+  }
 
-    getEventType(): EventTypeInterface {
-        return this.getEventTypes()
-    }
+  getEventType(): EventTypeInterface {
+    return this.getEventTypes()
+  }
 
-    execute(): void {
-        const { SUCCESS, ERROR } = this.getEventType()
+  execute(): void {
+    const { SUCCESS, ERROR } = this.getEventType()
 
-        this.userDomain
-            .getAll(optUserAndStocks)
-            .then((usersFound) => {
-                const users = usersFound.map((user) => {
-                    const { id, name, email, userStocks, createdAt, updatedAt } = user
+    this.userDomain
+      .getAll(optUserAndStocks)
+      .then((usersFound) => {
+        const users = usersFound.map((user) => {
+          const { id, name, email, userStocks, createdAt, updatedAt } = user
 
-                    const userStocksR = userStocks.map((us) => {
-                        const { id, symbol, qty, avgPrice } = us
-                        return { id, symbol, qty, avgPrice }
-                    })
+          const userStocksR = userStocks.map((us) => {
+            const { id, symbol, qty, avgPrice } = us
+            return { id, symbol, qty, avgPrice }
+          })
 
-                    return { id, name, email, stocks: userStocksR, createdAt, updatedAt }
-                })
+          return { id, name, email, stocks: userStocksR, createdAt, updatedAt }
+        })
 
-                this.emit(SUCCESS, users)
-            })
-            .catch((error) => {
-                this.emit(ERROR, error)
-            })
-    }
+        this.emit(SUCCESS, users)
+      })
+      .catch((error) => {
+        this.emit(ERROR, error)
+      })
+  }
 }

@@ -9,53 +9,53 @@ import { ValidationError } from '../../../e-infra/cross-cutting/utils/errors/err
 import { StockRepositoryInterface } from '../../../e-infra/data/interfaces/stock.repository.interface'
 
 export default class UserStockDomain implements UserStockDomainInterface {
-    private readonly userStockRepository: UserStockRepositoryInterface
-    private readonly stockRepository: StockRepositoryInterface
+  private readonly userStockRepository: UserStockRepositoryInterface
+  private readonly stockRepository: StockRepositoryInterface
 
-    constructor(userStockRepository: UserStockRepositoryInterface, stockRepository: StockRepositoryInterface) {
-        this.userStockRepository = userStockRepository
-        this.stockRepository = stockRepository
+  constructor(userStockRepository: UserStockRepositoryInterface, stockRepository: StockRepositoryInterface) {
+    this.userStockRepository = userStockRepository
+    this.stockRepository = stockRepository
+  }
+
+  async getById(id: string, options?: FindOptions): Promise<UserStock> {
+    return await this.userStockRepository.getById(id, options)
+  }
+
+  async create(newUserStock: UserStock, options?: CreateOptions): Promise<UserStock> {
+    const errors = validateSync(newUserStock, {
+      validationError: { target: false },
+    })
+    if (errors.length > 0) {
+      const error: Error = new ValidationError(getErrors(errors))
+      throw error
     }
 
-    async getById(id: string, options?: FindOptions): Promise<UserStock> {
-        return await this.userStockRepository.getById(id, options)
+    //validar stock exists
+    await this.stockRepository.getBySymbol(newUserStock.symbol)
+
+    //validar user stock dup
+    const opt: FindOptions = {
+      limit: 1,
+      attributes: ['id'],
+      where: { userId: newUserStock.userId, symbol: newUserStock.symbol },
+    }
+    const userStockExists = await this.userStockRepository.getAll(opt)
+    if (userStockExists.length > 0) {
+      const error: Error = new ValidationError('Stock already added to user')
+      throw error
     }
 
-    async create(newUserStock: UserStock, options?: CreateOptions): Promise<UserStock> {
-        const errors = validateSync(newUserStock, {
-            validationError: { target: false },
-        })
-        if (errors.length > 0) {
-            const error: Error = new ValidationError(getErrors(errors))
-            throw error
-        }
+    return this.userStockRepository
+      .create(toDB(newUserStock), options)
+      .then((userStockCreated) => {
+        return userStockCreated
+      })
+      .catch((error) => {
+        throw error
+      })
+  }
 
-        //validar stock exists
-        await this.stockRepository.getBySymbol(newUserStock.symbol)
-
-        //validar user stock dup
-        const opt: FindOptions = {
-            limit: 1,
-            attributes: ['id'],
-            where: { userId: newUserStock.userId, symbol: newUserStock.symbol },
-        }
-        const userStockExists = await this.userStockRepository.getAll(opt)
-        if (userStockExists.length > 0) {
-            const error: Error = new ValidationError('Stock already added to user')
-            throw error
-        }
-
-        return this.userStockRepository
-            .create(toDB(newUserStock), options)
-            .then((userStockCreated) => {
-                return userStockCreated
-            })
-            .catch((error) => {
-                throw error
-            })
-    }
-
-    async destroy(userId: string, symbol: string): Promise<boolean> {
-        return await this.userStockRepository.destroy(userId, symbol)
-    }
+  async destroy(userId: string, symbol: string): Promise<boolean> {
+    return await this.userStockRepository.destroy(userId, symbol)
+  }
 }

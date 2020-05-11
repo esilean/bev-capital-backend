@@ -12,28 +12,30 @@ import tokenController from '../b-controllers/token/token.controller'
 import userController from '../b-controllers/user/user.controller'
 import userStockController from '../b-controllers/user/user.stock.controller'
 import stockController from '../b-controllers/stock/stock.controller'
+import stockPriceController from '../b-controllers/stock/stock.price.controller'
 
 export default (config: ConfigInterface, logger: Logger, container: any, errorHandler: any): Router => {
-    const router = Router()
+  const router = Router()
 
-    if (config.env !== 'test') {
-        router.use(morgan(logger))
-    }
+  if (config.env !== 'test') {
+    router.use(morgan(logger))
+  }
 
-    const apiRouter = Router()
-    apiRouter.use(cors())
-    apiRouter.use(compression())
-    apiRouter.use(bodyParser.json())
-    apiRouter.use(container)
+  const apiRouter = Router()
+  apiRouter.use(cors())
+  apiRouter.use(compression())
+  apiRouter.use(bodyParser.json())
+  apiRouter.use(container)
 
-    apiRouter.use('/', index())
-    apiRouter.use('/token', tokenController())
-    apiRouter.use('/users', userController())
-    apiRouter.use('/users', userStockController())
-    apiRouter.use('/stocks', stockController())
+  apiRouter.use('/', index())
+  apiRouter.use('/token', tokenController())
+  apiRouter.use('/users', userController())
+  apiRouter.use('/usersstock', userStockController())
+  apiRouter.use('/stocks', stockController())
+  apiRouter.use('/stocksprice', stockPriceController())
 
-    router.use('/api', apiRouter)
+  router.use('/api', apiRouter)
 
-    router.use(errorHandler)
-    return router
+  router.use(errorHandler)
+  return router
 }

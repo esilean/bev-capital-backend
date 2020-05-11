@@ -1,16 +1,20 @@
 import { StockPriceDomainInterface } from '../../interfaces/stock.price.domain.interface'
 import { StockPriceRepositoryInterface } from '../../../e-infra/data/interfaces/stock.price.repository.interface'
 import StockPrice from '../../entities/stock.prices'
-import { FindOptions, CreateOptions, ValidationError, UpdateOptions } from 'sequelize/types'
+import { FindOptions, CreateOptions, UpdateOptions } from 'sequelize/types'
 import { validateSync } from 'class-validator'
 import { getErrors } from '../../../e-infra/cross-cutting/utils/errors/get.error.validation'
 import { toDB } from '../../../e-infra/data/repositories/mappers/stock.price.mapper'
+import { ValidationError } from '../../../e-infra/cross-cutting/utils/errors/error.handler'
+import { StockRepositoryInterface } from '../../../e-infra/data/interfaces/stock.repository.interface'
 
 export default class StockPriceDomain implements StockPriceDomainInterface {
   private readonly stockPriceRepository: StockPriceRepositoryInterface
+  private readonly stockRepository: StockRepositoryInterface
 
-  constructor(stockPriceRepository: StockPriceRepositoryInterface) {
+  constructor(stockPriceRepository: StockPriceRepositoryInterface, stockRepository: StockRepositoryInterface) {
     this.stockPriceRepository = stockPriceRepository
+    this.stockRepository = stockRepository
   }
 
   async getAll(options?: FindOptions): Promise<StockPrice[]> {
@@ -25,6 +29,8 @@ export default class StockPriceDomain implements StockPriceDomainInterface {
       const error: Error = new ValidationError(getErrors(errors))
       throw error
     }
+
+    await this.stockRepository.getBySymbol(newStockPrice.symbol)
 
     //validar stock dup
     const opt: FindOptions = {
@@ -48,9 +54,19 @@ export default class StockPriceDomain implements StockPriceDomainInterface {
       })
   }
 
-  update(symbol: string, datePrice: Date, newStockPrice: StockPrice, options?: UpdateOptions): Promise<StockPrice> {
+  async update(newStockPrice: StockPrice, options: UpdateOptions): Promise<StockPrice> {
+    const errors = validateSync(newStockPrice, {
+      validationError: { target: false },
+    })
+    if (errors.length > 0) {
+      const error: Error = new ValidationError(getErrors(errors))
+      throw error
+    }
+
+    await this.stockRepository.getBySymbol(newStockPrice.symbol)
+
     return this.stockPriceRepository
-      .update(symbol, datePrice, toDB(newStockPrice), options)
+      .update(toDB(newStockPrice), options)
       .then((stockPriceUpdated) => {
         return stockPriceUpdated
       })

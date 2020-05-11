@@ -2,10 +2,11 @@ import request from 'supertest'
 import { container } from '../src/e-infra/cross-cutting/ioc/container'
 import { ServerInterface } from '../src/a-app/interfaces/server.interface'
 import { Sequelize } from 'sequelize/types'
-import cleanDb from './support/db'
+import { cleanRecords, cleanUsers } from './support/db'
 import { JwtInterface } from '../src/e-infra/cross-cutting/authentication/interfaces/auth.interface'
 
-beforeEach(cleanDb)
+beforeEach(cleanRecords)
+beforeAll(cleanUsers)
 
 export default container
 export const server = container.resolve<ServerInterface>('server')

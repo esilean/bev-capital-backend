@@ -5,30 +5,30 @@ import { EventTypeInterface } from '../../interfaces/operation.interface'
 import { UserDomainInterface } from '../../../d-domain/interfaces/user.domain.interface'
 
 export default class DestroyUserService extends Operation implements DestroyUserServiceInterface {
-    private readonly userDomain: UserDomainInterface
+  private readonly userDomain: UserDomainInterface
 
-    constructor(userDomain: UserDomainInterface) {
-        super(['SUCCESS', 'ERROR', 'NOT_FOUND', 'VALIDATION_ERROR'])
+  constructor(userDomain: UserDomainInterface) {
+    super(['SUCCESS', 'ERROR', 'NOT_FOUND', 'VALIDATION_ERROR'])
 
-        this.userDomain = userDomain
-    }
+    this.userDomain = userDomain
+  }
 
-    getEventType(): EventTypeInterface {
-        return this.getEventTypes()
-    }
+  getEventType(): EventTypeInterface {
+    return this.getEventTypes()
+  }
 
-    execute(id: string): void {
-        const { SUCCESS, ERROR, NOT_FOUND, VALIDATION_ERROR } = this.getEventType()
+  execute(id: string): void {
+    const { SUCCESS, ERROR, NOT_FOUND, VALIDATION_ERROR } = this.getEventType()
 
-        this.userDomain
-            .destroy(id)
-            .then((destroyed) => {
-                if (destroyed) this.emit(SUCCESS, null)
-                else this.emit(NOT_FOUND, null)
-            })
-            .catch((error) => {
-                if (error.name === 'ValidationError') this.emit(VALIDATION_ERROR, error)
-                else this.emit(ERROR, error)
-            })
-    }
+    this.userDomain
+      .destroy(id)
+      .then((destroyed) => {
+        if (destroyed) this.emit(SUCCESS, null)
+        else this.emit(NOT_FOUND, null)
+      })
+      .catch((error) => {
+        if (error.name === 'ValidationError') this.emit(VALIDATION_ERROR, error)
+        else this.emit(ERROR, error)
+      })
+  }
 }

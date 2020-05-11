@@ -51,6 +51,7 @@ export function toDB(stockPrice: StockPrice): object {
     delayedPriceTime,
     previousClosePrice,
   } = stockPrice
+
   return {
     symbol,
     datePrice,

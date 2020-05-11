@@ -9,55 +9,55 @@ import { StockRepositoryInterface } from '../../../e-infra/data/interfaces/stock
 import { UserStockRepositoryInterface } from '../../../e-infra/data/interfaces/user.stock.repository.interface'
 
 export default class StockDomain implements StockDomainInterface {
-    private readonly stockRepository: StockRepositoryInterface
-    private readonly userStockRepository: UserStockRepositoryInterface
+  private readonly stockRepository: StockRepositoryInterface
+  private readonly userStockRepository: UserStockRepositoryInterface
 
-    constructor(stockRepository: StockRepositoryInterface, userStockRepository: UserStockRepositoryInterface) {
-        this.stockRepository = stockRepository
-        this.userStockRepository = userStockRepository
+  constructor(stockRepository: StockRepositoryInterface, userStockRepository: UserStockRepositoryInterface) {
+    this.stockRepository = stockRepository
+    this.userStockRepository = userStockRepository
+  }
+  async getAll(options?: FindOptions): Promise<Stock[]> {
+    return await this.stockRepository.getAll(options)
+  }
+
+  async getBySymbol(symbol: string, options?: FindOptions): Promise<Stock> {
+    return await this.stockRepository.getBySymbol(symbol, options)
+  }
+
+  async create(newStock: Stock, options?: CreateOptions): Promise<Stock> {
+    const errors = validateSync(newStock, {
+      validationError: { target: false },
+    })
+    if (errors.length > 0) {
+      const error: Error = new ValidationError(getErrors(errors))
+      throw error
     }
-    async getAll(options?: FindOptions): Promise<Stock[]> {
-        return await this.stockRepository.getAll(options)
+
+    //validar stock dup
+    const opt: FindOptions = { limit: 1, attributes: ['symbol'], where: { symbol: newStock.symbol } }
+    const stockExists = await this.stockRepository.getAll(opt)
+    if (stockExists.length > 0) {
+      const error: Error = new ValidationError('Stock already exists')
+      throw error
     }
 
-    async getBySymbol(symbol: string, options?: FindOptions): Promise<Stock> {
-        return await this.stockRepository.getBySymbol(symbol, options)
+    return this.stockRepository
+      .create(toDB(newStock), options)
+      .then((stockCreated) => {
+        return stockCreated
+      })
+      .catch((error) => {
+        throw error
+      })
+  }
+  async destroy(symbol: string): Promise<boolean> {
+    const opt: FindOptions = { limit: 1, attributes: ['symbol'], where: { symbol } }
+    const userStocks = await this.userStockRepository.getAll(opt)
+    if (userStocks.length > 0) {
+      const error: Error = new ValidationError('Stock cannot be deleted')
+      throw error
     }
 
-    async create(newStock: Stock, options?: CreateOptions): Promise<Stock> {
-        const errors = validateSync(newStock, {
-            validationError: { target: false },
-        })
-        if (errors.length > 0) {
-            const error: Error = new ValidationError(getErrors(errors))
-            throw error
-        }
-
-        //validar stock dup
-        const opt: FindOptions = { limit: 1, attributes: ['symbol'], where: { symbol: newStock.symbol } }
-        const stockExists = await this.stockRepository.getAll(opt)
-        if (stockExists.length > 0) {
-            const error: Error = new ValidationError('Stock already exists')
-            throw error
-        }
-
-        return this.stockRepository
-            .create(toDB(newStock), options)
-            .then((stockCreated) => {
-                return stockCreated
-            })
-            .catch((error) => {
-                throw error
-            })
-    }
-    async destroy(symbol: string): Promise<boolean> {
-        const opt: FindOptions = { limit: 1, attributes: ['symbol'], where: { symbol } }
-        const userStocks = await this.userStockRepository.getAll(opt)
-        if (userStocks.length > 0) {
-            const error: Error = new ValidationError('Stock cannot be deleted')
-            throw error
-        }
-
-        return await this.stockRepository.destroy(symbol)
-    }
+    return await this.stockRepository.destroy(symbol)
+  }
 }

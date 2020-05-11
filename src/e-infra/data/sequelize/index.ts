@@ -3,14 +3,14 @@ import { ConfigInterface } from '../../cross-cutting/utils/interfaces/config.int
 import path from 'path'
 
 export default (config: ConfigInterface): Sequelize => {
-    let sequelize: Sequelize
-    if (config.env === 'production') {
-        sequelize = new Sequelize(config.db.url, config.db)
-    } else {
-        sequelize = new Sequelize(config.db)
-    }
+  let sequelize: Sequelize
+  if (config.env === 'production') {
+    sequelize = new Sequelize(config.db.url, config.db)
+  } else {
+    sequelize = new Sequelize(config.db)
+  }
 
-    sequelize.addModels([path.join(__dirname, '../models/**/*')])
+  sequelize.addModels([path.join(__dirname, '../models/**/*')])
 
-    return sequelize
+  return sequelize
 }

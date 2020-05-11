@@ -1,37 +1,45 @@
-import { IsNotEmpty, IsDate, MaxLength } from 'class-validator'
+import { IsNotEmpty, IsDate, MaxLength, IsNumber } from 'class-validator'
 
 export default class StockPrice {
   @MaxLength(20)
   @IsNotEmpty()
   private _symbol: string
 
+  @IsDate()
   @IsNotEmpty()
   private _datePrice: Date
 
+  @IsNumber()
   @IsNotEmpty()
   private _open: number
 
+  @IsNumber()
   @IsNotEmpty()
   private _close: number
 
+  @IsNumber()
   @IsNotEmpty()
   private _high: number
 
+  @IsNumber()
   @IsNotEmpty()
   private _low: number
 
+  @IsNumber()
   @IsNotEmpty()
   private _latestPrice: number
 
   @IsDate()
   private _latestPriceTime: Date
 
+  @IsNumber()
   @IsNotEmpty()
   private _delayedPrice: number
 
   @IsDate()
   private _delayedPriceTime: Date
 
+  @IsNumber()
   private _previousClosePrice: number
 
   @IsDate()

@@ -48,7 +48,7 @@ module.exports = {
           defaultValue: 0,
         },
         latest_price_time: {
-          type: Sequelize.DECIMAL(10, 2),
+          type: Sequelize.DATE,
           allowNull: true,
         },
         delayed_price: {
@@ -57,7 +57,7 @@ module.exports = {
           defaultValue: 0,
         },
         delayed_price_time: {
-          type: Sequelize.DECIMAL(10, 2),
+          type: Sequelize.DATE,
           allowNull: true,
         },
         previous_close_price: {

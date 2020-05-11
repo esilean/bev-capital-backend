@@ -25,12 +25,12 @@ export default class StockPriceRepository implements StockPriceRepositoryInterfa
   }
 
   async update(values: object, options: UpdateOptions): Promise<StockPrice> {
-    const stockPriceUpdated = await this.stockPriceModel.update(values, options)
+    const rowUpdated = await this.stockPriceModel.update(values, options)
 
-    if (stockPriceUpdated[0] === 0) throw new NotFoundError('StockPrice cannot be found')
+    if (rowUpdated[0] === 0) throw new NotFoundError('StockPrice cannot be found')
 
-    const stockPrice = stockPriceUpdated[1][0]
-    return toEntity(stockPrice)
+    const stockPriceUpdated = await this.getAll(options)
+    return toEntity(stockPriceUpdated[0])
   }
 
   async destroy(symbol: string, datePrice: Date): Promise<boolean> {
