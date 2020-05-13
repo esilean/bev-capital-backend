@@ -22,6 +22,7 @@ describe('API -> POST /api/token', () => {
 
       expect(response.status).toEqual(200)
       expect(response.body).toHaveProperty('token')
+
       done()
     })
 

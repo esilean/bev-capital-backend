@@ -1,16 +1,11 @@
-import { app, jwt } from '../../setup'
-import { userFactory } from '../../support/factory/user.factory'
+import { app } from '../../setup'
+import { getToken } from '../../support/getToken'
 
 describe('API -> GET /api/users', () => {
   describe('#getAllUsers', () => {
     let token = ''
     beforeEach(async () => {
-      const user = await userFactory({})
-      token = jwt.signin({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      })
+      token = await getToken()
     })
 
     it('when there are users', async (done) => {
@@ -18,6 +13,7 @@ describe('API -> GET /api/users', () => {
 
       expect(response.status).toEqual(200)
       expect(response.body.length).toBeGreaterThan(0)
+
       done()
     })
 

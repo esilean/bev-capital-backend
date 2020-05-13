@@ -1,18 +1,13 @@
-import { app, jwt } from '../../setup'
-import { userFactory } from '../../support/factory/user.factory'
+import { app } from '../../setup'
 import { stockFactory } from '../../support/factory/stock.factory'
+import { getToken } from '../../support/getToken'
 
 describe('API -> GET /api/stocks', () => {
   describe('#getStock', () => {
     let token = ''
     let symbol = ''
     beforeEach(async () => {
-      const user = await userFactory({})
-      token = jwt.signin({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      })
+      token = await getToken()
 
       const stock = await stockFactory({})
       symbol = stock.symbol
@@ -23,6 +18,7 @@ describe('API -> GET /api/stocks', () => {
 
       expect(response.status).toEqual(200)
       expect(response.body).toHaveProperty('symbol')
+
       done()
     })
 

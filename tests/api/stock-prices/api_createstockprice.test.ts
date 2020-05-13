@@ -12,7 +12,7 @@ describe('API -> POST /api/stocksprice', () => {
     })
 
     it('when creating stock price is ok', async (done) => {
-      const symbol = faker.lorem.word()
+      const symbol = faker.random.alphaNumeric(15)
       await stockFactory({ symbol })
 
       const data = {
@@ -33,6 +33,7 @@ describe('API -> POST /api/stocksprice', () => {
 
       expect(response.status).toEqual(201)
       expect(response.body).toHaveProperty('symbol')
+
       done()
     })
 
@@ -57,7 +58,7 @@ describe('API -> POST /api/stocksprice', () => {
     })
 
     it('when stock price already exists', async (done) => {
-      const symbol = faker.lorem.word()
+      const symbol = faker.random.alphaNumeric(15)
       await stockFactory({ symbol })
       await stockPriceFactory({ symbol, datePrice: new Date(1999, 1, 1) })
 

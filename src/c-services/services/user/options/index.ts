@@ -6,5 +6,25 @@ export const optUser: FindOptions = {
 
 export const optUserAndStocks: FindOptions = {
   attributes: ['id', 'name', 'email', 'createdAt', 'updatedAt'],
-  include: ['userStocks'],
+  include: [
+    {
+      association: 'userStocks',
+      required: false,
+      include: [
+        {
+          association: 'stock',
+          required: false,
+          include: [
+            {
+              association: 'stockPrices',
+              required: false,
+              where: {
+                datePrice: new Date(new Date().toDateString()),
+              },
+            },
+          ],
+        },
+      ],
+    },
+  ],
 }

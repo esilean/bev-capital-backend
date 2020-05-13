@@ -2,7 +2,7 @@ import faker from 'faker'
 import StockPriceModel from '../../../src/e-infra/data/models/stock/stock.price.model'
 
 export async function stockPriceFactory({
-  symbol = faker.lorem.word(),
+  symbol = faker.random.alphaNumeric(15),
   datePrice = new Date(faker.date.recent()),
   open = faker.random.number(),
   close = faker.random.number(),

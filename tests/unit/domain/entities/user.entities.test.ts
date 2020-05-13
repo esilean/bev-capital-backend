@@ -27,6 +27,7 @@ describe('Domain -> Entities -> User', () => {
 
       const stock = new Stock('APPL', 'Apple', 'NASDAQ', 'apple.com')
       const userStock = new UserStocks('', newUser.id, stock.symbol, 0, 0)
+      userStock.stock = stock
       newUser.userStocks = [userStock]
       validate(newUser).then((errors) => {
         expect(errors).toHaveLength(0)

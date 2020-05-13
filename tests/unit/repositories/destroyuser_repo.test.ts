@@ -1,4 +1,4 @@
-import container, { db } from '../../setup'
+import container from '../../setup'
 import { userFactory } from '../../support/factory/user.factory'
 import { UserRepositoryInterface } from '../../../src/e-infra/data/interfaces/user.repository.interface'
 
@@ -6,10 +6,6 @@ describe('Infra -> Data -> Repositories -> User', () => {
   let userRepo: UserRepositoryInterface
   beforeAll(() => {
     userRepo = container.resolve<UserRepositoryInterface>('userRepository')
-  })
-
-  afterAll(async () => {
-    await db.close()
   })
 
   describe('#destroyUser', () => {

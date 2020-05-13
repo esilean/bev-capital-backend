@@ -4,6 +4,7 @@ import { ServerInterface } from './interfaces/server.interface'
 import { ConfigInterface } from '../e-infra/cross-cutting/utils/interfaces/config.interface'
 import { Logger } from 'log4js'
 import { AuthInterface } from '../e-infra/cross-cutting/authentication/interfaces/auth.interface'
+import http from 'http'
 
 export class Server implements ServerInterface {
   private appex: express.Application
@@ -24,6 +25,11 @@ export class Server implements ServerInterface {
 
   app(): Application {
     return this.appex
+  }
+
+  server(): http.Server {
+    const server = http.createServer(this.appex)
+    return server
   }
 
   startServer(): void {

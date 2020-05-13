@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { makeInvoker } from 'awilix-express'
 import Status from 'http-status'
+import { celebrate, Segments, Joi } from 'celebrate'
 
 import {
   RequestInterface,
@@ -85,8 +86,8 @@ function stockController(
         })
         .on(ERROR, next)
 
-      const { id } = request.params
-      destroyStockService.execute(id)
+      const { symbol } = request.params
+      destroyStockService.execute(symbol)
     },
   }
 }
@@ -97,9 +98,39 @@ export default (): Router => {
   const api = makeInvoker(stockController)
 
   router.get('/', api('authenticate'), api('getAll'))
-  router.get('/:symbol', api('authenticate'), api('get'))
-  router.post('/', api('authenticate'), api('create'))
-  router.delete('/:id', api('authenticate'), api('delete'))
+  router.get(
+    '/:symbol',
+    api('authenticate'),
+    celebrate({
+      [Segments.PARAMS]: Joi.object().keys({
+        symbol: Joi.string().required().max(20),
+      }),
+    }),
+    api('get')
+  )
+  router.post(
+    '/',
+    api('authenticate'),
+    celebrate({
+      [Segments.BODY]: Joi.object().keys({
+        symbol: Joi.string().required().max(20),
+        name: Joi.string().required().max(50),
+        exchange: Joi.string().required().max(100),
+        website: Joi.string().required().max(150),
+      }),
+    }),
+    api('create')
+  )
+  router.delete(
+    '/:symbol',
+    api('authenticate'),
+    celebrate({
+      [Segments.PARAMS]: Joi.object().keys({
+        symbol: Joi.string().required().max(20),
+      }),
+    }),
+    api('delete')
+  )
 
   return router
 }

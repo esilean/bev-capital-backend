@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsDate, MaxLength } from 'class-validator'
+import Stock from './stock'
 
 export default class UserStock {
   private _id: string
@@ -15,6 +16,9 @@ export default class UserStock {
 
   @IsNotEmpty()
   private _avgPrice: number
+
+  @IsNotEmpty()
+  private _stock!: Stock
 
   @IsDate()
   private _createdAt: Date
@@ -50,6 +54,13 @@ export default class UserStock {
 
   get avgPrice(): number {
     return this._avgPrice
+  }
+
+  set stock(stock: Stock) {
+    this._stock = stock
+  }
+  get stock(): Stock {
+    return this._stock
   }
 
   set createdAt(createdAt: Date) {

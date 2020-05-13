@@ -1,19 +1,17 @@
-import { app, jwt } from '../../setup'
+import { app } from '../../setup'
 import { userFactory } from '../../support/factory/user.factory'
 import faker from 'faker'
+import { getToken } from '../../support/getToken'
 
 describe('API -> POST /api/users', () => {
   describe('#createUser', () => {
     let token = ''
     let email = ''
     beforeEach(async () => {
+      token = await getToken()
+
       const user = await userFactory({})
       email = user.email
-      token = jwt.signin({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      })
     })
 
     it('when creating user is ok', async (done) => {
@@ -27,6 +25,7 @@ describe('API -> POST /api/users', () => {
 
       expect(response.status).toEqual(201)
       expect(response.body).toHaveProperty('id')
+
       done()
     })
 

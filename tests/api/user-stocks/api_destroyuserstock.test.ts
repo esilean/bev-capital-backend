@@ -17,6 +17,7 @@ describe('API -> DELETE /api/usersstock', () => {
       const response = await app.delete(`/api/usersstock/${stock.symbol}`).set('Authorization', `Bearer  ${token}`)
 
       expect(response.status).toEqual(204)
+
       done()
     })
 

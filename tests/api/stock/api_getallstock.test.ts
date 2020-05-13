@@ -1,24 +1,17 @@
-import { app, jwt } from '../../setup'
-import { userFactory } from '../../support/factory/user.factory'
+import { app } from '../../setup'
 import { stockFactory } from '../../support/factory/stock.factory'
+import { getToken } from '../../support/getToken'
 
 describe('API -> GET /api/stocks', () => {
   describe('#getAllStocks', () => {
     let token = ''
     beforeEach(async () => {
-      const user = await userFactory({})
-      token = jwt.signin({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      })
-
-      await stockFactory({})
-      await stockFactory({})
-      await stockFactory({})
+      token = await getToken()
     })
 
     it('when there are stocks', async (done) => {
+      await stockFactory({})
+
       const response = await app.get('/api/stocks').set('Authorization', `Bearer  ${token}`)
 
       expect(response.status).toEqual(200)

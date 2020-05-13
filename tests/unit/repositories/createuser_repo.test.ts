@@ -1,4 +1,4 @@
-import container, { db } from '../../setup'
+import container from '../../setup'
 import faker from 'faker'
 import { UserRepositoryInterface } from '../../../src/e-infra/data/interfaces/user.repository.interface'
 import User from '../../../src/d-domain/entities/user'
@@ -11,10 +11,6 @@ describe('Infra -> Data -> Repositories -> User', () => {
     userRepo = container.resolve<UserRepositoryInterface>('userRepository')
   })
 
-  afterAll(async () => {
-    await db.close()
-  })
-
   describe('#createUser', () => {
     it('when user is valid', async (done) => {
       const newUser = new User('', faker.name.firstName(), faker.internet.email(), faker.internet.password())
@@ -24,6 +20,7 @@ describe('Infra -> Data -> Repositories -> User', () => {
 
         expect(userCreated).toBeInstanceOf(User)
         expect(userCreated).toHaveProperty('id')
+
         done()
       })
     })

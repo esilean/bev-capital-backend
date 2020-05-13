@@ -1,19 +1,17 @@
-import { app, jwt } from '../../setup'
+import { app } from '../../setup'
 import { userFactory } from '../../support/factory/user.factory'
 import { stockFactory } from '../../support/factory/stock.factory'
 import { userStockFactory } from '../../support/factory/user.stock.factory'
+import { getToken } from '../../support/getToken'
+import faker from 'faker'
 
 describe('API -> DELETE /api/users', () => {
   describe('#destroyUser', () => {
     let token = ''
     let id = ''
     beforeEach(async () => {
+      token = await getToken()
       const user = await userFactory({})
-      token = jwt.signin({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      })
       id = user.id
     })
 
@@ -21,6 +19,7 @@ describe('API -> DELETE /api/users', () => {
       const response = await app.delete(`/api/users/${id}`).set('Authorization', `Bearer  ${token}`)
 
       expect(response.status).toEqual(204)
+
       done()
     })
 
@@ -34,8 +33,9 @@ describe('API -> DELETE /api/users', () => {
     })
 
     it('when delete user that exists on stocks', async (done) => {
-      await stockFactory({ symbol: 'TWRDA' })
-      await userStockFactory({ userId: id, symbol: 'TWRDA' })
+      const symbol = faker.random.alphaNumeric(15)
+      await stockFactory({ symbol })
+      await userStockFactory({ userId: id, symbol })
 
       const response = await app.delete(`/api/users/${id}`).set('Authorization', `Bearer  ${token}`)
 

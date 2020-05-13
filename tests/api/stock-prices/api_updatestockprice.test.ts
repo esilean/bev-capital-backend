@@ -12,7 +12,7 @@ describe('API -> PUST /api/stocksprice', () => {
     })
 
     it('when updating stock price is ok', async (done) => {
-      const symbol = faker.lorem.word()
+      const symbol = faker.random.alphaNumeric(15)
       await stockFactory({ symbol })
       await stockPriceFactory({ symbol, datePrice: new Date(1999, 5, 1), previousClosePrice: 99 })
 
@@ -32,11 +32,12 @@ describe('API -> PUST /api/stocksprice', () => {
 
       expect(response.status).toEqual(200)
       expect(response.body).toHaveProperty('previousClosePrice', '1.99')
+
       done()
     })
 
     it('when no token is provided', async (done) => {
-      const symbol = faker.lorem.word()
+      const symbol = faker.random.alphaNumeric(15)
       await stockFactory({ symbol })
       await stockPriceFactory({ symbol, datePrice: new Date(1999, 5, 1), previousClosePrice: 99 })
 

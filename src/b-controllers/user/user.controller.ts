@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { makeInvoker } from 'awilix-express'
 import Status from 'http-status'
+import { celebrate, Segments, Joi } from 'celebrate'
 
 import {
   GetAllUserServiceInterface,
@@ -48,7 +49,7 @@ function userController(
         })
         .on(ERROR, next)
 
-      const { id } = request.user
+      const { id } = request.params
       getUserService.execute(id)
     },
     create: (request: RequestInterface<User>, response: ResponseInterface, next: NextInterface): void => {
@@ -97,9 +98,38 @@ export default (): Router => {
   const api = makeInvoker(userController)
 
   router.get('/', api('authenticate'), api('getAll'))
-  router.get('/:id', api('authenticate'), api('get'))
-  router.post('/', api('authenticate'), api('create'))
-  router.delete('/:id', api('authenticate'), api('delete'))
+  router.get(
+    '/:id',
+    api('authenticate'),
+    celebrate({
+      [Segments.PARAMS]: Joi.object().keys({
+        id: Joi.string().required(),
+      }),
+    }),
+    api('get')
+  )
+  router.post(
+    '/',
+    api('authenticate'),
+    celebrate({
+      [Segments.BODY]: Joi.object().keys({
+        name: Joi.string().required().max(50),
+        email: Joi.string().required().max(100),
+        password: Joi.string().required().max(100),
+      }),
+    }),
+    api('create')
+  )
+  router.delete(
+    '/:id',
+    api('authenticate'),
+    celebrate({
+      [Segments.PARAMS]: Joi.object().keys({
+        id: Joi.string().required(),
+      }),
+    }),
+    api('delete')
+  )
 
   return router
 }

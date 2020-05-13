@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { makeInvoker } from 'awilix-express'
 import Status from 'http-status'
+import { celebrate, Segments, Joi } from 'celebrate'
 
 import {
   RequestInterface,
@@ -45,7 +46,16 @@ export default (): Router => {
 
   const api = makeInvoker(tokenController)
 
-  router.post('/', api('getToken'))
+  router.post(
+    '/',
+    celebrate({
+      [Segments.BODY]: Joi.object().keys({
+        email: Joi.string().required().max(100),
+        password: Joi.string().required().max(50),
+      }),
+    }),
+    api('getToken')
+  )
 
   return router
 }

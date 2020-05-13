@@ -3,7 +3,7 @@ import UserStockModel from '../../../src/e-infra/data/models/user/user.stock.mod
 import StockPriceModel from '../../../src/e-infra/data/models/stock/stock.price.model'
 import UserModel from '../../../src/e-infra/data/models/user/user.model'
 
-export function cleanRecords(): void {
+export function cleanOthers(): void {
   StockPriceModel.destroy({ where: {} })
   UserStockModel.destroy({ where: {} })
   StockModel.destroy({ where: {} })

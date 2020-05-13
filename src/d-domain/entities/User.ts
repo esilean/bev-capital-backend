@@ -1,16 +1,19 @@
-import { ValidateIf, IsEmail, IsDate, IsNotEmpty, ValidateNested } from 'class-validator'
+import { ValidateIf, IsEmail, IsDate, IsNotEmpty, ValidateNested, MaxLength } from 'class-validator'
 import UserStock from './user.stock'
 
 export default class User {
   private _id: string
 
+  @MaxLength(50)
   @IsNotEmpty()
   private _name: string
 
+  @MaxLength(100)
   @IsEmail()
   @IsNotEmpty()
   private _email: string
 
+  @MaxLength(100)
   @ValidateIf((o) => o._id === '')
   @IsNotEmpty()
   private _password: string

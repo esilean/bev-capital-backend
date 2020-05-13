@@ -5,6 +5,10 @@ export interface GetAllStockPriceServiceInterface extends OperationInterface {
   execute(): void
 }
 
+export interface GetStockPriceServiceInterface extends OperationInterface {
+  execute(symbol: string, datePrice: string): void
+}
+
 export interface CreateStockPriceServiceInterface extends OperationInterface {
   execute(body: StockPrice): void
 }

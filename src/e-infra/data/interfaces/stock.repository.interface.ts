@@ -1,11 +1,13 @@
 import { FindOptions, CreateOptions } from 'sequelize/types'
 import Stock from '../../../d-domain/entities/stock'
+import { StockPriceInterface } from './stock.price.repository.interface'
 
 export interface StockInterface {
   symbol: string
   name: string
   exchange: string
   website: string
+  stockPrices: StockPriceInterface[]
   createdAt?: Date
   updatedAt?: Date
 }

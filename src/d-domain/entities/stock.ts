@@ -1,17 +1,21 @@
-import { IsNotEmpty, IsDate, ValidateNested } from 'class-validator'
+import { IsNotEmpty, IsDate, ValidateNested, MaxLength } from 'class-validator'
 import UserStock from './user.stock'
 import StockPrice from './stock.prices'
 
 export default class Stock {
+  @MaxLength(20)
   @IsNotEmpty()
   private _symbol: string
 
+  @MaxLength(50)
   @IsNotEmpty()
   private _name: string
 
+  @MaxLength(100)
   @IsNotEmpty()
   private _exchange: string
 
+  @MaxLength(150)
   @IsNotEmpty()
   private _website: string
 

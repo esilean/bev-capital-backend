@@ -22,6 +22,10 @@ export default class UserStockDomain implements UserStockDomainInterface {
   }
 
   async create(newUserStock: UserStock, options?: CreateOptions): Promise<UserStock> {
+    //validar stock exists
+    const stock = await this.stockRepository.getBySymbol(newUserStock.symbol)
+    newUserStock.stock = stock
+
     const errors = validateSync(newUserStock, {
       validationError: { target: false },
     })
@@ -29,9 +33,6 @@ export default class UserStockDomain implements UserStockDomainInterface {
       const error: Error = new ValidationError(getErrors(errors))
       throw error
     }
-
-    //validar stock exists
-    await this.stockRepository.getBySymbol(newUserStock.symbol)
 
     //validar user stock dup
     const opt: FindOptions = {

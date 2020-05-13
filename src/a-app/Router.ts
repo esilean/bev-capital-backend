@@ -6,6 +6,7 @@ import cors from 'cors'
 import { ConfigInterface } from '../e-infra/cross-cutting/utils/interfaces/config.interface'
 import { Logger } from 'log4js'
 import morgan from '../e-infra/cross-cutting/utils/logging/morgan'
+import { errors } from 'celebrate'
 
 import index from '../b-controllers'
 import tokenController from '../b-controllers/token/token.controller'
@@ -36,6 +37,8 @@ export default (config: ConfigInterface, logger: Logger, container: any, errorHa
 
   router.use('/api', apiRouter)
 
+  router.use(errors())
   router.use(errorHandler)
+
   return router
 }

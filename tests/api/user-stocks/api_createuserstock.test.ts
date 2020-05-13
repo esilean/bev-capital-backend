@@ -20,6 +20,7 @@ describe('API -> POST /api/usersstock', () => {
 
       expect(response.status).toEqual(201)
       expect(response.body).toHaveProperty('id')
+
       done()
     })
 
@@ -37,8 +38,9 @@ describe('API -> POST /api/usersstock', () => {
     })
 
     it('when stock does not exist', async (done) => {
+      const symbol = faker.random.alphaNumeric(15)
       const data = {
-        symbol: 'FAKESYMBOL',
+        symbol,
         qty: faker.finance.amount(),
         avgPrice: faker.finance.amount(),
       }
@@ -52,14 +54,14 @@ describe('API -> POST /api/usersstock', () => {
 
     it('when stock already added to user', async (done) => {
       const fakeUserId = faker.random.uuid()
-      const fakeSymbol = 'FAKEADDSYMBOLXXXX'
+      const symbol = faker.random.alphaNumeric(15)
       const token = await getToken(fakeUserId)
 
-      await stockFactory({ symbol: fakeSymbol })
-      await userStockFactory({ userId: fakeUserId, symbol: fakeSymbol })
+      await stockFactory({ symbol })
+      await userStockFactory({ userId: fakeUserId, symbol })
 
       const data = {
-        symbol: fakeSymbol,
+        symbol,
         qty: faker.finance.amount(),
         avgPrice: faker.finance.amount(),
       }
@@ -72,9 +74,9 @@ describe('API -> POST /api/usersstock', () => {
 
     it('when no token is provided', async (done) => {
       const data = {
-        symbol: faker.lorem.word(),
-        qty: faker.finance.amount(),
-        avgPrice: faker.finance.amount(),
+        symbol: faker.random.word(),
+        qty: faker.random.number(),
+        avgPrice: faker.random.number(),
       }
 
       const response = await app.post('/api/usersstock').send(data)

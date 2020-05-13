@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { makeInvoker } from 'awilix-express'
 import Status from 'http-status'
+import { celebrate, Segments, Joi } from 'celebrate'
 import {
   RequestInterface,
   ResponseInterface,
@@ -13,12 +14,14 @@ import {
   CreateStockPriceServiceInterface,
   UpdateStockPriceServiceInterface,
   DestroyStockPriceServiceInterface,
+  GetStockPriceServiceInterface,
 } from '../../c-services/interfaces/stock.price.service.interface'
 import StockPrice from '../../d-domain/entities/stock.prices'
 
 function stockPriceController(
   auth: AuthInterface,
   getAllStockPriceService: GetAllStockPriceServiceInterface,
+  getStockPriceService: GetStockPriceServiceInterface,
   createStockPriceService: CreateStockPriceServiceInterface,
   updateStockPriceService: UpdateStockPriceServiceInterface,
   destroyStockPriceService: DestroyStockPriceServiceInterface
@@ -35,6 +38,21 @@ function stockPriceController(
         .on(ERROR, next)
 
       getAllStockPriceService.execute()
+    },
+    get: (request: RequestInterface<StockPrice>, response: ResponseInterface, next: NextInterface): void => {
+      const { SUCCESS, ERROR, NOT_FOUND } = getStockPriceService.getEventType()
+
+      getStockPriceService
+        .on(SUCCESS, (stockPrice: StockPrice) => {
+          response.status(Status.OK).json(stockPrice)
+        })
+        .on(NOT_FOUND, (error: Error) => {
+          response.status(Status.NOT_FOUND).json(error)
+        })
+        .on(ERROR, next)
+
+      const { symbol, dateprice } = request.params
+      getStockPriceService.execute(symbol, dateprice)
     },
     create: (request: RequestInterface<StockPrice>, response: ResponseInterface, next: NextInterface): void => {
       const { SUCCESS, ERROR, VALIDATION_ERROR, NOT_FOUND } = createStockPriceService.getEventType()
@@ -103,9 +121,66 @@ export default (): Router => {
   const api = makeInvoker(stockPriceController)
 
   router.get('/', api('authenticate'), api('getAll'))
-  router.post('/', api('authenticate'), api('create'))
-  router.put('/:symbol/:dateprice', api('authenticate'), api('update'))
-  router.delete('/:symbol/:dateprice', api('authenticate'), api('delete'))
+  router.get(
+    '/:symbol/:dateprice',
+    api('authenticate'),
+    celebrate({
+      [Segments.PARAMS]: Joi.object().keys({
+        symbol: Joi.string().required().min(1),
+        dateprice: Joi.date().required(),
+      }),
+    }),
+    api('get')
+  )
+  router.post(
+    '/',
+    api('authenticate'),
+    celebrate({
+      [Segments.BODY]: Joi.object().keys({
+        symbol: Joi.string().required().max(20),
+        datePrice: Joi.date().required(),
+        open: Joi.number().required(),
+        close: Joi.number().required(),
+        high: Joi.number().required(),
+        low: Joi.number().required(),
+        latestPrice: Joi.number().required(),
+        latestPriceTime: Joi.date().required(),
+        delayedPrice: Joi.number().required(),
+        delayedPriceTime: Joi.date().required(),
+        previousClosePrice: Joi.number().required(),
+      }),
+    }),
+    api('create')
+  )
+  router.put(
+    '/:symbol/:dateprice',
+    api('authenticate'),
+    celebrate({
+      [Segments.BODY]: Joi.object().keys({
+        open: Joi.number().required(),
+        close: Joi.number().required(),
+        high: Joi.number().required(),
+        low: Joi.number().required(),
+        latestPrice: Joi.number().required(),
+        latestPriceTime: Joi.date().required(),
+        delayedPrice: Joi.number().required(),
+        delayedPriceTime: Joi.date().required(),
+        previousClosePrice: Joi.number().required(),
+      }),
+    }),
+    api('update')
+  )
+  router.delete(
+    '/:symbol/:dateprice',
+    api('authenticate'),
+    celebrate({
+      [Segments.PARAMS]: Joi.object().keys({
+        symbol: Joi.string().required().min(1),
+        dateprice: Joi.date().required(),
+      }),
+    }),
+    api('delete')
+  )
 
   return router
 }

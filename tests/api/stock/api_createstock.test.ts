@@ -1,27 +1,18 @@
-import { app, jwt } from '../../setup'
-import { userFactory } from '../../support/factory/user.factory'
+import { app } from '../../setup'
 import { stockFactory } from '../../support/factory/stock.factory'
 import faker from 'faker'
+import { getToken } from '../../support/getToken'
 
 describe('API -> POST /api/stocks', () => {
   describe('#createStock', () => {
     let token = ''
-    let symbol = ''
     beforeEach(async () => {
-      const user = await userFactory({})
-      token = jwt.signin({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      })
-
-      const stock = await stockFactory({})
-      symbol = stock.symbol
+      token = await getToken()
     })
 
     it('when creating stock is ok', async (done) => {
       const data = {
-        symbol: faker.lorem.word(),
+        symbol: faker.random.word(),
         name: faker.lorem.word(),
         exchange: faker.lorem.word(),
         website: faker.internet.url(),
@@ -31,6 +22,7 @@ describe('API -> POST /api/stocks', () => {
 
       expect(response.status).toEqual(201)
       expect(response.body).toHaveProperty('symbol')
+
       done()
     })
 
@@ -47,8 +39,11 @@ describe('API -> POST /api/stocks', () => {
     })
 
     it('when symbol already exists', async (done) => {
+      const stock = await stockFactory({})
+      const symbol = stock.symbol
+
       const data = {
-        symbol: symbol,
+        symbol,
         name: faker.lorem.word(),
         exchange: faker.lorem.word(),
         website: faker.internet.url(),
@@ -62,7 +57,7 @@ describe('API -> POST /api/stocks', () => {
 
     it('when no token is provided', async (done) => {
       const data = {
-        symbol: symbol,
+        symbol: 'ASD',
         name: faker.lorem.word(),
         exchange: faker.lorem.word(),
         website: faker.internet.url(),

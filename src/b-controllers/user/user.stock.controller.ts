@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { makeInvoker } from 'awilix-express'
 import Status from 'http-status'
+import { celebrate, Segments, Joi } from 'celebrate'
 import {
   RequestInterface,
   ResponseInterface,
@@ -86,9 +87,38 @@ export default (): Router => {
 
   const api = makeInvoker(userStockController)
 
-  router.get('/:id', api('authenticate'), api('get'))
-  router.post('/', api('authenticate'), api('create'))
-  router.delete('/:symbol', api('authenticate'), api('delete'))
+  router.get(
+    '/:id',
+    api('authenticate'),
+    celebrate({
+      [Segments.PARAMS]: Joi.object().keys({
+        id: Joi.string().required(),
+      }),
+    }),
+    api('get')
+  )
+  router.post(
+    '/',
+    api('authenticate'),
+    celebrate({
+      [Segments.BODY]: Joi.object().keys({
+        symbol: Joi.string().required().max(20),
+        qty: Joi.number().required(),
+        avgPrice: Joi.number().required(),
+      }),
+    }),
+    api('create')
+  )
+  router.delete(
+    '/:symbol',
+    api('authenticate'),
+    celebrate({
+      [Segments.PARAMS]: Joi.object().keys({
+        symbol: Joi.string().required().min(1),
+      }),
+    }),
+    api('delete')
+  )
 
   return router
 }

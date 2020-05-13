@@ -27,8 +27,28 @@ export default class GetUserService extends Operation implements GetUserServiceI
         const { id, name, email, userStocks, createdAt, updatedAt } = userFound
 
         const userStocksR = userStocks.map((us) => {
-          const { id, symbol, qty, avgPrice } = us
-          return { id, symbol, qty, avgPrice }
+          const { id, symbol, qty, avgPrice, stock } = us
+
+          const { name, exchange, website, stockPrices } = stock
+
+          const stockPrice =
+            stockPrices &&
+            stockPrices.map((sp) => {
+              const {
+                open,
+                close,
+                high,
+                low,
+                latestPrice,
+                latestPriceTime,
+                delayedPrice,
+                delayedPriceTime,
+                previousClosePrice,
+              } = sp
+              return { open, close, high, low, latestPrice, latestPriceTime, delayedPrice, delayedPriceTime, previousClosePrice }
+            })
+
+          return { id, symbol, qty, avgPrice, stock: { name, exchange, website, priceToday: stockPrice[0] || {} } }
         })
 
         this.emit(SUCCESS, { id, name, email, stocks: userStocksR, createdAt, updatedAt })

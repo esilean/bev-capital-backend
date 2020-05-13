@@ -4,28 +4,28 @@ import { stockPriceFactory } from '../../support/factory/stock.price.factory'
 import { getToken } from '../../support/getToken'
 import faker from 'faker'
 
-describe('API -> GET /api/stocksprice', () => {
-  describe('#getAllStockPrices', () => {
+describe('API -> GET /api/stocksprice/:symbol/:dateprice', () => {
+  describe('#getStockPrice', () => {
     let token = ''
-    beforeEach(async () => {
+    beforeAll(async () => {
       token = await getToken()
     })
 
-    it('when there are stock prices', async (done) => {
+    it('when there is stock price', async (done) => {
       const symbol = faker.random.alphaNumeric(15)
       await stockFactory({ symbol })
-      await stockPriceFactory({ symbol })
+      await stockPriceFactory({ symbol, datePrice: new Date(2020, 4, 1) })
 
-      const response = await app.get('/api/stocksprice').set('Authorization', `Bearer  ${token}`)
+      const response = await app.get(`/api/stocksprice/${symbol}/2020-05-01`).set('Authorization', `Bearer  ${token}`)
 
       expect(response.status).toEqual(200)
-      expect(response.body.length).toBeGreaterThan(0)
+      expect(response.body).toHaveProperty('symbol', symbol)
 
       done()
     })
 
     it('when no token is provided', async (done) => {
-      const response = await app.get('/api/stocksprice')
+      const response = await app.get('/api/stocksprice/AWR/2020-05-01')
 
       expect(response.status).toEqual(401)
       done()
