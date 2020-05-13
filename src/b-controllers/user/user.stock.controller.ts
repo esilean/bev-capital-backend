@@ -114,7 +114,7 @@ export default (): Router => {
     api('authenticate'),
     celebrate({
       [Segments.PARAMS]: Joi.object().keys({
-        symbol: Joi.string().required().min(1),
+        symbol: Joi.string().required().max(20),
       }),
     }),
     api('delete')

@@ -21,6 +21,7 @@ export class Server implements ServerInterface {
     this.appex.use(auth.initialize())
 
     this.appex.use(router)
+
   }
 
   app(): Application {

@@ -12,8 +12,9 @@ beforeAll(cleanOthers)
 
 afterAll(() => {
   db.close()
-  server.server().close()
-  container.dispose()
+  server.server().close(() => {
+    container.dispose()
+  })
 })
 
 export default container

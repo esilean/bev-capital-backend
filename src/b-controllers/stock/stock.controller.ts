@@ -16,6 +16,7 @@ import {
   GetStockServiceInterface,
   CreateStockServiceInterface,
 } from '../../c-services/interfaces/stock.service.interface'
+import { ValidationError } from '../../e-infra/cross-cutting/utils/errors/error.handler'
 
 function stockController(
   auth: AuthInterface,
@@ -113,7 +114,7 @@ export default (): Router => {
     api('authenticate'),
     celebrate({
       [Segments.BODY]: Joi.object().keys({
-        symbol: Joi.string().required().max(20),
+        symbol: Joi.string().required().max(20).error(new ValidationError('Symbol is required and must be less or equal to 20 characters')),
         name: Joi.string().required().max(50),
         exchange: Joi.string().required().max(100),
         website: Joi.string().required().max(150),

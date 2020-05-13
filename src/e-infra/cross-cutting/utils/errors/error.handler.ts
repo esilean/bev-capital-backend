@@ -2,6 +2,14 @@
 import Status from 'http-status'
 import { RequestInterface, ResponseInterface, NextInterface } from '../interfaces/express.interface'
 
+
+class JoiError extends Error {
+  joi: unknown
+  constructor(message: string) {
+    super()
+  }
+}
+
 export class ValidationError extends Error {
   constructor(message: string) {
     super()
@@ -18,17 +26,25 @@ export class NotFoundError extends Error {
   }
 }
 
-export default (error: Error, request: RequestInterface<string>, response: ResponseInterface, next: NextInterface): void => {
+export default (error: JoiError, request: RequestInterface<string>, response: ResponseInterface, next: NextInterface): void => {
   let env = 'production'
   if (request.container) {
     const { logger, config } = request.container.cradle
     env = config.env
-    logger.error(error)
+    if (env === 'development')
+      logger.error(error)
+  }
+
+  let errorType = 'InternalServerError'
+  let errorStatus = Status.INTERNAL_SERVER_ERROR
+  if (error.joi) {
+    errorType = 'ValidationError'
+    errorStatus = Status.BAD_REQUEST
   }
 
   const resp = Object.assign(
     {
-      type: 'InternalServerError',
+      name: errorType,
     },
     env === 'development' && {
       message: error.message,
@@ -36,5 +52,5 @@ export default (error: Error, request: RequestInterface<string>, response: Respo
     }
   )
 
-  response.status(Status.INTERNAL_SERVER_ERROR).json(resp)
+  response.status(errorStatus).json(resp)
 }
