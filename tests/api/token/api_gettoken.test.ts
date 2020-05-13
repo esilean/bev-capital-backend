@@ -1,6 +1,6 @@
 import { app } from '../../setup'
 import { userFactory } from '../../support/factory/user.factory'
-import Token from '../../../src/d-domain/entities/token'
+import UserLogin from '../../../src/d-domain/entities/user-login'
 
 describe('API -> POST /api/token', () => {
   describe('#createUser', () => {
@@ -13,7 +13,7 @@ describe('API -> POST /api/token', () => {
     })
 
     it('when user login is ok', async (done) => {
-      const data: Token = {
+      const data: UserLogin = {
         email,
         password,
       }
@@ -27,7 +27,7 @@ describe('API -> POST /api/token', () => {
     })
 
     it('when user password is wrong', async (done) => {
-      const data: Token = {
+      const data: UserLogin = {
         email,
         password: 'anothersecret',
       }

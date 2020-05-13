@@ -5,7 +5,7 @@ import Operation from '../../operation'
 import { EventTypeInterface } from '../../interfaces/operation.interface'
 import { validate } from 'class-validator'
 import { getErrors } from '../../../e-infra/cross-cutting/utils/errors/get.error.validation'
-import Token from '../../../d-domain/entities/token'
+import UserLogin from '../../../d-domain/entities/user-login'
 import { FindOptions } from 'sequelize/types'
 import { comparePassword } from '../../../e-infra/cross-cutting/authentication/encryption'
 import { TokenInterface, JwtInterface } from '../../../e-infra/cross-cutting/authentication/interfaces/auth.interface'
@@ -25,14 +25,14 @@ export default class GetTokenService extends Operation implements GetTokenServic
     return this.getEventTypes()
   }
 
-  execute(body: Token): void {
+  execute(body: UserLogin): void {
     const { SUCCESS, ERROR, VALIDATION_ERROR, NOT_FOUND } = this.getEventType()
 
     const { email, password } = body
 
-    const newToken = new Token(email, password)
+    const newLogin = new UserLogin(email, password)
 
-    validate(newToken, { validationError: { target: false } }).then((errors) => {
+    validate(newLogin, { validationError: { target: false } }).then((errors) => {
       if (errors.length > 0) {
         const error = new Error(getErrors(errors))
         this.emit(VALIDATION_ERROR, error)

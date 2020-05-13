@@ -11,7 +11,7 @@ export interface TokenInterface {
 
 export interface JwtInterface {
   signin(payload: TokenInterface): string
-  verify(token: string): string | Record<string, any>
+  verify(token: string): boolean
 }
 
 export interface AuthInterface {

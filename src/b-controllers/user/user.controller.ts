@@ -100,7 +100,7 @@ export default (): Router => {
   router.get('/', api('authenticate'), api('getAll'))
   router.get(
     '/:id',
-    api('authenticate'),
+    //api('authenticate'),
     celebrate({
       [Segments.PARAMS]: Joi.object().keys({
         id: Joi.string().required(),

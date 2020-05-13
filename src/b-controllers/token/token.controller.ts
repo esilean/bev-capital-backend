@@ -8,17 +8,19 @@ import {
   ResponseInterface,
   NextInterface,
 } from '../../e-infra/cross-cutting/utils/interfaces/express.interface'
-import { GetTokenServiceInterface } from '../../c-services/interfaces/token.service.interface'
+import { GetTokenServiceInterface, VerifyTokenServiceInterface } from '../../c-services/interfaces/token.service.interface'
 import { TokenInterface } from '../../e-infra/cross-cutting/authentication/interfaces/auth.interface'
+import UserLogin from '../../d-domain/entities/user-login'
 import Token from '../../d-domain/entities/token'
 
-function tokenController(getTokenService: GetTokenServiceInterface): unknown {
+function tokenController(getTokenService: GetTokenServiceInterface,
+  verifyTokenService: VerifyTokenServiceInterface): unknown {
   return {
-    getToken: (request: RequestInterface<Token>, response: ResponseInterface, next: NextInterface): void => {
+    getToken: (request: RequestInterface<UserLogin>, response: ResponseInterface, next: NextInterface): void => {
       const { SUCCESS, ERROR, NOT_FOUND, VALIDATION_ERROR } = getTokenService.getEventType()
 
       getTokenService
-        .on(SUCCESS, (token: TokenInterface) => {
+        .on(SUCCESS, (token: UserLogin) => {
           response.status(Status.OK).json(token)
         })
         .on(VALIDATION_ERROR, (error: Error) => {
@@ -38,6 +40,25 @@ function tokenController(getTokenService: GetTokenServiceInterface): unknown {
       const { body } = request
       getTokenService.execute(body)
     },
+
+    verifyToken: (request: RequestInterface<Token>, response: ResponseInterface, next: NextInterface): void => {
+      const { SUCCESS, ERROR, VALIDATION_ERROR } = verifyTokenService.getEventType()
+
+      verifyTokenService
+        .on(SUCCESS, (token: any) => {
+          response.status(Status.OK).json(token)
+        })
+        .on(VALIDATION_ERROR, (error: Error) => {
+          response.status(Status.BAD_REQUEST).json({
+            type: 'ValidationError',
+            message: error.message,
+          })
+        })
+        .on(ERROR, next)
+
+      const { body } = request
+      verifyTokenService.execute(body)
+    },
   }
 }
 
@@ -55,6 +76,16 @@ export default (): Router => {
       }),
     }),
     api('getToken')
+  )
+
+  router.post(
+    '/verify',
+    celebrate({
+      [Segments.BODY]: Joi.object().keys({
+        token: Joi.string().required(),
+      }),
+    }),
+    api('verifyToken')
   )
 
   return router
