@@ -7,14 +7,17 @@ import { stockPriceFactory } from '../../support/factory/stock.price.factory'
 describe('API -> PUST /api/stocksprice', () => {
   describe('#updateStockPrice', () => {
     let token = ''
+    let symbol = ''
     beforeEach(async () => {
       token = await getToken()
+
+      symbol = faker.random.alphaNumeric(15)
+      await stockFactory({ symbol })
+      await stockPriceFactory({ symbol, datePrice: new Date(1999, 5, 1), previousClosePrice: 99 })      
     })
 
     it('when updating stock price is ok', async (done) => {
-      const symbol = faker.random.alphaNumeric(15)
-      await stockFactory({ symbol })
-      await stockPriceFactory({ symbol, datePrice: new Date(1999, 5, 1), previousClosePrice: 99 })
+
 
       const data = {
         open: faker.random.number(),
@@ -37,9 +40,6 @@ describe('API -> PUST /api/stocksprice', () => {
     })
 
     it('when no token is provided', async (done) => {
-      const symbol = faker.random.alphaNumeric(15)
-      await stockFactory({ symbol })
-      await stockPriceFactory({ symbol, datePrice: new Date(1999, 5, 1), previousClosePrice: 99 })
 
       const data = {
         open: faker.random.number(),

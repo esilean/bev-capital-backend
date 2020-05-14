@@ -9,14 +9,22 @@ describe('API -> DELETE /api/users', () => {
   describe('#destroyUser', () => {
     let token = ''
     let id = ''
+    let id2 = ''
     beforeEach(async () => {
       token = await getToken()
       const user = await userFactory({})
       id = user.id
+
+      const symbol = faker.random.alphaNumeric(15)
+      await stockFactory({ symbol })
+      await userStockFactory({ userId: id, symbol })      
+
+      const user2 = await userFactory({})
+      id2 = user2.id
     })
 
     it('when delete user and return status 204', async (done) => {
-      const response = await app.delete(`/api/users/${id}`).set('Authorization', `Bearer  ${token}`)
+      const response = await app.delete(`/api/users/${id2}`).set('Authorization', `Bearer  ${token}`)
 
       expect(response.status).toEqual(204)
 
@@ -33,9 +41,7 @@ describe('API -> DELETE /api/users', () => {
     })
 
     it('when delete user that exists on stocks', async (done) => {
-      const symbol = faker.random.alphaNumeric(15)
-      await stockFactory({ symbol })
-      await userStockFactory({ userId: id, symbol })
+
 
       const response = await app.delete(`/api/users/${id}`).set('Authorization', `Bearer  ${token}`)
 

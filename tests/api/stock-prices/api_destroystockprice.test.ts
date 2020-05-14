@@ -7,15 +7,17 @@ import faker from 'faker'
 describe('API -> DELETE /api/stocksprice', () => {
   describe('#destroyStockPrice', () => {
     let token = ''
-
+    let symbol = ''
     beforeEach(async () => {
       token = await getToken()
+      
+      symbol = faker.random.alphaNumeric(15)
+      await stockFactory({ symbol })
+      await stockPriceFactory({ symbol, datePrice: new Date(2020, 1, 1) })
     })
 
     it('when delete stock price and return status 204', async (done) => {
-      const symbol = faker.random.alphaNumeric(15)
-      await stockFactory({ symbol })
-      await stockPriceFactory({ symbol, datePrice: new Date(2020, 1, 1) })
+
 
       const response = await app.delete(`/api/stocksprice/${symbol}/2020-02-01`).set('Authorization', `Bearer  ${token}`)
 

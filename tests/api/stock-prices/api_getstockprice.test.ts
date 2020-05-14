@@ -7,14 +7,17 @@ import faker from 'faker'
 describe('API -> GET /api/stocksprice/:symbol/:dateprice', () => {
   describe('#getStockPrice', () => {
     let token = ''
-    beforeAll(async () => {
+    let symbol = ''
+    beforeEach(async () => {
       token = await getToken()
+
+      symbol = faker.random.alphaNumeric(15)
+      await stockFactory({ symbol })
+      await stockPriceFactory({ symbol, datePrice: new Date(2020, 4, 1) })
     })
 
     it('when there is stock price', async (done) => {
-      const symbol = faker.random.alphaNumeric(15)
-      await stockFactory({ symbol })
-      await stockPriceFactory({ symbol, datePrice: new Date(2020, 4, 1) })
+
 
       const response = await app.get(`/api/stocksprice/${symbol}/2020-05-01`).set('Authorization', `Bearer  ${token}`)
 

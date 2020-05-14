@@ -5,17 +5,37 @@ import faker from 'faker'
 import { getToken } from '../../support/getToken'
 
 describe('API -> POST /api/usersstock', () => {
+
   describe('#createUserStock', () => {
-    it('when creating user stock is ok', async (done) => {
+
+    let token = ''
+    let symbol = ''
+    let symbol2 = ''
+    beforeEach(async () => {
+      const userId = faker.random.uuid()
+      token = await getToken(userId)
+
       const stock = await stockFactory({})
+      symbol = stock.symbol
+
+
+      
+      symbol2 = faker.random.alphaNumeric(15)
+      await stockFactory({ symbol: symbol2 })
+      await userStockFactory({ userId: userId, symbol: symbol2 })
+
+    })
+
+    it('when creating user stock is ok', async (done) => {
+
 
       const data = {
-        symbol: stock.symbol,
+        symbol,
         qty: faker.finance.amount(),
         avgPrice: faker.finance.amount(),
       }
 
-      const token = await getToken()
+
       const response = await app.post('/api/usersstock').set('Authorization', `Bearer  ${token}`).send(data)
 
       expect(response.status).toEqual(201)
@@ -30,7 +50,6 @@ describe('API -> POST /api/usersstock', () => {
         avgPrice: faker.finance.amount(),
       }
 
-      const token = await getToken()
       const response = await app.post('/api/usersstock').set('Authorization', `Bearer  ${token}`).send(data)
 
       expect(response.status).toEqual(400)
@@ -45,7 +64,6 @@ describe('API -> POST /api/usersstock', () => {
         avgPrice: faker.finance.amount(),
       }
 
-      const token = await getToken()
       const response = await app.post('/api/usersstock').set('Authorization', `Bearer  ${token}`).send(data)
 
       expect(response.status).toEqual(404)
@@ -53,15 +71,9 @@ describe('API -> POST /api/usersstock', () => {
     })
 
     it('when stock already added to user', async (done) => {
-      const fakeUserId = faker.random.uuid()
-      const symbol = faker.random.alphaNumeric(15)
-      const token = await getToken(fakeUserId)
-
-      await stockFactory({ symbol })
-      await userStockFactory({ userId: fakeUserId, symbol })
 
       const data = {
-        symbol,
+        symbol: symbol2,
         qty: faker.finance.amount(),
         avgPrice: faker.finance.amount(),
       }

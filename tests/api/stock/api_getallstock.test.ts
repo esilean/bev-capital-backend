@@ -7,10 +7,11 @@ describe('API -> GET /api/stocks', () => {
     let token = ''
     beforeEach(async () => {
       token = await getToken()
+      await stockFactory({})
     })
 
     it('when there are stocks', async (done) => {
-      await stockFactory({})
+
 
       const response = await app.get('/api/stocks').set('Authorization', `Bearer  ${token}`)
 

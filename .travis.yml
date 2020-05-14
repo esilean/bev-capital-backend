@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+  - 'stable'
+dist: trusty
+install: yarn install
+services:
+  - mysql
+before_install:
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS bevcapitaltest;'
+script: yarn test
+after_success: yarn coverage

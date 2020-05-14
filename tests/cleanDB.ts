@@ -1,8 +1,8 @@
 import { container } from '../src/e-infra/cross-cutting/ioc/container'
-import { cleanUsers } from './support/db'
+import { cleanUsers, cleanOthers } from './support/db'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export default async () => {
-  container.resolve('database')
-  cleanUsers()
+export default async (): Promise<void> => {
+  await container.resolve('database')
+  await cleanOthers()
+  await cleanUsers()
 }

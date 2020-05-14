@@ -3,15 +3,12 @@ import { container } from '../src/e-infra/cross-cutting/ioc/container'
 import { ServerInterface } from '../src/a-app/interfaces/server.interface'
 import { JwtInterface } from '../src/e-infra/cross-cutting/authentication/interfaces/auth.interface'
 import { Sequelize } from 'sequelize/types'
-import { cleanOthers } from './support/db'
 
 const server = container.resolve<ServerInterface>('server')
 export const db = container.resolve<Sequelize>('database')
 
-beforeAll(cleanOthers)
-
-afterAll(() => {
-  db.close()
+afterAll(async () => {
+  await db.close()
   server.server().close(() => {
     container.dispose()
   })

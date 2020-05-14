@@ -9,13 +9,13 @@ describe('API -> GET /api/stocksprice', () => {
     let token = ''
     beforeEach(async () => {
       token = await getToken()
+
+      const symbol = faker.random.alphaNumeric(15)
+      await stockFactory({ symbol })
+      await stockPriceFactory({ symbol })      
     })
 
     it('when there are stock prices', async (done) => {
-      const symbol = faker.random.alphaNumeric(15)
-      await stockFactory({ symbol })
-      await stockPriceFactory({ symbol })
-
       const response = await app.get('/api/stocksprice').set('Authorization', `Bearer  ${token}`)
 
       expect(response.status).toEqual(200)

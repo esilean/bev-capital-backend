@@ -1,19 +1,29 @@
 import { app } from '../../setup'
-import { userFactory } from '../../support/factory/user.factory'
 import { stockFactory } from '../../support/factory/stock.factory'
 import { userStockFactory } from '../../support/factory/user.stock.factory'
 import { getToken } from '../../support/getToken'
+import faker from 'faker'
 
 describe('API -> DELETE /api/stocks', () => {
   describe('#destroyStock', () => {
     let token = ''
+    let symbol = ''
+    let symbol2 = ''
     beforeEach(async () => {
-      token = await getToken()
+      const userId = faker.random.uuid()
+      token = await getToken(userId)
+
+      const stock = await stockFactory({})
+      symbol = stock.symbol
+
+      const stock2 = await stockFactory({})
+      symbol2 = stock2.symbol
+
+      await userStockFactory({ userId, symbol: symbol2 })
     })
 
     it('when delete stock and return status 204', async (done) => {
-      const stock = await stockFactory({})
-      const symbol = stock.symbol
+
       const response = await app.delete(`/api/stocks/${symbol}`).set('Authorization', `Bearer  ${token}`)
 
       expect(response.status).toEqual(204)
@@ -29,14 +39,8 @@ describe('API -> DELETE /api/stocks', () => {
     })
 
     it('when delete stock that exists on users', async (done) => {
-      const stock = await stockFactory({})
-      const symbol = stock.symbol
-      const user = await userFactory({})
-      const userId = user.id
 
-      await userStockFactory({ userId, symbol })
-
-      const response = await app.delete(`/api/stocks/${symbol}`).set('Authorization', `Bearer  ${token}`)
+      const response = await app.delete(`/api/stocks/${symbol2}`).set('Authorization', `Bearer  ${token}`)
 
       expect(response.status).toEqual(400)
       done()

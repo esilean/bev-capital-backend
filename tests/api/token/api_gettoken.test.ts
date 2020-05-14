@@ -3,7 +3,7 @@ import { userFactory } from '../../support/factory/user.factory'
 import UserLogin from '../../../src/d-domain/entities/user-login'
 
 describe('API -> POST /api/token', () => {
-  describe('#createUser', () => {
+  describe('#getToken', () => {
     let email = ''
     let password = ''
     beforeEach(async () => {
