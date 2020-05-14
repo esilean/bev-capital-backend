@@ -2,6 +2,7 @@
     "compilerOptions": {
         "target": "es6",
         "module": "commonjs",
+        "moduleResolution": "node",
         "outDir": "./dist",
         "sourceMap": true,
         "esModuleInterop": true,
@@ -11,13 +12,5 @@
         "emitDecoratorMetadata": true,
         "noImplicitAny": false,
         "allowJs": true
-    },
-    "include": [
-        "./src/**/*",
-        "./tests/**/*"
-    ],
-    "exclude": [
-        "node_modules",
-
-    ]
+    }
 }

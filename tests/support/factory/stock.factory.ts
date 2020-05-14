@@ -2,7 +2,7 @@ import faker from 'faker'
 import StockModel from '../../../src/e-infra/data/models/stock/stock.model'
 
 export async function stockFactory({
-  symbol = faker.random.alphaNumeric(15),
+  symbol = faker.random.alphaNumeric(20),
   name = faker.random.alphaNumeric(45),
   exchange = faker.random.word(),
   website = faker.internet.url(),
