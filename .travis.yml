@@ -7,7 +7,9 @@ services:
 before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS bevcapitaltest;'
 install: 
-  - yarn global add typescript
   - yarn install
+before_script:
+  - yarn global add typescript -D
+  - yarn global add typings -D
 script: yarn test
 after_success: yarn coverage
