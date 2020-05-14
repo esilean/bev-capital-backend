@@ -9,7 +9,7 @@ describe('API -> POST /api/stocksprice', () => {
     let token = ''
     let symbol = ''
     let symbol2 = ''
-    beforeEach(async () => {
+    beforeAll(async () => {
       token = await getToken()
 
       symbol = faker.random.alphaNumeric(15)

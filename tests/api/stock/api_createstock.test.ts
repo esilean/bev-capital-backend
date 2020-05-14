@@ -13,8 +13,8 @@ describe('API -> POST /api/stocks', () => {
     it('when creating stock is ok', async (done) => {
       const data = {
         symbol: faker.random.word(),
-        name: faker.lorem.word(),
-        exchange: faker.lorem.word(),
+        name: faker.random.word(),
+        exchange: faker.random.word(),
         website: faker.internet.url(),
       }
 
@@ -28,7 +28,7 @@ describe('API -> POST /api/stocks', () => {
 
     it('when stock data is missing', async (done) => {
       const data = {
-        exchange: faker.lorem.word(),
+        exchange: faker.random.word(),
         website: faker.internet.url(),
       }
 
@@ -44,8 +44,8 @@ describe('API -> POST /api/stocks', () => {
 
       const data = {
         symbol,
-        name: faker.lorem.word(),
-        exchange: faker.lorem.word(),
+        name: faker.random.word(),
+        exchange: faker.random.word(),
         website: faker.internet.url(),
       }
 
@@ -58,8 +58,8 @@ describe('API -> POST /api/stocks', () => {
     it('when no token is provided', async (done) => {
       const data = {
         symbol: 'ASD',
-        name: faker.lorem.word(),
-        exchange: faker.lorem.word(),
+        name: faker.random.word(),
+        exchange: faker.random.word(),
         website: faker.internet.url(),
       }
 

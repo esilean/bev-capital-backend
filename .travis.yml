@@ -5,6 +5,8 @@ dist: trusty
 install: yarn install
 services:
   - mysql
+before_script:
+- yarn build
 before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS bevcapitaltest;'
 script: yarn test

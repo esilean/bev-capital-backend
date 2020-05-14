@@ -3,7 +3,7 @@ import StockModel from '../../../src/e-infra/data/models/stock/stock.model'
 
 export async function stockFactory({
   symbol = faker.random.alphaNumeric(15),
-  name = faker.random.word(),
+  name = faker.random.alphaNumeric(45),
   exchange = faker.random.word(),
   website = faker.internet.url(),
 }): Promise<StockModel> {
