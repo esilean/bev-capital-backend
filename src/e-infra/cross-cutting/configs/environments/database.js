@@ -26,7 +26,7 @@ module.exports = {
         },
     },
     production: {
-        url: '',
+        url: process.env.CLEARDB_DATABASE_URL,
         dialect: 'mysql',
         logging: false,
         define: {
