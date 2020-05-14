@@ -7,12 +7,12 @@
     "scripts": {
         "dev": "nodemon",
         "start": "yarn build && node ./dist/src/index.js",
-        "prebuild": "rm -rf dist",
+        "prebuild": "rm -rf ./dist",
         "build": "tsc --project .",
         "format": "prettier --write \"src/**/*.ts\" && prettier --write \"tests/**/*.ts\"",
         "eslint-fix": "eslint --fix \"src/**/*.ts\" && eslint --fix \"tests/**/*.ts\"",
         "test": "cross-env NODE_ENV=test jest dist/tests/ --testTimeout=10000",
-        "pretest": "cross-env NODE_ENV=test sequelize db:migrate && yarn build",
+        "pretest": "cross-env NODE_ENV=test sequelize db:migrate",
         "coverage": "cross-env NODE_ENV=test yarn pretest && jest dist/tests/ --coverage && cat ./coverage/lcov.info | coveralls"
     },
     "dependencies": {

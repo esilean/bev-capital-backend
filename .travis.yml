@@ -8,8 +8,6 @@ before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS bevcapitaltest;'
 install: 
   - yarn install
-before_script:
-  - yarn global add typescript -D
-  - yarn global add typings -D
+  - yarn build  
 script: yarn test
 after_success: yarn coverage
