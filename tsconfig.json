@@ -1,21 +1,17 @@
 {
     "compilerOptions": {
-        "target": "es2017",        
-        "module": "es2015",        
+        "target": "es6",        
+        "module": "commonjs",        
         "moduleResolution": "node",        
         "outDir": "./dist",
         "allowSyntheticDefaultImports": true,
         "sourceMap": true,
-        "lib": ["es5", "es6"],
         "esModuleInterop": true,
         "strict": true,
+        "noImplicitAny": false,
         "skipLibCheck": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "declaration": true,
         "allowJs": true
-    },
-    "exclude": [
-        "node_modules"
-    ]
+    }
 }
