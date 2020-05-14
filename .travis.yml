@@ -2,12 +2,12 @@ language: node_js
 node_js:
   - 'stable'
 dist: trusty
-install: yarn install
 services:
   - mysql
-before_script:
-- yarn build
 before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS bevcapitaltest;'
+install: 
+  - yarn global add typescript
+  - yarn install
 script: yarn test
 after_success: yarn coverage
