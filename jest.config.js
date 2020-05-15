@@ -1,7 +1,7 @@
 module.exports = {
     verbose: true,
     roots: [
-        '<rootDir>/dist/tests'
+        '<rootDir>/tests'
     ],
     testMatch: [
         '**/__tests__/**/*.+(ts|tsx|js)',
@@ -10,7 +10,7 @@ module.exports = {
     transform: {
         '^.+\\.(ts|tsx)$': 'ts-jest'
     },
-    globalSetup: './dist/tests/cleanDB.js',
+    globalSetup: './tests/cleanDB.ts',
     testEnvironment: 'node',
     // An array of regexp pattern strings used to skip coverage collection
     coveragePathIgnorePatterns: [

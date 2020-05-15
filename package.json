@@ -1,19 +1,19 @@
 {
     "name": "bev-capital",
     "version": "1.0.0",
-    "main": "dist/.js",
+    "main": "dist/index.js",
     "author": "Leandro Bevilaqua",
     "license": "MIT",
     "scripts": {
         "dev": "nodemon",
-        "start": "yarn build && cross-env NODE_ENV=production node ./dist/src/index.js",
+        "start": "node ./dist/index.js",
         "prebuild": "rm -rf ./dist",
-        "build": "tsc -p .",
+        "build": "tsc",
         "format": "prettier --write \"src/**/*.ts\" && prettier --write \"tests/**/*.ts\"",
         "eslint-fix": "eslint --fix \"src/**/*.ts\" && eslint --fix \"tests/**/*.ts\"",
-        "test": "cross-env NODE_ENV=test jest dist/tests/ --testTimeout=10000",
+        "test": "cross-env NODE_ENV=test jest --testTimeout=10000",
         "pretest": "cross-env NODE_ENV=test sequelize db:migrate",
-        "coverage": "cross-env NODE_ENV=test yarn pretest && jest dist/tests/ --coverage && cat ./coverage/lcov.info | coveralls"
+        "coverage": "cross-env NODE_ENV=test yarn pretest && jest --coverage && cat ./coverage/lcov.info | coveralls"
     },
     "dependencies": {
         "awilix": "^4.2.6",
@@ -69,5 +69,8 @@
         "supertest": "^4.0.2",
         "ts-jest": "^25.5.0",
         "ts-node": "^8.10.1"
+    },
+    "engines": {
+        "node": "^12.14.1"
     }
 }
