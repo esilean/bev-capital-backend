@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable no-console */
 module.exports = {
     development: {
         username: 'root',
@@ -5,7 +7,7 @@ module.exports = {
         database: 'bevcapital',
         host: '127.0.0.1',
         dialect: 'mysql',
-        logging: true,
+        logging: (...msg) => console.log(msg),
         define: {
             timestamps: true,
             underscored: true,
