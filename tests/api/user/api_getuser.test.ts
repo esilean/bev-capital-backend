@@ -5,19 +5,16 @@ import faker from 'faker'
 
 describe('API -> GET /api/users/:id', () => {
   describe('#getUser', () => {
-
-
     let token = ''
     let id = ''
     beforeEach(async () => {
       token = await getToken()
 
       id = faker.random.word()
-      await userFactory({ id })      
+      await userFactory({ id })
     })
 
     it('when there is user', async (done) => {
-
       const response = await app.get(`/api/users/${id}`).set('Authorization', `Bearer  ${token}`)
 
       expect(response.status).toEqual(200)

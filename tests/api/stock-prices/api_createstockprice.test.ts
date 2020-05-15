@@ -21,8 +21,6 @@ describe('API -> POST /api/stocksprice', () => {
     })
 
     it('when creating stock price is ok', async (done) => {
-
-
       const data = {
         symbol,
         datePrice: new Date(faker.date.recent()),
@@ -66,8 +64,6 @@ describe('API -> POST /api/stocksprice', () => {
     })
 
     it('when stock price already exists', async (done) => {
-
-
       const data = {
         symbol: symbol2,
         datePrice: new Date(1999, 1, 1),

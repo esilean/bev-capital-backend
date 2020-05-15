@@ -17,7 +17,7 @@ describe('API -> DELETE /api/users', () => {
 
       const symbol = faker.random.alphaNumeric(15)
       await stockFactory({ symbol })
-      await userStockFactory({ userId: id, symbol })      
+      await userStockFactory({ userId: id, symbol })
 
       const user2 = await userFactory({})
       id2 = user2.id
@@ -41,8 +41,6 @@ describe('API -> DELETE /api/users', () => {
     })
 
     it('when delete user that exists on stocks', async (done) => {
-
-
       const response = await app.delete(`/api/users/${id}`).set('Authorization', `Bearer  ${token}`)
 
       expect(response.status).toEqual(400)

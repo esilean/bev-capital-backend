@@ -5,9 +5,7 @@ import faker from 'faker'
 import { getToken } from '../../support/getToken'
 
 describe('API -> POST /api/usersstock', () => {
-
   describe('#createUserStock', () => {
-
     let token = ''
     let symbol = ''
     let symbol2 = ''
@@ -18,23 +16,17 @@ describe('API -> POST /api/usersstock', () => {
       const stock = await stockFactory({})
       symbol = stock.symbol
 
-
-      
       symbol2 = faker.random.alphaNumeric(15)
       await stockFactory({ symbol: symbol2 })
       await userStockFactory({ userId: userId, symbol: symbol2 })
-
     })
 
     it('when creating user stock is ok', async (done) => {
-
-
       const data = {
         symbol,
         qty: faker.finance.amount(),
         avgPrice: faker.finance.amount(),
       }
-
 
       const response = await app.post('/api/usersstock').set('Authorization', `Bearer  ${token}`).send(data)
 
@@ -71,7 +63,6 @@ describe('API -> POST /api/usersstock', () => {
     })
 
     it('when stock already added to user', async (done) => {
-
       const data = {
         symbol: symbol2,
         qty: faker.finance.amount(),

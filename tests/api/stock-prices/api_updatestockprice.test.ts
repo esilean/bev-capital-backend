@@ -13,12 +13,10 @@ describe('API -> PUST /api/stocksprice', () => {
 
       symbol = faker.random.alphaNumeric(15)
       await stockFactory({ symbol })
-      await stockPriceFactory({ symbol, datePrice: new Date(1999, 5, 1), previousClosePrice: 99 })      
+      await stockPriceFactory({ symbol, datePrice: new Date(1999, 5, 1), previousClosePrice: 99 })
     })
 
     it('when updating stock price is ok', async (done) => {
-
-
       const data = {
         open: faker.random.number(),
         close: faker.random.number(),
@@ -40,7 +38,6 @@ describe('API -> PUST /api/stocksprice', () => {
     })
 
     it('when no token is provided', async (done) => {
-
       const data = {
         open: faker.random.number(),
         close: faker.random.number(),

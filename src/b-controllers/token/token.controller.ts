@@ -9,12 +9,10 @@ import {
   NextInterface,
 } from '../../e-infra/cross-cutting/utils/interfaces/express.interface'
 import { GetTokenServiceInterface, VerifyTokenServiceInterface } from '../../c-services/interfaces/token.service.interface'
-import { TokenInterface } from '../../e-infra/cross-cutting/authentication/interfaces/auth.interface'
 import UserLogin from '../../d-domain/entities/user-login'
 import Token from '../../d-domain/entities/token'
 
-function tokenController(getTokenService: GetTokenServiceInterface,
-  verifyTokenService: VerifyTokenServiceInterface): unknown {
+function tokenController(getTokenService: GetTokenServiceInterface, verifyTokenService: VerifyTokenServiceInterface): unknown {
   return {
     getToken: (request: RequestInterface<UserLogin>, response: ResponseInterface, next: NextInterface): void => {
       const { SUCCESS, ERROR, NOT_FOUND, VALIDATION_ERROR } = getTokenService.getEventType()
@@ -45,7 +43,7 @@ function tokenController(getTokenService: GetTokenServiceInterface,
       const { SUCCESS, ERROR, VALIDATION_ERROR } = verifyTokenService.getEventType()
 
       verifyTokenService
-        .on(SUCCESS, (token: any) => {
+        .on(SUCCESS, (token: boolean) => {
           response.status(Status.OK).json(token)
         })
         .on(VALIDATION_ERROR, (error: Error) => {

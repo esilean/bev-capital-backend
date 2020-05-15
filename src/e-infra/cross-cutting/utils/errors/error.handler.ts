@@ -2,7 +2,6 @@
 import Status from 'http-status'
 import { RequestInterface, ResponseInterface, NextInterface } from '../interfaces/express.interface'
 
-
 class JoiError extends Error {
   joi: unknown
   constructor(message: string) {
@@ -31,8 +30,7 @@ export default (error: JoiError, request: RequestInterface<string>, response: Re
   if (request.container) {
     const { logger, config } = request.container.cradle
     env = config.env
-    if (env === 'development')
-      logger.error(error)
+    if (env === 'development') logger.error(error)
   }
 
   let errorType = 'InternalServerError'

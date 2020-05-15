@@ -114,7 +114,10 @@ export default (): Router => {
     api('authenticate'),
     celebrate({
       [Segments.BODY]: Joi.object().keys({
-        symbol: Joi.string().required().max(20).error(new ValidationError('Symbol is required and must be less or equal to 20 characters')),
+        symbol: Joi.string()
+          .required()
+          .max(20)
+          .error(new ValidationError('Symbol is required and must be less or equal to 20 characters')),
         name: Joi.string().required().max(50),
         exchange: Joi.string().required().max(100),
         website: Joi.string().required().max(150),

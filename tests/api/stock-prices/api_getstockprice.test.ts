@@ -17,8 +17,6 @@ describe('API -> GET /api/stocksprice/:symbol/:dateprice', () => {
     })
 
     it('when there is stock price', async (done) => {
-
-
       const response = await app.get(`/api/stocksprice/${symbol}/2020-05-01`).set('Authorization', `Bearer  ${token}`)
 
       expect(response.status).toEqual(200)

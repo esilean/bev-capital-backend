@@ -1,8 +1,7 @@
 import jwt from 'jsonwebtoken'
 import { TokenInterface, JwtInterface } from './interfaces/auth.interface'
 import { ConfigInterface } from '../utils/interfaces/config.interface'
-import { ValidationError, NotFoundError } from '../utils/errors/error.handler'
-
+import { NotFoundError } from '../utils/errors/error.handler'
 
 export default class Jwt implements JwtInterface {
   private config: ConfigInterface
@@ -11,8 +10,7 @@ export default class Jwt implements JwtInterface {
   constructor(config: ConfigInterface) {
     this.config = config
 
-    if (!this.config.authSecret)
-      throw new NotFoundError('AuthSecret cannot be found')
+    if (!this.config.authSecret) throw new NotFoundError('AuthSecret cannot be found')
 
     this.secret = this.config.authSecret
   }

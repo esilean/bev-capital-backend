@@ -10,15 +10,13 @@ describe('API -> DELETE /api/stocksprice', () => {
     let symbol = ''
     beforeEach(async () => {
       token = await getToken()
-      
+
       symbol = faker.random.alphaNumeric(15)
       await stockFactory({ symbol })
       await stockPriceFactory({ symbol, datePrice: new Date(2020, 1, 1) })
     })
 
     it('when delete stock price and return status 204', async (done) => {
-
-
       const response = await app.delete(`/api/stocksprice/${symbol}/2020-02-01`).set('Authorization', `Bearer  ${token}`)
 
       expect(response.status).toEqual(204)

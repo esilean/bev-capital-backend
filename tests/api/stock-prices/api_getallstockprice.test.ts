@@ -12,7 +12,7 @@ describe('API -> GET /api/stocksprice', () => {
 
       const symbol = faker.random.alphaNumeric(15)
       await stockFactory({ symbol })
-      await stockPriceFactory({ symbol })      
+      await stockPriceFactory({ symbol })
     })
 
     it('when there are stock prices', async (done) => {

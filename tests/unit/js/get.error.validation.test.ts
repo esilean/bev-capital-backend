@@ -4,13 +4,9 @@ import { ValidationError } from 'class-validator'
 describe('Intra -> CrossCutting -> Utils > Error', () => {
   describe('#getErrorValidation', () => {
     it('when is ok', async (done) => {
-
       const errors: ValidationError[] = []
       expect(getErrors(errors)).toBe('')
       done()
-
     })
-
-
   })
 })

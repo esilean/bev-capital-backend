@@ -4,7 +4,7 @@ import { validate } from 'class-validator'
 import { getErrors } from '../../../e-infra/cross-cutting/utils/errors/get.error.validation'
 import Token from '../../../d-domain/entities/token'
 
-import { TokenInterface, JwtInterface } from '../../../e-infra/cross-cutting/authentication/interfaces/auth.interface'
+import { JwtInterface } from '../../../e-infra/cross-cutting/authentication/interfaces/auth.interface'
 import { VerifyTokenServiceInterface } from '../../interfaces/token.service.interface'
 
 export default class VerifyTokenService extends Operation implements VerifyTokenServiceInterface {
@@ -27,20 +27,19 @@ export default class VerifyTokenService extends Operation implements VerifyToken
 
     const verifyToken = new Token(token)
 
-    validate(verifyToken, { validationError: { target: false } }).then((errors) => {
-      if (errors.length > 0) {
-        const error = new Error(getErrors(errors))
-        this.emit(VALIDATION_ERROR, error)
-      } else {
+    validate(verifyToken, { validationError: { target: false } })
+      .then((errors) => {
+        if (errors.length > 0) {
+          const error = new Error(getErrors(errors))
+          this.emit(VALIDATION_ERROR, error)
+        } else {
+          const token = this.jwt.verify(verifyToken.token)
 
-        const token = this.jwt.verify(verifyToken.token)
-
-        this.emit(SUCCESS, token)
-      }
-    })
+          this.emit(SUCCESS, token)
+        }
+      })
       .catch((error) => {
         this.emit(ERROR, error)
       })
-
   }
 }

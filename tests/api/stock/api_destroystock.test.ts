@@ -23,7 +23,6 @@ describe('API -> DELETE /api/stocks', () => {
     })
 
     it('when delete stock and return status 204', async (done) => {
-
       const response = await app.delete(`/api/stocks/${symbol}`).set('Authorization', `Bearer  ${token}`)
 
       expect(response.status).toEqual(204)
@@ -39,7 +38,6 @@ describe('API -> DELETE /api/stocks', () => {
     })
 
     it('when delete stock that exists on users', async (done) => {
-
       const response = await app.delete(`/api/stocks/${symbol2}`).set('Authorization', `Bearer  ${token}`)
 
       expect(response.status).toEqual(400)
