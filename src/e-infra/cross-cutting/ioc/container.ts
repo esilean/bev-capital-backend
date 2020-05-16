@@ -10,6 +10,7 @@ import errorHandler from '../utils/errors/error.handler'
 import database from '../../data/sequelize'
 import Auth from '../authentication/auth'
 import Jwt from '../authentication/jwt'
+import { SocketIO } from '../../../a-app/socket'
 import { camelize } from '../utils/js/camelize'
 
 const container = createContainer<CradleInterface>({
@@ -27,6 +28,7 @@ container.register({
   database: asFunction(database).singleton(),
   auth: asClass(Auth).singleton(),
   jwt: asClass(Jwt).singleton(),
+  sockio: asClass(SocketIO).singleton(),
 })
 
 container.loadModules([['../../data/models/**/*.*(ts|js)', { register: asValue }]], {

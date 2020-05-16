@@ -1,7 +1,6 @@
 import { Server } from 'http'
 
 export interface ServerInterface {
-  app(): Express.Application
-  server(): Server
+  app(): Server
   startServer(): void
 }

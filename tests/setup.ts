@@ -9,7 +9,7 @@ export const db = container.resolve<Sequelize>('database')
 
 afterAll(async () => {
   await db.close()
-  server.server().close(() => {
+  server.app().close(() => {
     container.dispose()
   })
 })
