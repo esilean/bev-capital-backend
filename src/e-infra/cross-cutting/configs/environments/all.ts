@@ -38,6 +38,7 @@ export const configs = (env: string): ConfigInterface => {
         default: { appenders: ['toFile', 'toConsole'], level: 'DEBUG' },
       },
     },
+    intervalSec: process.env.INTERVAL_SEC || '3600',
     authSecret: process.env.SECRET,
   }
 

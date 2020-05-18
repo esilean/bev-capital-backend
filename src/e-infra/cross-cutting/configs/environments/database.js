@@ -7,7 +7,8 @@ module.exports = {
         database: 'bevcapital',
         host: '127.0.0.1',
         dialect: 'mysql',
-        logging: (...msg) => console.log(msg),
+        //logging: (...msg) => console.log(msg),
+        logging: false,
         define: {
             timestamps: true,
             underscored: true,

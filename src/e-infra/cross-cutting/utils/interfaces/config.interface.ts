@@ -4,6 +4,7 @@ interface ConfigInterface {
   db: Record<string, any>
   port: string | number
   logging: LogginInterface
+  intervalSec: string
   authSecret: string | undefined
 }
 
