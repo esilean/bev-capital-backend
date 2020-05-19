@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-import { configs } from './environments/all'
+import { configs } from './environments'
 
 const ENV: string = process.env.NODE_ENV || 'development'
 

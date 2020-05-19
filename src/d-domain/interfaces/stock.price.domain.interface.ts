@@ -5,5 +5,7 @@ export interface StockPriceDomainInterface {
   getAll(options?: FindOptions): Promise<StockPrice[]>
   create(newStockPrice: StockPrice, options?: CreateOptions): Promise<StockPrice>
   update(newStockPrice: StockPrice, options: UpdateOptions): Promise<StockPrice>
-  destroy(symbol: string, datePrice: Date): Promise<boolean>
+  destroy(symbol: string): Promise<boolean>
+
+  createOrUpdate(newStockPrice: StockPrice): Promise<void>
 }

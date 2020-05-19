@@ -14,48 +14,39 @@ import Token from '../../d-domain/entities/token'
 
 function tokenController(getTokenService: GetTokenServiceInterface, verifyTokenService: VerifyTokenServiceInterface): unknown {
   return {
-    getToken: (request: RequestInterface<UserLogin>, response: ResponseInterface, next: NextInterface): void => {
-      const { SUCCESS, ERROR, NOT_FOUND, VALIDATION_ERROR } = getTokenService.getEventType()
-
-      getTokenService
-        .on(SUCCESS, (token: UserLogin) => {
-          response.status(Status.OK).json(token)
-        })
-        .on(VALIDATION_ERROR, (error: Error) => {
+    getToken: async (request: RequestInterface<UserLogin>, response: ResponseInterface, next: NextInterface): Promise<void> => {
+      try {
+        const { body } = request
+        const token = await getTokenService.execute(body)
+        response.status(Status.OK).json(token)
+      } catch (error) {
+        if (error.name === 'ValidationError')
           response.status(Status.BAD_REQUEST).json({
             type: 'ValidationError',
             message: error.message,
           })
-        })
-        .on(NOT_FOUND, (error: Error) => {
+        else if (error.name === 'NotFoundError')
           response.status(Status.NOT_FOUND).json({
             type: 'NotFoundError',
             message: error.message,
           })
-        })
-        .on(ERROR, next)
-
-      const { body } = request
-      getTokenService.execute(body)
+        else next(error)
+      }
     },
 
-    verifyToken: (request: RequestInterface<Token>, response: ResponseInterface, next: NextInterface): void => {
-      const { SUCCESS, ERROR, VALIDATION_ERROR } = verifyTokenService.getEventType()
-
-      verifyTokenService
-        .on(SUCCESS, (token: boolean) => {
-          response.status(Status.OK).json(token)
-        })
-        .on(VALIDATION_ERROR, (error: Error) => {
+    verifyToken: async (request: RequestInterface<Token>, response: ResponseInterface, next: NextInterface): Promise<void> => {
+      try {
+        const { body } = request
+        const token = await verifyTokenService.execute(body)
+        response.status(Status.OK).json(token)
+      } catch (error) {
+        if (error.name === 'ValidationError')
           response.status(Status.BAD_REQUEST).json({
             type: 'ValidationError',
             message: error.message,
           })
-        })
-        .on(ERROR, next)
-
-      const { body } = request
-      verifyTokenService.execute(body)
+        else next(error)
+      }
     },
   }
 }

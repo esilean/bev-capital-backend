@@ -1,11 +1,11 @@
-import { OperationInterface } from './operation.interface'
 import UserLogin from '../../d-domain/entities/user-login'
 import Token from '../../d-domain/entities/token'
+import { TokenInterface } from '../../e-infra/cross-cutting/authentication/interfaces/auth.interface'
 
-export interface GetTokenServiceInterface extends OperationInterface {
-  execute(body: UserLogin): void
+export interface GetTokenServiceInterface {
+  execute(body: UserLogin): Promise<TokenInterface>
 }
 
-export interface VerifyTokenServiceInterface extends OperationInterface {
-  execute(body: Token): void
+export interface VerifyTokenServiceInterface {
+  execute(body: Token): Promise<boolean>
 }

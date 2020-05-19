@@ -18,6 +18,11 @@ export default class StockPriceRepository implements StockPriceRepositoryInterfa
     return stockPrices.map((stockPrice) => toEntity(stockPrice))
   }
 
+  async exist(symbol: string): Promise<boolean> {
+    const stock = await this.stockPriceModel.findByPk(symbol)
+    return stock !== null
+  }
+
   async create(values: object, options?: CreateOptions): Promise<StockPrice> {
     const stockPriceCreated = await this.stockPriceModel.create(values, options)
 
@@ -27,15 +32,15 @@ export default class StockPriceRepository implements StockPriceRepositoryInterfa
   async update(values: object, options: UpdateOptions): Promise<StockPrice> {
     const rowUpdated = await this.stockPriceModel.update(values, options)
 
-    if (rowUpdated[0] === 0) throw new NotFoundError('StockPrice cannot be found')
+    if (rowUpdated[0] === 0) throw new NotFoundError('StockPrice cannot be updated')
 
     const stockPriceUpdated = await this.getAll(options)
     return toEntity(stockPriceUpdated[0])
   }
 
-  async destroy(symbol: string, datePrice: Date): Promise<boolean> {
+  async destroy(symbol: string): Promise<boolean> {
     const stockDestroyed = await this.stockPriceModel.destroy({
-      where: { symbol, datePrice },
+      where: { symbol },
     })
     return stockDestroyed > 0
   }

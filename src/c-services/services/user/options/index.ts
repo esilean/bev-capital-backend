@@ -20,9 +20,6 @@ export const optUserAndStocks: FindOptions = {
             {
               association: 'stockPrices',
               required: false,
-              where: {
-                datePrice: new Date(new Date().toDateString()),
-              },
             },
           ],
         },

@@ -21,6 +21,15 @@ export default class StockPriceDomain implements StockPriceDomainInterface {
     return await this.stockPriceRepository.getAll(options)
   }
 
+  async createOrUpdate(newStockPrice: StockPrice): Promise<void> {
+    const exist = await this.stockPriceRepository.exist(newStockPrice.symbol)
+    if (exist) {
+      await this.update(newStockPrice, { where: { symbol: newStockPrice.symbol } })
+    } else {
+      await this.create(newStockPrice)
+    }
+  }
+
   async create(newStockPrice: StockPrice, options?: CreateOptions): Promise<StockPrice> {
     const errors = validateSync(newStockPrice, {
       validationError: { target: false },
@@ -36,7 +45,7 @@ export default class StockPriceDomain implements StockPriceDomainInterface {
     const opt: FindOptions = {
       limit: 1,
       attributes: ['symbol'],
-      where: { symbol: newStockPrice.symbol, datePrice: newStockPrice.datePrice },
+      where: { symbol: newStockPrice.symbol },
     }
     const stockPriceExists = await this.stockPriceRepository.getAll(opt)
     if (stockPriceExists.length > 0) {
@@ -75,7 +84,7 @@ export default class StockPriceDomain implements StockPriceDomainInterface {
       })
   }
 
-  async destroy(symbol: string, datePrice: Date): Promise<boolean> {
-    return await this.stockPriceRepository.destroy(symbol, datePrice)
+  async destroy(symbol: string): Promise<boolean> {
+    return await this.stockPriceRepository.destroy(symbol)
   }
 }

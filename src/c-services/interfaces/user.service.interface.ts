@@ -1,18 +1,17 @@
-import { OperationInterface } from './operation.interface'
 import User from '../../d-domain/entities/user'
 
-export interface GetAllUserServiceInterface extends OperationInterface {
-  execute(): void
+export interface GetAllUserServiceInterface {
+  execute(): Promise<User[]>
 }
 
-export interface GetUserServiceInterface extends OperationInterface {
-  execute(id: string): void
+export interface GetUserServiceInterface {
+  execute(id: string): Promise<User>
 }
 
-export interface CreateUserServiceInterface extends OperationInterface {
-  execute(body: User): void
+export interface CreateUserServiceInterface {
+  execute(body: User): Promise<User>
 }
 
-export interface DestroyUserServiceInterface extends OperationInterface {
-  execute(id: string): void
+export interface DestroyUserServiceInterface {
+  execute(id: string): Promise<boolean>
 }

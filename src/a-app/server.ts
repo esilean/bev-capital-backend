@@ -6,11 +6,14 @@ import { Logger } from 'log4js'
 import { AuthInterface } from '../e-infra/cross-cutting/authentication/interfaces/auth.interface'
 import http from 'http'
 import { SocketIOInterface } from './socket'
+import socketio from 'socket.io'
 
 export class Server implements ServerInterface {
   private server: http.Server
   private config: ConfigInterface
   private logger: Logger
+  private sockio: SocketIOInterface
+  private io: socketio.Server
 
   constructor(router: Router, sockio: SocketIOInterface, auth: AuthInterface, config: ConfigInterface, logger: Logger) {
     this.config = config
@@ -23,7 +26,8 @@ export class Server implements ServerInterface {
 
     this.server = http.createServer(app)
 
-    sockio.connect(this.server)
+    this.sockio = sockio
+    this.io = this.sockio.connect(this.server)
   }
 
   app(): http.Server {
@@ -34,6 +38,8 @@ export class Server implements ServerInterface {
     const http = this.server.listen(this.config.port, () => {
       const { port } = http.address() as AddressInfo
       this.logger.info(`API is running on port: ${port}`)
+
+      this.sockio.start(this.io)
     })
   }
 }

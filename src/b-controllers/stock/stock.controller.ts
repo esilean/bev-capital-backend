@@ -27,68 +27,59 @@ function stockController(
 ): unknown {
   return {
     authenticate: auth.authenticate(),
-    getAll: (request: RequestInterface<Stock>, response: ResponseInterface, next: NextInterface): void => {
-      const { SUCCESS, ERROR } = getAllStockService.getEventType()
+    getAll: async (request: RequestInterface<Stock>, response: ResponseInterface, next: NextInterface): Promise<void> => {
+      try {
+        const stocksFound = await getAllStockService.execute()
 
-      getAllStockService
-        .on(SUCCESS, (stocks: Stock[]) => {
-          response.status(Status.OK).json(stocks)
+        const stocks = stocksFound.map((stock: Stock) => {
+          const { symbol, name, exchange, website } = stock
+          return { symbol, name, exchange, website }
         })
-        .on(ERROR, next)
-
-      getAllStockService.execute()
+        response.status(Status.OK).json(stocks)
+      } catch (error) {
+        next(error)
+      }
     },
-    get: (request: RequestInterface<Stock>, response: ResponseInterface, next: NextInterface): void => {
-      const { SUCCESS, ERROR, NOT_FOUND } = getStockService.getEventType()
-
-      getStockService
-        .on(SUCCESS, (stock: Stock) => {
-          response.status(Status.OK).json(stock)
-        })
-        .on(NOT_FOUND, (error: Error) => {
-          response.status(Status.NOT_FOUND).json(error)
-        })
-        .on(ERROR, next)
-
-      const { symbol } = request.params
-      getStockService.execute(symbol)
+    get: async (request: RequestInterface<Stock>, response: ResponseInterface, next: NextInterface): Promise<void> => {
+      try {
+        const { symbol } = request.params
+        const stock = await getStockService.execute(symbol)
+        const { name, exchange, website } = stock
+        response.status(Status.OK).json({ symbol, name, exchange, website })
+      } catch (error) {
+        if (error.name === 'NotFoundError') response.status(Status.NOT_FOUND).json(error)
+        else next(error)
+      }
     },
-    create: (request: RequestInterface<Stock>, response: ResponseInterface, next: NextInterface): void => {
-      const { SUCCESS, ERROR, VALIDATION_ERROR } = createStockService.getEventType()
+    create: async (request: RequestInterface<Stock>, response: ResponseInterface, next: NextInterface): Promise<void> => {
+      try {
+        const { body } = request
+        const stock = await createStockService.execute(body)
 
-      createStockService
-        .on(SUCCESS, (stock: Stock) => {
-          response.status(Status.CREATED).json(stock)
-        })
-        .on(VALIDATION_ERROR, (error: Error) => {
-          response.status(Status.BAD_REQUEST).json(error)
-        })
-        .on(ERROR, next)
-
-      const { body } = request
-      createStockService.execute(body)
+        const { symbol, name, exchange, website } = stock
+        response.status(Status.CREATED).json({ symbol, name, exchange, website })
+      } catch (error) {
+        if (error.name === 'ValidationError') response.status(Status.BAD_REQUEST).json(error)
+        else if (error.name === 'NotFoundError') response.status(Status.NOT_FOUND).json(error)
+        else next(error)
+      }
     },
 
-    delete: (request: RequestInterface<Stock>, response: ResponseInterface, next: NextInterface): void => {
-      const { SUCCESS, ERROR, NOT_FOUND, VALIDATION_ERROR } = destroyStockService.getEventType()
+    delete: async (request: RequestInterface<Stock>, response: ResponseInterface, next: NextInterface): Promise<void> => {
+      try {
+        const { symbol } = request.params
+        const destroyed = await destroyStockService.execute(symbol)
 
-      destroyStockService
-        .on(SUCCESS, () => {
-          response.status(Status.NO_CONTENT).json()
-        })
-        .on(VALIDATION_ERROR, (error: Error) => {
-          response.status(Status.BAD_REQUEST).json(error)
-        })
-        .on(NOT_FOUND, () => {
+        if (destroyed) response.status(Status.NO_CONTENT).json()
+        else
           response.status(Status.NOT_FOUND).json({
             type: 'NotFoundError',
             message: 'Stock cannot be found.',
           })
-        })
-        .on(ERROR, next)
-
-      const { symbol } = request.params
-      destroyStockService.execute(symbol)
+      } catch (error) {
+        if (error.name === 'ValidationError') response.status(Status.BAD_REQUEST).json(error)
+        else next(error)
+      }
     },
   }
 }

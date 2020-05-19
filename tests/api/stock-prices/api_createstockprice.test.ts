@@ -17,13 +17,12 @@ describe('API -> POST /api/stocksprice', () => {
 
       symbol2 = faker.random.alphaNumeric(15)
       await stockFactory({ symbol: symbol2 })
-      await stockPriceFactory({ symbol: symbol2, datePrice: new Date(1999, 1, 1) })
+      await stockPriceFactory({ symbol: symbol2 })
     })
 
     it('when creating stock price is ok', async (done) => {
       const data = {
         symbol,
-        datePrice: new Date(faker.date.recent()),
         open: faker.random.number(),
         close: faker.random.number(),
         high: faker.random.number(),
@@ -45,7 +44,6 @@ describe('API -> POST /api/stocksprice', () => {
 
     it('when stock data is missing', async (done) => {
       const data = {
-        datePrice: new Date(faker.date.recent()),
         open: faker.finance.amount(),
         close: faker.finance.amount(),
         high: faker.finance.amount(),
@@ -66,7 +64,6 @@ describe('API -> POST /api/stocksprice', () => {
     it('when stock price already exists', async (done) => {
       const data = {
         symbol: symbol2,
-        datePrice: new Date(1999, 1, 1),
         open: faker.random.number(),
         close: faker.random.number(),
         high: faker.random.number(),

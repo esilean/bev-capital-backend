@@ -4,7 +4,7 @@ import { stockPriceFactory } from '../../support/factory/stock.price.factory'
 import { getToken } from '../../support/getToken'
 import faker from 'faker'
 
-describe('API -> GET /api/stocksprice/:symbol/:dateprice', () => {
+describe('API -> GET /api/stocksprice/:symbol', () => {
   describe('#getStockPrice', () => {
     let token = ''
     let symbol = ''
@@ -13,11 +13,11 @@ describe('API -> GET /api/stocksprice/:symbol/:dateprice', () => {
 
       symbol = faker.random.alphaNumeric(15)
       await stockFactory({ symbol })
-      await stockPriceFactory({ symbol, datePrice: new Date(2020, 4, 1) })
+      await stockPriceFactory({ symbol })
     })
 
     it('when there is stock price', async (done) => {
-      const response = await app.get(`/api/stocksprice/${symbol}/2020-05-01`).set('Authorization', `Bearer  ${token}`)
+      const response = await app.get(`/api/stocksprice/${symbol}`).set('Authorization', `Bearer  ${token}`)
 
       expect(response.status).toEqual(200)
       expect(response.body).toHaveProperty('symbol', symbol)
@@ -26,7 +26,7 @@ describe('API -> GET /api/stocksprice/:symbol/:dateprice', () => {
     })
 
     it('when no token is provided', async (done) => {
-      const response = await app.get('/api/stocksprice/AWR/2020-05-01')
+      const response = await app.get('/api/stocksprice/AWR')
 
       expect(response.status).toEqual(401)
       done()

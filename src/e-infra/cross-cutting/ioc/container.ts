@@ -45,14 +45,21 @@ container.loadModules([['../../data/repositories/**/*.*(ts|js)', { register: asC
   },
 })
 
-container.loadModules([['../../../c-services/services/**/*.*(ts|js)', { register: asClass }]], {
+container.loadModules([['../../../d-domain/services/**/*.*(ts|js)', { register: asClass, lifetime: Lifetime.SINGLETON }]], {
   cwd: __dirname,
   formatName: function (name) {
     return camelize(name)
   },
 })
 
-container.loadModules([['../../../d-domain/services/**/*.*(ts|js)', { register: asClass, lifetime: Lifetime.SINGLETON }]], {
+container.loadModules([['../../../c-services/services/**/*.*(ts|js)', { register: asClass, lifetime: Lifetime.SCOPED }]], {
+  cwd: __dirname,
+  formatName: function (name) {
+    return camelize(name)
+  },
+})
+
+container.loadModules([['../../../c-services/workers/**/*.*(ts|js)', { register: asClass, lifetime: Lifetime.SINGLETON }]], {
   cwd: __dirname,
   formatName: function (name) {
     return camelize(name)

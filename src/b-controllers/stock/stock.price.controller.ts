@@ -28,89 +28,161 @@ function stockPriceController(
 ): unknown {
   return {
     authenticate: auth.authenticate(),
-    getAll: (request: RequestInterface<StockPrice>, response: ResponseInterface, next: NextInterface): void => {
-      const { SUCCESS, ERROR } = getAllStockPriceService.getEventType()
-
-      getAllStockPriceService
-        .on(SUCCESS, (stockPrices: StockPrice[]) => {
-          response.status(Status.OK).json(stockPrices)
+    getAll: async (request: RequestInterface<StockPrice>, response: ResponseInterface, next: NextInterface): Promise<void> => {
+      try {
+        const stockPricesFound = await getAllStockPriceService.execute()
+        const stockPrices = stockPricesFound.map((stockPrice: StockPrice) => {
+          const {
+            symbol,
+            open,
+            close,
+            high,
+            low,
+            latestPrice,
+            latestPriceTime,
+            delayedPrice,
+            delayedPriceTime,
+            previousClosePrice,
+          } = stockPrice
+          return {
+            symbol,
+            open,
+            close,
+            high,
+            low,
+            latestPrice,
+            latestPriceTime,
+            delayedPrice,
+            delayedPriceTime,
+            previousClosePrice,
+          }
         })
-        .on(ERROR, next)
 
-      getAllStockPriceService.execute()
+        response.status(Status.OK).json(stockPrices)
+      } catch (error) {
+        next(error)
+      }
     },
-    get: (request: RequestInterface<StockPrice>, response: ResponseInterface, next: NextInterface): void => {
-      const { SUCCESS, ERROR, NOT_FOUND } = getStockPriceService.getEventType()
+    get: async (request: RequestInterface<StockPrice>, response: ResponseInterface, next: NextInterface): Promise<void> => {
+      try {
+        const { symbol } = request.params
+        const stockPrice = await getStockPriceService.execute(symbol)
 
-      getStockPriceService
-        .on(SUCCESS, (stockPrice: StockPrice) => {
-          response.status(Status.OK).json(stockPrice)
-        })
-        .on(NOT_FOUND, (error: Error) => {
-          response.status(Status.NOT_FOUND).json(error)
-        })
-        .on(ERROR, next)
+        const {
+          open,
+          close,
+          high,
+          low,
+          latestPrice,
+          latestPriceTime,
+          delayedPrice,
+          delayedPriceTime,
+          previousClosePrice,
+        } = stockPrice
 
-      const { symbol, dateprice } = request.params
-      getStockPriceService.execute(symbol, dateprice)
+        response.status(Status.OK).json({
+          symbol,
+          open,
+          close,
+          high,
+          low,
+          latestPrice,
+          latestPriceTime,
+          delayedPrice,
+          delayedPriceTime,
+          previousClosePrice,
+        })
+      } catch (error) {
+        if (error.name === 'NotFoundError') response.status(Status.NOT_FOUND).json(error)
+        else next(error)
+      }
     },
-    create: (request: RequestInterface<StockPrice>, response: ResponseInterface, next: NextInterface): void => {
-      const { SUCCESS, ERROR, VALIDATION_ERROR, NOT_FOUND } = createStockPriceService.getEventType()
+    create: async (request: RequestInterface<StockPrice>, response: ResponseInterface, next: NextInterface): Promise<void> => {
+      try {
+        const { body } = request
+        const stockPrice = await createStockPriceService.execute(body)
+        const {
+          symbol,
+          open,
+          close,
+          high,
+          low,
+          latestPrice,
+          latestPriceTime,
+          delayedPrice,
+          delayedPriceTime,
+          previousClosePrice,
+        } = stockPrice
 
-      createStockPriceService
-        .on(SUCCESS, (stockPrice: StockPrice) => {
-          response.status(Status.CREATED).json(stockPrice)
+        response.status(Status.CREATED).json({
+          symbol,
+          open,
+          close,
+          high,
+          low,
+          latestPrice,
+          latestPriceTime,
+          delayedPrice,
+          delayedPriceTime,
+          previousClosePrice,
         })
-        .on(VALIDATION_ERROR, (error: Error) => {
-          response.status(Status.BAD_REQUEST).json(error)
-        })
-        .on(NOT_FOUND, (error: Error) => {
-          response.status(Status.NOT_FOUND).json(error)
-        })
-        .on(ERROR, next)
-
-      const { body } = request
-
-      createStockPriceService.execute(body)
+      } catch (error) {
+        if (error.name === 'ValidationError') response.status(Status.BAD_REQUEST).json(error)
+        else if (error.name === 'NotFoundError') response.status(Status.NOT_FOUND).json(error)
+        else next(error)
+      }
     },
 
-    update: (request: RequestInterface<StockPrice>, response: ResponseInterface, next: NextInterface): void => {
-      const { SUCCESS, ERROR, VALIDATION_ERROR, NOT_FOUND } = updateStockPriceService.getEventType()
+    update: async (request: RequestInterface<StockPrice>, response: ResponseInterface, next: NextInterface): Promise<void> => {
+      try {
+        const { symbol } = request.params
+        const { body } = request
+        const stockPrice = await updateStockPriceService.execute(symbol, body)
+        const {
+          open,
+          close,
+          high,
+          low,
+          latestPrice,
+          latestPriceTime,
+          delayedPrice,
+          delayedPriceTime,
+          previousClosePrice,
+        } = stockPrice
 
-      updateStockPriceService
-        .on(SUCCESS, (stockPrice: StockPrice) => {
-          response.status(Status.OK).json(stockPrice)
+        response.status(Status.OK).json({
+          symbol,
+          open,
+          close,
+          high,
+          low,
+          latestPrice,
+          latestPriceTime,
+          delayedPrice,
+          delayedPriceTime,
+          previousClosePrice,
         })
-        .on(VALIDATION_ERROR, (error: Error) => {
-          response.status(Status.BAD_REQUEST).json(error)
-        })
-        .on(NOT_FOUND, (error: Error) => {
-          response.status(Status.NOT_FOUND).json(error)
-        })
-        .on(ERROR, next)
-
-      const { symbol, dateprice } = request.params
-      const { body } = request
-      updateStockPriceService.execute(symbol, dateprice, body)
+      } catch (error) {
+        if (error.name === 'ValidationError') response.status(Status.BAD_REQUEST).json(error)
+        else if (error.name === 'NotFoundError') response.status(Status.NOT_FOUND).json(error)
+        else next(error)
+      }
     },
 
-    delete: (request: RequestInterface<StockPrice>, response: ResponseInterface, next: NextInterface): void => {
-      const { SUCCESS, ERROR, NOT_FOUND } = destroyStockPriceService.getEventType()
+    delete: async (request: RequestInterface<StockPrice>, response: ResponseInterface, next: NextInterface): Promise<void> => {
+      try {
+        const { symbol } = request.params
+        const destroyed = await destroyStockPriceService.execute(symbol)
 
-      destroyStockPriceService
-        .on(SUCCESS, () => {
-          response.status(Status.NO_CONTENT).json()
-        })
-        .on(NOT_FOUND, () => {
+        if (destroyed) response.status(Status.NO_CONTENT).json()
+        else
           response.status(Status.NOT_FOUND).json({
             type: 'NotFoundError',
             message: 'Stock Price cannot be found.',
           })
-        })
-        .on(ERROR, next)
-
-      const { symbol, dateprice } = request.params
-      destroyStockPriceService.execute(symbol, dateprice)
+      } catch (error) {
+        next(error)
+      }
     },
   }
 }
@@ -122,12 +194,11 @@ export default (): Router => {
 
   router.get('/', api('authenticate'), api('getAll'))
   router.get(
-    '/:symbol/:dateprice',
+    '/:symbol',
     api('authenticate'),
     celebrate({
       [Segments.PARAMS]: Joi.object().keys({
         symbol: Joi.string().required().max(20),
-        dateprice: Joi.date().required(),
       }),
     }),
     api('get')
@@ -138,7 +209,6 @@ export default (): Router => {
     celebrate({
       [Segments.BODY]: Joi.object().keys({
         symbol: Joi.string().required().max(20),
-        datePrice: Joi.date().required(),
         open: Joi.number().required(),
         close: Joi.number().required(),
         high: Joi.number().required(),
@@ -153,12 +223,11 @@ export default (): Router => {
     api('create')
   )
   router.put(
-    '/:symbol/:dateprice',
+    '/:symbol/',
     api('authenticate'),
     celebrate({
       [Segments.PARAMS]: Joi.object().keys({
         symbol: Joi.string().required().max(20),
-        dateprice: Joi.date().required(),
       }),
       [Segments.BODY]: Joi.object().keys({
         open: Joi.number().required(),
@@ -175,12 +244,11 @@ export default (): Router => {
     api('update')
   )
   router.delete(
-    '/:symbol/:dateprice',
+    '/:symbol',
     api('authenticate'),
     celebrate({
       [Segments.PARAMS]: Joi.object().keys({
         symbol: Joi.string().required().max(20),
-        dateprice: Joi.date().required(),
       }),
     }),
     api('delete')

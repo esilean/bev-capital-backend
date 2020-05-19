@@ -13,13 +13,6 @@ export default class StockPriceModel extends Model<StockPriceModel> {
   })
   symbol!: string
 
-  @PrimaryKey
-  @Column({
-    type: DataType.DATE,
-    allowNull: false,
-  })
-  datePrice!: Date
-
   @Column({
     type: DataType.DOUBLE(10, 2),
     allowNull: false,

@@ -1,45 +1,29 @@
-import Operation from '../../operation'
-import { EventTypeInterface } from '../../interfaces/operation.interface'
-import { validate } from 'class-validator'
+import { validateSync } from 'class-validator'
 import { getErrors } from '../../../e-infra/cross-cutting/utils/errors/get.error.validation'
 import Token from '../../../d-domain/entities/token'
 
 import { JwtInterface } from '../../../e-infra/cross-cutting/authentication/interfaces/auth.interface'
 import { VerifyTokenServiceInterface } from '../../interfaces/token.service.interface'
+import { ValidationError } from '../../../e-infra/cross-cutting/utils/errors/error.handler'
 
-export default class VerifyTokenService extends Operation implements VerifyTokenServiceInterface {
+export default class VerifyTokenService implements VerifyTokenServiceInterface {
   private readonly jwt: JwtInterface
 
   constructor(jwt: JwtInterface) {
-    super(['SUCCESS', 'ERROR', 'VALIDATION_ERROR'])
-
     this.jwt = jwt
   }
 
-  getEventType(): EventTypeInterface {
-    return this.getEventTypes()
-  }
-
-  execute(body: Token): void {
-    const { SUCCESS, ERROR, VALIDATION_ERROR } = this.getEventType()
-
+  async execute(body: Token): Promise<boolean> {
     const { token } = body
 
     const verifyToken = new Token(token)
 
-    validate(verifyToken, { validationError: { target: false } })
-      .then((errors) => {
-        if (errors.length > 0) {
-          const error = new Error(getErrors(errors))
-          this.emit(VALIDATION_ERROR, error)
-        } else {
-          const token = this.jwt.verify(verifyToken.token)
+    const errors = validateSync(verifyToken, {
+      validationError: { target: false },
+    })
+    if (errors.length > 0) throw new ValidationError(getErrors(errors))
 
-          this.emit(SUCCESS, token)
-        }
-      })
-      .catch((error) => {
-        this.emit(ERROR, error)
-      })
+    const validToken = this.jwt.verify(verifyToken.token)
+    return validToken
   }
 }

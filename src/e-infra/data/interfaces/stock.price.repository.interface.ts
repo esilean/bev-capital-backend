@@ -3,7 +3,6 @@ import StockPrice from '../../../d-domain/entities/stock.prices'
 
 export interface StockPriceInterface {
   symbol: string
-  datePrice: Date
   open: number
   close: number
   high: number
@@ -21,5 +20,7 @@ export interface StockPriceRepositoryInterface {
   getAll(options?: FindOptions): Promise<StockPrice[]>
   create(values: object, options?: CreateOptions): Promise<StockPrice>
   update(values: object, options: UpdateOptions): Promise<StockPrice>
-  destroy(symbol: string, datePrice: Date): Promise<boolean>
+  destroy(symbol: string): Promise<boolean>
+
+  exist(symbol: string): Promise<boolean>
 }

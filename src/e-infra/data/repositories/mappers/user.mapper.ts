@@ -22,7 +22,6 @@ export function toEntity(values: UserInterface): User {
         stockPrices &&
         stockPrices.map((sp) => {
           const {
-            datePrice,
             open,
             close,
             high,
@@ -35,7 +34,6 @@ export function toEntity(values: UserInterface): User {
           } = sp
           const stockPrice = new StockPrice(
             symbol,
-            datePrice,
             open,
             close,
             high,

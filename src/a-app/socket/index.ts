@@ -1,72 +1,62 @@
 import socketio from 'socket.io'
 import { Logger } from 'log4js'
 import { Server } from 'http'
-import { StockPriceModelInterface } from '../../e-infra/data/models/stock/stock.price.model'
-import faker from 'faker'
+import Stock from '../../d-domain/entities/stock'
+import { GetAllStockServiceInterface } from '../../c-services/interfaces/stock.service.interface'
+import { PriceWorkerInterface } from '../../c-services/interfaces/workers/price.worker.interface'
+import { PriceIEXWorkerInterface } from '../../c-services/interfaces/workers/price.iex.worker.interface'
 import { ConfigInterface } from '../../e-infra/cross-cutting/utils/interfaces/config.interface'
 
 export interface SocketIOInterface {
-  connect(server: Server): void
-}
-
-const getPrices = async (socket: socketio.Socket, stockPriceModel: StockPriceModelInterface): Promise<void> => {
-  let delayedPrice = faker.random.number(10)
-
-  await stockPriceModel.update(
-    {
-      delayedPrice,
-    },
-    {
-      where: {
-        symbol: 'AWR',
-      },
-    }
-  )
-
-  delayedPrice = faker.random.number(20)
-
-  await stockPriceModel.update(
-    {
-      delayedPrice,
-    },
-    {
-      where: {
-        symbol: 'FB',
-      },
-    }
-  )
-
-  socket.emit('updateStocks')
+  connect(server: Server): socketio.Server
+  start(io: socketio.Server): void
 }
 
 export class SocketIO implements SocketIOInterface {
   private logger: Logger
   private config: ConfigInterface
-  private stockPriceModel: StockPriceModelInterface
 
-  constructor(stockPriceModel: StockPriceModelInterface, logger: Logger, config: ConfigInterface) {
-    this.logger = logger
+  private getAllStockService: GetAllStockServiceInterface
+  private priceWorker: PriceWorkerInterface
+  private priceIexWorker: PriceIEXWorkerInterface
+
+  constructor(
+    config: ConfigInterface,
+    logger: Logger,
+    getAllStockService: GetAllStockServiceInterface,
+    priceWorker: PriceWorkerInterface,
+    priceIexWorker: PriceIEXWorkerInterface
+  ) {
     this.config = config
-    this.stockPriceModel = stockPriceModel
+    this.logger = logger
+
+    this.getAllStockService = getAllStockService
+    this.priceWorker = priceWorker
+    this.priceIexWorker = priceIexWorker
   }
 
-  connect(server: Server): void {
+  connect(server: Server): socketio.Server {
     const io = socketio(server)
+    return io
+  }
 
+  start(io: socketio.Server): void {
     this.logger.info('Starting socket')
 
-    let intervalId: NodeJS.Timeout
-    io.on('connection', (socket) => {
-      this.logger.info('New client connected')
+    this.getAllStockService
+      .execute()
+      .then((stocks: Stock[]) => {
+        const symbols = stocks.map((sp) => sp.symbol)
+        setInterval(() => {
+          this.priceIexWorker.generatePrice(symbols)
+        }, 1000 * parseInt(this.config.intervalSecGetFromIex))
 
-      intervalId = setInterval(() => {
-        getPrices(socket, this.stockPriceModel)
-      }, 1000 * parseInt(this.config.intervalSec))
-
-      socket.on('disconnect', () => {
-        clearInterval(intervalId)
-        this.logger.info('Client disconnected')
+        stocks.forEach((s) => {
+          this.priceWorker.getPrice(io, s.symbol)
+        })
       })
-    })
+      .catch((error) => {
+        this.logger.error(error)
+      })
   }
 }

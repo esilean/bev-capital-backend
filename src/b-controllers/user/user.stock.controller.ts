@@ -25,59 +25,49 @@ function userStockController(
 ): unknown {
   return {
     authenticate: auth.authenticate(),
-    get: (request: RequestInterface<UserStock>, response: ResponseInterface, next: NextInterface): void => {
-      const { SUCCESS, ERROR, NOT_FOUND } = getUserStockService.getEventType()
+    get: async (request: RequestInterface<UserStock>, response: ResponseInterface, next: NextInterface): Promise<void> => {
+      try {
+        const { id } = request.params
+        const userStock = await getUserStockService.execute(id)
 
-      getUserStockService
-        .on(SUCCESS, (userStock: UserStock) => {
-          response.status(Status.OK).json(userStock)
-        })
-        .on(NOT_FOUND, (error: Error) => {
-          response.status(Status.NOT_FOUND).json(error)
-        })
-        .on(ERROR, next)
+        const { userId, symbol, qty, avgPrice } = userStock
 
-      const { id } = request.params
-      getUserStockService.execute(id)
+        response.status(Status.OK).json({ id, userId, symbol, qty, avgPrice })
+      } catch (error) {
+        if (error.name === 'NotFoundError') response.status(Status.NOT_FOUND).json(error)
+        else next(error)
+      }
     },
-    create: (request: RequestInterface<UserStock>, response: ResponseInterface, next: NextInterface): void => {
-      const { SUCCESS, ERROR, VALIDATION_ERROR, NOT_FOUND } = createUserStockService.getEventType()
+    create: async (request: RequestInterface<UserStock>, response: ResponseInterface, next: NextInterface): Promise<void> => {
+      try {
+        const { id } = request.user
+        const { body } = request
+        const userStock = await createUserStockService.execute(id, body)
 
-      createUserStockService
-        .on(SUCCESS, (userStock: UserStock) => {
-          response.status(Status.CREATED).json(userStock)
-        })
-        .on(VALIDATION_ERROR, (error: Error) => {
-          response.status(Status.BAD_REQUEST).json(error)
-        })
-        .on(NOT_FOUND, (error: Error) => {
-          response.status(Status.NOT_FOUND).json(error)
-        })
-        .on(ERROR, next)
-
-      const { id } = request.user
-      const { body } = request
-      createUserStockService.execute(id, body)
+        const { userId, symbol, qty, avgPrice } = userStock
+        response.status(Status.CREATED).json({ id, userId, symbol, qty, avgPrice })
+      } catch (error) {
+        if (error.name === 'ValidationError') response.status(Status.BAD_REQUEST).json(error)
+        else if (error.name === 'NotFoundError') response.status(Status.NOT_FOUND).json(error)
+        else next(error)
+      }
     },
 
-    delete: (request: RequestInterface<UserStock>, response: ResponseInterface, next: NextInterface): void => {
-      const { SUCCESS, ERROR, NOT_FOUND } = destroyUserStockService.getEventType()
-
-      destroyUserStockService
-        .on(SUCCESS, () => {
-          response.status(Status.NO_CONTENT).json()
-        })
-        .on(NOT_FOUND, () => {
+    delete: async (request: RequestInterface<UserStock>, response: ResponseInterface, next: NextInterface): Promise<void> => {
+      try {
+        const { id } = request.user
+        const { symbol } = request.params
+        const destroyed = await destroyUserStockService.execute(id, symbol)
+        if (destroyed) response.status(Status.NO_CONTENT).json()
+        else
           response.status(Status.NOT_FOUND).json({
             type: 'NotFoundError',
-            message: 'User Stock cannot be found.',
+            message: 'UserStock cannot be found.',
           })
-        })
-        .on(ERROR, next)
-
-      const { id } = request.user
-      const { symbol } = request.params
-      destroyUserStockService.execute(id, symbol)
+      } catch (error) {
+        if (error.name === 'ValidationError') response.status(Status.BAD_REQUEST).json(error)
+        else next(error)
+      }
     },
   }
 }

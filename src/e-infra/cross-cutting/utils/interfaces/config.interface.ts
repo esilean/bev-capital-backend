@@ -4,7 +4,10 @@ interface ConfigInterface {
   db: Record<string, any>
   port: string | number
   logging: LogginInterface
-  intervalSec: string
+  iexBaseURL: string | undefined
+  iexToken: string | undefined
+  intervalSecSendClient: string
+  intervalSecGetFromIex: string
   authSecret: string | undefined
 }
 

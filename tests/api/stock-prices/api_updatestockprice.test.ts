@@ -13,7 +13,7 @@ describe('API -> PUST /api/stocksprice', () => {
 
       symbol = faker.random.alphaNumeric(15)
       await stockFactory({ symbol })
-      await stockPriceFactory({ symbol, datePrice: new Date(1999, 5, 1), previousClosePrice: 99 })
+      await stockPriceFactory({ symbol, previousClosePrice: 99 })
     })
 
     it('when updating stock price is ok', async (done) => {
@@ -29,7 +29,7 @@ describe('API -> PUST /api/stocksprice', () => {
         previousClosePrice: 1.99,
       }
 
-      const response = await app.put(`/api/stocksprice/${symbol}/1999-06-01`).set('Authorization', `Bearer  ${token}`).send(data)
+      const response = await app.put(`/api/stocksprice/${symbol}`).set('Authorization', `Bearer  ${token}`).send(data)
 
       expect(response.status).toEqual(200)
       expect(response.body).toHaveProperty('previousClosePrice', '1.99')
@@ -50,7 +50,7 @@ describe('API -> PUST /api/stocksprice', () => {
         previousClosePrice: 1.99,
       }
 
-      const response = await app.put(`/api/stocksprice/${symbol}/1999-06-01`).send(data)
+      const response = await app.put(`/api/stocksprice/${symbol}`).send(data)
 
       expect(response.status).toEqual(401)
       done()

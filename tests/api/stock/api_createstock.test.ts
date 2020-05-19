@@ -12,7 +12,7 @@ describe('API -> POST /api/stocks', () => {
 
     it('when creating stock is ok', async (done) => {
       const data = {
-        symbol: faker.random.word(),
+        symbol: faker.random.alphaNumeric(15),
         name: faker.random.word(),
         exchange: faker.random.word(),
         website: faker.internet.url(),

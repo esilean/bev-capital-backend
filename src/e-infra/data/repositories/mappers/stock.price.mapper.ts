@@ -4,7 +4,6 @@ import { StockPriceInterface } from '../../interfaces/stock.price.repository.int
 export function toEntity(values: StockPriceInterface): StockPrice {
   const {
     symbol,
-    datePrice,
     open,
     close,
     high,
@@ -20,7 +19,6 @@ export function toEntity(values: StockPriceInterface): StockPrice {
 
   const stock = new StockPrice(
     symbol,
-    datePrice,
     open,
     close,
     high,
@@ -40,7 +38,6 @@ export function toEntity(values: StockPriceInterface): StockPrice {
 export function toDB(stockPrice: StockPrice): object {
   const {
     symbol,
-    datePrice,
     open,
     close,
     high,
@@ -54,7 +51,6 @@ export function toDB(stockPrice: StockPrice): object {
 
   return {
     symbol,
-    datePrice,
     open,
     close,
     high,

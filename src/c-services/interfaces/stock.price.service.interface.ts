@@ -1,22 +1,21 @@
-import { OperationInterface } from './operation.interface'
 import StockPrice from '../../d-domain/entities/stock.prices'
 
-export interface GetAllStockPriceServiceInterface extends OperationInterface {
-  execute(): void
+export interface GetAllStockPriceServiceInterface {
+  execute(): Promise<StockPrice[]>
 }
 
-export interface GetStockPriceServiceInterface extends OperationInterface {
-  execute(symbol: string, datePrice: string): void
+export interface GetStockPriceServiceInterface {
+  execute(symbol: string): Promise<StockPrice>
 }
 
-export interface CreateStockPriceServiceInterface extends OperationInterface {
-  execute(body: StockPrice): void
+export interface CreateStockPriceServiceInterface {
+  execute(body: StockPrice): Promise<StockPrice>
 }
 
-export interface UpdateStockPriceServiceInterface extends OperationInterface {
-  execute(symbol: string, datePrice: string, body: StockPrice): void
+export interface UpdateStockPriceServiceInterface {
+  execute(symbol: string, body: StockPrice): Promise<StockPrice>
 }
 
-export interface DestroyStockPriceServiceInterface extends OperationInterface {
-  execute(symbol: string, datePrice: string): void
+export interface DestroyStockPriceServiceInterface {
+  execute(symbol: string): Promise<boolean>
 }

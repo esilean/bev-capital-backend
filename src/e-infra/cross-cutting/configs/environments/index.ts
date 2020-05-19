@@ -38,7 +38,10 @@ export const configs = (env: string): ConfigInterface => {
         default: { appenders: ['toFile', 'toConsole'], level: 'DEBUG' },
       },
     },
-    intervalSec: process.env.INTERVAL_SEC || '3600',
+    iexBaseURL: process.env.IEX_BASEURL,
+    iexToken: process.env.IEX_TOKEN,
+    intervalSecSendClient: process.env.INTERVAL_SEC_SENDCLIENT || '3600',
+    intervalSecGetFromIex: process.env.INTERVAL_SEC_GETFROMIEX || '7200',
     authSecret: process.env.SECRET,
   }
 

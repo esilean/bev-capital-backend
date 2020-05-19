@@ -18,10 +18,6 @@ module.exports = {
             onUpdate: 'CASCADE',
           },
         },
-        date_price: {
-          type: Sequelize.DATE,
-          allowNull: false,
-        },
         open: {
           type: Sequelize.DECIMAL(10, 2),
           allowNull: false,
@@ -76,9 +72,9 @@ module.exports = {
         },
       })
       .then(() => {
-        return queryInterface.addConstraint('stock_prices', ['symbol', 'date_price'], {
+        return queryInterface.addConstraint('stock_prices', ['symbol'], {
           type: 'primary key',
-          name: 'pkfk_symbol_dateprice',
+          name: 'pkfk_symbol',
         })
       })
   },

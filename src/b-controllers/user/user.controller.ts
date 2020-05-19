@@ -26,68 +26,122 @@ function userController(
 ): unknown {
   return {
     authenticate: auth.authenticate(),
-    getAll: (request: RequestInterface<User>, response: ResponseInterface, next: NextInterface): void => {
-      const { SUCCESS, ERROR } = getAllUserService.getEventType()
+    getAll: async (request: RequestInterface<User>, response: ResponseInterface, next: NextInterface): Promise<void> => {
+      try {
+        const usersFound = await getAllUserService.execute()
 
-      getAllUserService
-        .on(SUCCESS, (users: User[]) => {
-          response.status(Status.OK).json(users)
+        const users = usersFound.map((user: User) => {
+          const { id, name, email, userStocks } = user
+
+          const userStocksR = userStocks.map((us) => {
+            const { id, symbol, qty, avgPrice, stock } = us
+
+            const { name, exchange, website, stockPrices } = stock
+
+            const stockPrice =
+              stockPrices &&
+              stockPrices.map((sp) => {
+                const {
+                  open,
+                  close,
+                  high,
+                  low,
+                  latestPrice,
+                  latestPriceTime,
+                  delayedPrice,
+                  delayedPriceTime,
+                  previousClosePrice,
+                } = sp
+                return {
+                  open,
+                  close,
+                  high,
+                  low,
+                  latestPrice,
+                  latestPriceTime,
+                  delayedPrice,
+                  delayedPriceTime,
+                  previousClosePrice,
+                }
+              })
+
+            return { id, symbol, qty, avgPrice, stock: { name, exchange, website, priceToday: stockPrice[0] || {} } }
+          })
+
+          return { id, name, email, stocks: userStocksR }
         })
-        .on(ERROR, next)
 
-      getAllUserService.execute()
+        response.status(Status.OK).json(users)
+      } catch (error) {
+        next(error)
+      }
     },
-    get: (request: RequestInterface<User>, response: ResponseInterface, next: NextInterface): void => {
-      const { SUCCESS, ERROR, NOT_FOUND } = getUserService.getEventType()
+    get: async (request: RequestInterface<User>, response: ResponseInterface, next: NextInterface): Promise<void> => {
+      try {
+        const { id } = request.params
+        const userFound = await getUserService.execute(id)
+        const { name, email, userStocks } = userFound
 
-      getUserService
-        .on(SUCCESS, (user: User) => {
-          response.status(Status.OK).json(user)
-        })
-        .on(NOT_FOUND, (error: Error) => {
-          response.status(Status.NOT_FOUND).json(error)
-        })
-        .on(ERROR, next)
+        const userStocksR = userStocks.map((us) => {
+          const { id, symbol, qty, avgPrice, stock } = us
 
-      const { id } = request.params
-      getUserService.execute(id)
+          const { name, exchange, website, stockPrices } = stock
+
+          const stockPrice =
+            stockPrices &&
+            stockPrices.map((sp) => {
+              const {
+                open,
+                close,
+                high,
+                low,
+                latestPrice,
+                latestPriceTime,
+                delayedPrice,
+                delayedPriceTime,
+                previousClosePrice,
+              } = sp
+              return { open, close, high, low, latestPrice, latestPriceTime, delayedPrice, delayedPriceTime, previousClosePrice }
+            })
+
+          return { id, symbol, qty, avgPrice, stock: { name, exchange, website, priceToday: stockPrice[0] || {} } }
+        })
+
+        response.status(Status.OK).json({ id, name, email, stocks: userStocksR })
+      } catch (error) {
+        if (error.name === 'NotFoundError') response.status(Status.NOT_FOUND).json(error)
+        else next(error)
+      }
     },
-    create: (request: RequestInterface<User>, response: ResponseInterface, next: NextInterface): void => {
-      const { SUCCESS, ERROR, VALIDATION_ERROR } = createUserService.getEventType()
+    create: async (request: RequestInterface<User>, response: ResponseInterface, next: NextInterface): Promise<void> => {
+      try {
+        const { body } = request
+        const user = await createUserService.execute(body)
 
-      createUserService
-        .on(SUCCESS, (user: User) => {
-          response.status(Status.CREATED).json(user)
-        })
-        .on(VALIDATION_ERROR, (error: Error) => {
-          response.status(Status.BAD_REQUEST).json(error)
-        })
-        .on(ERROR, next)
-
-      const { body } = request
-      createUserService.execute(body)
+        const { id, name, email } = user
+        response.status(Status.CREATED).json({ id, name, email })
+      } catch (error) {
+        if (error.name === 'ValidationError') response.status(Status.BAD_REQUEST).json(error)
+        else if (error.name === 'NotFoundError') response.status(Status.NOT_FOUND).json(error)
+        else next(error)
+      }
     },
 
-    delete: (request: RequestInterface<User>, response: ResponseInterface, next: NextInterface): void => {
-      const { SUCCESS, ERROR, NOT_FOUND, VALIDATION_ERROR } = destroyUserService.getEventType()
+    delete: async (request: RequestInterface<User>, response: ResponseInterface, next: NextInterface): Promise<void> => {
+      try {
+        const { id } = request.params
+        const destroyed = await destroyUserService.execute(id)
 
-      destroyUserService
-        .on(SUCCESS, () => {
-          response.status(Status.NO_CONTENT).json()
-        })
-        .on(VALIDATION_ERROR, (error: Error) => {
-          response.status(Status.BAD_REQUEST).json(error)
-        })
-        .on(NOT_FOUND, () => {
+        if (destroyed) response.status(Status.NO_CONTENT).json()
+        else
           response.status(Status.NOT_FOUND).json({
             type: 'NotFoundError',
             message: 'User cannot be found.',
           })
-        })
-        .on(ERROR, next)
-
-      const { id } = request.params
-      destroyUserService.execute(id)
+      } catch (error) {
+        if (error.name === 'ValidationError') response.status(Status.BAD_REQUEST).json(error)
+        else next(error)
+      }
     },
   }
 }

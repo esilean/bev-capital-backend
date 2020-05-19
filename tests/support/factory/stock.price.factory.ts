@@ -3,7 +3,6 @@ import StockPriceModel from '../../../src/e-infra/data/models/stock/stock.price.
 
 export async function stockPriceFactory({
   symbol = faker.random.alphaNumeric(15),
-  datePrice = new Date(faker.date.recent()),
   open = faker.random.number(),
   close = faker.random.number(),
   high = faker.random.number(),
@@ -16,7 +15,6 @@ export async function stockPriceFactory({
 }): Promise<StockPriceModel> {
   return StockPriceModel.create({
     symbol,
-    datePrice: new Date(datePrice.getUTCFullYear(), datePrice.getUTCMonth(), datePrice.getUTCDate()),
     open,
     close,
     high,

@@ -5,10 +5,6 @@ export default class StockPrice {
   @IsNotEmpty()
   private _symbol: string
 
-  @IsDate()
-  @IsNotEmpty()
-  private _datePrice: Date
-
   @IsNumber()
   @IsNotEmpty()
   private _open: number
@@ -50,7 +46,6 @@ export default class StockPrice {
 
   constructor(
     symbol: string,
-    datePrice: Date,
     open: number,
     close: number,
     high: number,
@@ -64,7 +59,6 @@ export default class StockPrice {
     updatedAt?: Date
   ) {
     this._symbol = symbol
-    this._datePrice = datePrice
     this._open = open
     this._close = close
     this._high = high
@@ -80,10 +74,6 @@ export default class StockPrice {
 
   get symbol(): string {
     return this._symbol
-  }
-
-  get datePrice(): Date {
-    return this._datePrice
   }
 
   get open(): number {
