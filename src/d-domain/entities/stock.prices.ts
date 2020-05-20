@@ -38,6 +38,9 @@ export default class StockPrice {
   @IsNumber()
   private _previousClosePrice: number
 
+  @IsNumber()
+  private _changePercent: number | null = null
+
   @IsDate()
   private _createdAt: Date
 
@@ -68,6 +71,9 @@ export default class StockPrice {
     this._delayedPrice = delayedPrice
     this._delayedPriceTime = delayedPriceTime
     this._previousClosePrice = previousClosePrice
+
+    const change = previousClosePrice > 0 ? (latestPrice / previousClosePrice - 1) * 100.0 : 0.0
+    this._changePercent = change
     this._createdAt = createdAt || new Date()
     this._updatedAt = updatedAt || new Date()
   }
@@ -109,6 +115,10 @@ export default class StockPrice {
 
   get previousClosePrice(): number {
     return this._previousClosePrice
+  }
+
+  get changePercent(): number | null {
+    return this._changePercent
   }
 
   set createdAt(createdAt: Date) {

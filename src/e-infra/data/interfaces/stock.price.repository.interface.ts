@@ -1,4 +1,4 @@
-import { FindOptions, CreateOptions, UpdateOptions } from 'sequelize/types'
+import { FindOptions, CreateOptions, UpdateOptions, DestroyOptions } from 'sequelize/types'
 import StockPrice from '../../../d-domain/entities/stock.prices'
 
 export interface StockPriceInterface {
@@ -20,7 +20,5 @@ export interface StockPriceRepositoryInterface {
   getAll(options?: FindOptions): Promise<StockPrice[]>
   create(values: object, options?: CreateOptions): Promise<StockPrice>
   update(values: object, options: UpdateOptions): Promise<StockPrice>
-  destroy(symbol: string): Promise<boolean>
-
-  exist(symbol: string): Promise<boolean>
+  destroy(options: DestroyOptions): Promise<boolean>
 }

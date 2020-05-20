@@ -10,10 +10,10 @@ export default class PriceIEXWorker implements PriceIEXWorkerInterface {
     this.getAllStockQuoteIexService = getAllStockQuoteIexService
     this.stockPriceDomain = stockPriceDomain
   }
-  async generatePrice(symbols: string[]): Promise<void> {
+  async generatePriceIEX(symbols: string[]): Promise<void> {
     const stocksPrice = await this.getAllStockQuoteIexService.execute(symbols)
     stocksPrice.forEach((sp) => {
-      this.stockPriceDomain.createOrUpdate(sp)
+      this.stockPriceDomain.update(sp, { where: { symbol: sp.symbol } })
     })
   }
 }

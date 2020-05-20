@@ -28,8 +28,7 @@ export default class PriceWorker implements PriceWorkerInterface {
             .execute(symbol)
             .then((stockPrice: StockPrice) => {
               if (stockPrice) {
-                const { symbol, low, high, latestPrice, latestPriceTime, previousClosePrice } = stockPrice
-                const changePercent = previousClosePrice > 0 ? (latestPrice / previousClosePrice - 1) * 100.0 : 0.0
+                const { symbol, low, high, latestPrice, latestPriceTime, previousClosePrice, changePercent } = stockPrice
                 socket.emit(symbol, { symbol, low, high, latestPrice, latestPriceTime, previousClosePrice, changePercent })
               }
             })

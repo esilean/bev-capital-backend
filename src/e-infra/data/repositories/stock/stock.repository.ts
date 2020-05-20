@@ -1,4 +1,4 @@
-import { FindOptions, CreateOptions } from 'sequelize/types'
+import { FindOptions, CreateOptions, DestroyOptions } from 'sequelize/types'
 import { toEntity } from '../mappers/stock.mapper'
 import Stock from '../../../../d-domain/entities/stock'
 import { StockRepositoryInterface } from '../../interfaces/stock.repository.interface'
@@ -31,10 +31,8 @@ export default class StockRepository implements StockRepositoryInterface {
     return toEntity(stockCreated)
   }
 
-  async destroy(symbol: string): Promise<boolean> {
-    const stockDestroyed = await this.stockModel.destroy({
-      where: { symbol },
-    })
+  async destroy(options: DestroyOptions): Promise<boolean> {
+    const stockDestroyed = await this.stockModel.destroy(options)
     return stockDestroyed > 0
   }
 }

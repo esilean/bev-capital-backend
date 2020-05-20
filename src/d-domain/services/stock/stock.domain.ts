@@ -1,4 +1,4 @@
-import { FindOptions, CreateOptions } from 'sequelize/types'
+import { FindOptions, CreateOptions, DestroyOptions } from 'sequelize/types'
 import { validateSync } from 'class-validator'
 import { getErrors } from '../../../e-infra/cross-cutting/utils/errors/get.error.validation'
 import { ValidationError } from '../../../e-infra/cross-cutting/utils/errors/error.handler'
@@ -46,18 +46,21 @@ export default class StockDomain implements StockDomainInterface {
       .then((stockCreated) => {
         return stockCreated
       })
+      .then((stockCreated) => {
+        return stockCreated
+      })
       .catch((error) => {
         throw error
       })
   }
-  async destroy(symbol: string): Promise<boolean> {
-    const opt: FindOptions = { limit: 1, attributes: ['symbol'], where: { symbol } }
+  async destroy(options: DestroyOptions): Promise<boolean> {
+    const opt: FindOptions = { limit: 1, attributes: ['symbol'], where: options.where }
     const userStocks = await this.userStockRepository.getAll(opt)
     if (userStocks.length > 0) {
       const error: Error = new ValidationError('Stock cannot be deleted')
       throw error
     }
 
-    return await this.stockRepository.destroy(symbol)
+    return await this.stockRepository.destroy(options)
   }
 }

@@ -51,6 +51,7 @@ function userController(
                   delayedPrice,
                   delayedPriceTime,
                   previousClosePrice,
+                  changePercent,
                 } = sp
                 return {
                   open,
@@ -62,6 +63,7 @@ function userController(
                   delayedPrice,
                   delayedPriceTime,
                   previousClosePrice,
+                  changePercent,
                 }
               })
 
@@ -100,8 +102,21 @@ function userController(
                 delayedPrice,
                 delayedPriceTime,
                 previousClosePrice,
+                changePercent,
               } = sp
-              return { open, close, high, low, latestPrice, latestPriceTime, delayedPrice, delayedPriceTime, previousClosePrice }
+
+              return {
+                open,
+                close,
+                high,
+                low,
+                latestPrice,
+                latestPriceTime,
+                delayedPrice,
+                delayedPriceTime,
+                previousClosePrice,
+                changePercent,
+              }
             })
 
           return { id, symbol, qty, avgPrice, stock: { name, exchange, website, priceToday: stockPrice[0] || {} } }

@@ -1,7 +1,7 @@
 import { StockPriceDomainInterface } from '../../interfaces/stock.price.domain.interface'
 import { StockPriceRepositoryInterface } from '../../../e-infra/data/interfaces/stock.price.repository.interface'
 import StockPrice from '../../entities/stock.prices'
-import { FindOptions, CreateOptions, UpdateOptions } from 'sequelize/types'
+import { FindOptions, CreateOptions, UpdateOptions, DestroyOptions } from 'sequelize/types'
 import { validateSync } from 'class-validator'
 import { getErrors } from '../../../e-infra/cross-cutting/utils/errors/get.error.validation'
 import { toDB } from '../../../e-infra/data/repositories/mappers/stock.price.mapper'
@@ -21,15 +21,6 @@ export default class StockPriceDomain implements StockPriceDomainInterface {
     return await this.stockPriceRepository.getAll(options)
   }
 
-  async createOrUpdate(newStockPrice: StockPrice): Promise<void> {
-    const exist = await this.stockPriceRepository.exist(newStockPrice.symbol)
-    if (exist) {
-      await this.update(newStockPrice, { where: { symbol: newStockPrice.symbol } })
-    } else {
-      await this.create(newStockPrice)
-    }
-  }
-
   async create(newStockPrice: StockPrice, options?: CreateOptions): Promise<StockPrice> {
     const errors = validateSync(newStockPrice, {
       validationError: { target: false },
@@ -38,8 +29,6 @@ export default class StockPriceDomain implements StockPriceDomainInterface {
       const error: Error = new ValidationError(getErrors(errors))
       throw error
     }
-
-    await this.stockRepository.getBySymbol(newStockPrice.symbol)
 
     //validar stock dup
     const opt: FindOptions = {
@@ -84,7 +73,7 @@ export default class StockPriceDomain implements StockPriceDomainInterface {
       })
   }
 
-  async destroy(symbol: string): Promise<boolean> {
-    return await this.stockPriceRepository.destroy(symbol)
+  async destroy(options: DestroyOptions): Promise<boolean> {
+    return await this.stockPriceRepository.destroy(options)
   }
 }

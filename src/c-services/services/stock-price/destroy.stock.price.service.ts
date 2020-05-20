@@ -9,7 +9,7 @@ export default class DestroyStockPriceService implements DestroyStockPriceServic
   }
 
   async execute(symbol: string): Promise<boolean> {
-    const destroyed = await this.stockPriceDomain.destroy(symbol)
+    const destroyed = await this.stockPriceDomain.destroy({ where: { symbol } })
     return destroyed
   }
 }

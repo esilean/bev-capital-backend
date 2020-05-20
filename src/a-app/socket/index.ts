@@ -48,7 +48,7 @@ export class SocketIO implements SocketIOInterface {
       .then((stocks: Stock[]) => {
         const symbols = stocks.map((sp) => sp.symbol)
         setInterval(() => {
-          this.priceIexWorker.generatePrice(symbols)
+          this.priceIexWorker.generatePriceIEX(symbols)
         }, 1000 * parseInt(this.config.intervalSecGetFromIex))
 
         stocks.forEach((s) => {
