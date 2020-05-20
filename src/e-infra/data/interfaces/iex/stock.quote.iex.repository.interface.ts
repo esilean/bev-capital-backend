@@ -1,4 +1,4 @@
-import StockPrice from '../../../../d-domain/entities/stock.prices';
+import StockPrice from '../../../../d-domain/entities/stock.prices'
 
 export interface StockBatchIEXInterface {
   [k: string]: StockQuoteIEXInterface

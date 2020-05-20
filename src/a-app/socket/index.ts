@@ -46,11 +46,13 @@ export class SocketIO implements SocketIOInterface {
     this.getAllStockService
       .execute()
       .then((stocks: Stock[]) => {
+        //get prices from IEX Provider
         const symbols = stocks.map((sp) => sp.symbol)
         setInterval(() => {
           this.priceIexWorker.generatePriceIEX(symbols)
         }, 1000 * parseInt(this.config.intervalSecGetFromIex))
 
+        //for each stock open a new socket namespace (nspc = symbol name)
         stocks.forEach((s) => {
           this.priceWorker.getPrice(io, s.symbol)
         })

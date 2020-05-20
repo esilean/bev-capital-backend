@@ -4,7 +4,7 @@ import { CradleInterface } from './interfaces/cradle.interface'
 import { App } from '../../../a-app/app'
 import { Server } from '../../../a-app/server'
 import Router from '../../../a-app/router'
-import { config } from '../configs/config'
+import { config } from '../configs'
 import { logger } from '../utils/logging/logger'
 import errorHandler from '../utils/errors/error.handler'
 import database from '../../data/sequelize'
@@ -12,6 +12,7 @@ import Auth from '../authentication/auth'
 import Jwt from '../authentication/jwt'
 import { SocketIO } from '../../../a-app/socket'
 import { camelize } from '../utils/js/camelize'
+import Redis from '../../redis'
 
 const container = createContainer<CradleInterface>({
   injectionMode: InjectionMode.CLASSIC,
@@ -29,6 +30,7 @@ container.register({
   auth: asClass(Auth).singleton(),
   jwt: asClass(Jwt).singleton(),
   sockio: asClass(SocketIO).singleton(),
+  redisClient: asClass(Redis).singleton(),
 })
 
 container.loadModules([['../../data/models/**/*.*(ts|js)', { register: asValue }]], {

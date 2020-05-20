@@ -65,12 +65,15 @@ export class SocketIO implements SocketIOInterface {
   start(io: socketio.Server): void {
     const interval = this.config.intervalSecSendClient
 
-    this.getAllStockService.execute().then((stocks: Stock[]) => {
-      stocks.forEach((s) => {
-        getStock(io, interval, s.symbol, this.getStockQuoteIexService)
+    this.getAllStockService
+      .execute()
+      .then((stocks: Stock[]) => {
+        stocks.forEach((s) => {
+          getStock(io, interval, s.symbol, this.getStockQuoteIexService)
+        })
       })
-    }).catch(error => {
-      this.logger.error(error)
-    })
+      .catch((error) => {
+        this.logger.error(error)
+      })
   }
 }

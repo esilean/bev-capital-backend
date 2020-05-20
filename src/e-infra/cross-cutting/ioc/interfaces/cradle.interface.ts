@@ -6,6 +6,7 @@ import { Logger } from 'log4js'
 import { Sequelize } from 'sequelize/types'
 import { AuthInterface, JwtInterface } from '../../authentication/interfaces/auth.interface'
 import { SocketIOInterface } from '../../../../a-app/socket'
+import { RedisInterface } from '../../../redis/interfaces/redis.interface'
 
 export interface CradleInterface extends Request {
   server: ServerInterface
@@ -19,4 +20,5 @@ export interface CradleInterface extends Request {
   auth: AuthInterface
   jwt: JwtInterface
   sockio: SocketIOInterface
+  redisClient: RedisInterface
 }

@@ -38,6 +38,9 @@ export default (error: JoiError, request: RequestInterface<string>, response: Re
   if (error.joi) {
     errorType = 'ValidationError'
     errorStatus = Status.BAD_REQUEST
+  } else if (error.name === 'NotFoundError') {
+    errorType = 'NotFoundError'
+    errorStatus = Status.NOT_FOUND
   }
 
   const resp = Object.assign(
