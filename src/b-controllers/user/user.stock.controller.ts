@@ -30,9 +30,49 @@ function userStockController(
         const { id } = request.params
         const userStock = await getUserStockService.execute(id)
 
-        const { userId, symbol, qty, avgPrice } = userStock
+        const { symbol, qty, avgPrice, stock } = userStock
 
-        response.status(Status.OK).json({ id, userId, symbol, qty, avgPrice })
+        const { name, exchange, website, stockPrice } = stock
+
+        const {
+          open,
+          close,
+          high,
+          low,
+          latestPrice,
+          latestPriceTime,
+          delayedPrice,
+          delayedPriceTime,
+          previousClosePrice,
+          changePercent,
+        } = stockPrice
+
+        const data = {
+          id,
+          symbol,
+          qty,
+          avgPrice,
+          stock: {
+            name,
+            exchange,
+            website,
+            priceToday: {
+              open,
+              close,
+              high,
+              low,
+              latestPrice,
+              latestPriceTime,
+              delayedPrice,
+              delayedPriceTime,
+              previousClosePrice,
+              changePercent,
+            },
+          },
+        }
+
+
+        response.status(Status.OK).json(data)
       } catch (error) {
         if (error.name === 'NotFoundError') response.status(Status.NOT_FOUND).json(error)
         else next(error)
@@ -44,8 +84,8 @@ function userStockController(
         const { body } = request
         const userStock = await createUserStockService.execute(id, body)
 
-        const { userId, symbol, qty, avgPrice } = userStock
-        response.status(Status.CREATED).json({ id, userId, symbol, qty, avgPrice })
+        const { id: uId, userId, symbol, qty, avgPrice } = userStock
+        response.status(Status.CREATED).json({ id: uId, userId, symbol, qty, avgPrice })
       } catch (error) {
         if (error.name === 'ValidationError') response.status(Status.BAD_REQUEST).json(error)
         else if (error.name === 'NotFoundError') response.status(Status.NOT_FOUND).json(error)

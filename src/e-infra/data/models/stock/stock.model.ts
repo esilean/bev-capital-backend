@@ -1,4 +1,4 @@
-import { Table, Model, Column, CreatedAt, UpdatedAt, DataType, Length, HasMany, PrimaryKey } from 'sequelize-typescript'
+import { Table, Model, Column, CreatedAt, UpdatedAt, DataType, Length, HasMany, PrimaryKey, HasOne } from 'sequelize-typescript'
 import UserStockModel from '../user/user.stock.model'
 import StockPriceModel from './stock.price.model'
 
@@ -38,8 +38,8 @@ export default class StockModel extends Model<StockModel> {
   @HasMany(() => UserStockModel)
   userStocks!: UserStockModel[]
 
-  @HasMany(() => StockPriceModel)
-  stockPrices!: StockPriceModel[]
+  @HasOne(() => StockPriceModel)
+  stockPrice!: StockPriceModel
 
   @CreatedAt
   @Column({ field: 'created_at' })

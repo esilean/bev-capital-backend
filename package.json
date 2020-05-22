@@ -16,6 +16,7 @@
     "coverage": "cross-env NODE_ENV=test yarn pretest && jest --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {
+    "async": "^3.2.0",
     "awilix": "^4.2.6",
     "awilix-express": "^3.0.0",
     "axios": "^0.19.2",
@@ -47,6 +48,7 @@
   },
   "devDependencies": {
     "@babel/parser": "^7.9.6",
+    "@types/async": "^3.2.3",
     "@types/bcrypt": "^3.0.0",
     "@types/bluebird": "^3.5.30",
     "@types/compression": "^1.7.0",

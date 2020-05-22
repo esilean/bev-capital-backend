@@ -7,7 +7,7 @@ export interface StockInterface {
   name: string
   exchange: string
   website: string
-  stockPrices: StockPriceInterface[]
+  stockPrice: StockPriceInterface
   createdAt?: Date
   updatedAt?: Date
 }

@@ -36,12 +36,31 @@ function userController(
           const userStocksR = userStocks.map((us) => {
             const { id, symbol, qty, avgPrice, stock } = us
 
-            const { name, exchange, website, stockPrices } = stock
+            const { name, exchange, website, stockPrice } = stock
 
-            const stockPrice =
-              stockPrices &&
-              stockPrices.map((sp) => {
-                const {
+            const {
+              open,
+              close,
+              high,
+              low,
+              latestPrice,
+              latestPriceTime,
+              delayedPrice,
+              delayedPriceTime,
+              previousClosePrice,
+              changePercent,
+            } = stockPrice
+
+            return {
+              id,
+              symbol,
+              qty,
+              avgPrice,
+              stock: {
+                name,
+                exchange,
+                website,
+                priceToday: {
                   open,
                   close,
                   high,
@@ -52,22 +71,9 @@ function userController(
                   delayedPriceTime,
                   previousClosePrice,
                   changePercent,
-                } = sp
-                return {
-                  open,
-                  close,
-                  high,
-                  low,
-                  latestPrice,
-                  latestPriceTime,
-                  delayedPrice,
-                  delayedPriceTime,
-                  previousClosePrice,
-                  changePercent,
-                }
-              })
-
-            return { id, symbol, qty, avgPrice, stock: { name, exchange, website, priceToday: stockPrice[0] || {} } }
+                },
+              },
+            }
           })
 
           return { id, name, email, stocks: userStocksR }
@@ -87,12 +93,31 @@ function userController(
         const userStocksR = userStocks.map((us) => {
           const { id, symbol, qty, avgPrice, stock } = us
 
-          const { name, exchange, website, stockPrices } = stock
+          const { name, exchange, website, stockPrice } = stock
 
-          const stockPrice =
-            stockPrices &&
-            stockPrices.map((sp) => {
-              const {
+          const {
+            open,
+            close,
+            high,
+            low,
+            latestPrice,
+            latestPriceTime,
+            delayedPrice,
+            delayedPriceTime,
+            previousClosePrice,
+            changePercent,
+          } = stockPrice
+
+          return {
+            id,
+            symbol,
+            qty,
+            avgPrice,
+            stock: {
+              name,
+              exchange,
+              website,
+              priceToday: {
                 open,
                 close,
                 high,
@@ -103,23 +128,9 @@ function userController(
                 delayedPriceTime,
                 previousClosePrice,
                 changePercent,
-              } = sp
-
-              return {
-                open,
-                close,
-                high,
-                low,
-                latestPrice,
-                latestPriceTime,
-                delayedPrice,
-                delayedPriceTime,
-                previousClosePrice,
-                changePercent,
-              }
-            })
-
-          return { id, symbol, qty, avgPrice, stock: { name, exchange, website, priceToday: stockPrice[0] || {} } }
+              },
+            },
+          }
         })
 
         response.status(Status.OK).json({ id, name, email, stocks: userStocksR })

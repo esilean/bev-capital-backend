@@ -18,7 +18,7 @@ export const optUserAndStocks: FindOptions = {
           required: false,
           include: [
             {
-              association: 'stockPrices',
+              association: 'stockPrice',
               required: false,
             },
           ],

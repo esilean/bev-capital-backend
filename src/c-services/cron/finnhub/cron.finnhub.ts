@@ -1,4 +1,5 @@
 import cron from 'node-cron'
+import async from 'async'
 import { UserStockDomainInterface } from '../../../d-domain/interfaces/user.stocks.domain.interface'
 import { CronFinnHubInterface } from '../interfaces/cron.interfaces'
 import moment from 'moment'
@@ -55,9 +56,11 @@ export default class CronFinnhub implements CronFinnHubInterface {
           const symbols = stocks.map((s) => s.symbol)
 
           symbols.forEach(async (s) => {
-            //sleep for 1 second cause finnhub provider does not allowed many calls... should use websocket
-            await new Promise((r) => setTimeout(r, 1000))
-            this.priceFinnhubWorker.generatePriceFinnhub(s)
+            async.series([
+              (): void => {
+                this.priceFinnhubWorker.generatePriceFinnhub(s)
+              },
+            ])
           })
         }
       })

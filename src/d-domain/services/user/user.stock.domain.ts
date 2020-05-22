@@ -27,7 +27,7 @@ export default class UserStockDomain implements UserStockDomainInterface {
 
   async create(newUserStock: UserStock, options?: CreateOptions): Promise<UserStock> {
     //validar stock exists
-    const stock = await this.stockRepository.getBySymbol(newUserStock.symbol)
+    const stock = await this.stockRepository.getBySymbol(newUserStock.symbol, { include: ['stockPrice'] })
     newUserStock.stock = stock
 
     const errors = validateSync(newUserStock, {

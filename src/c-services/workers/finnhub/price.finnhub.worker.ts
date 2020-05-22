@@ -33,6 +33,4 @@ export default class PriceFinnhubWorker implements PriceFinnhubWorkerInterface {
       this.stockPriceDomain.update(stockPrice, { where: { symbol: stockPrice.symbol } })
     })
   }
-
-
 }

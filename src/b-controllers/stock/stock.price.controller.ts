@@ -11,9 +11,7 @@ import {
 import { AuthInterface } from '../../e-infra/cross-cutting/authentication/interfaces/auth.interface'
 import {
   GetAllStockPriceServiceInterface,
-  CreateStockPriceServiceInterface,
   UpdateStockPriceServiceInterface,
-  DestroyStockPriceServiceInterface,
   GetStockPriceServiceInterface,
 } from '../../c-services/interfaces/stock.price.service.interface'
 import StockPrice from '../../d-domain/entities/stock.prices'
@@ -22,9 +20,7 @@ function stockPriceController(
   auth: AuthInterface,
   getAllStockPriceService: GetAllStockPriceServiceInterface,
   getStockPriceService: GetStockPriceServiceInterface,
-  createStockPriceService: CreateStockPriceServiceInterface,
-  updateStockPriceService: UpdateStockPriceServiceInterface,
-  destroyStockPriceService: DestroyStockPriceServiceInterface
+  updateStockPriceService: UpdateStockPriceServiceInterface
 ): unknown {
   return {
     authenticate: auth.authenticate(),
@@ -97,41 +93,6 @@ function stockPriceController(
         else next(error)
       }
     },
-    create: async (request: RequestInterface<StockPrice>, response: ResponseInterface, next: NextInterface): Promise<void> => {
-      try {
-        const { body } = request
-        const stockPrice = await createStockPriceService.execute(body)
-        const {
-          symbol,
-          open,
-          close,
-          high,
-          low,
-          latestPrice,
-          latestPriceTime,
-          delayedPrice,
-          delayedPriceTime,
-          previousClosePrice,
-        } = stockPrice
-
-        response.status(Status.CREATED).json({
-          symbol,
-          open,
-          close,
-          high,
-          low,
-          latestPrice,
-          latestPriceTime,
-          delayedPrice,
-          delayedPriceTime,
-          previousClosePrice,
-        })
-      } catch (error) {
-        if (error.name === 'ValidationError') response.status(Status.BAD_REQUEST).json(error)
-        else if (error.name === 'NotFoundError') response.status(Status.NOT_FOUND).json(error)
-        else next(error)
-      }
-    },
 
     update: async (request: RequestInterface<StockPrice>, response: ResponseInterface, next: NextInterface): Promise<void> => {
       try {
@@ -168,22 +129,6 @@ function stockPriceController(
         else next(error)
       }
     },
-
-    delete: async (request: RequestInterface<StockPrice>, response: ResponseInterface, next: NextInterface): Promise<void> => {
-      try {
-        const { symbol } = request.params
-        const destroyed = await destroyStockPriceService.execute(symbol)
-
-        if (destroyed) response.status(Status.NO_CONTENT).json()
-        else
-          response.status(Status.NOT_FOUND).json({
-            type: 'NotFoundError',
-            message: 'Stock Price cannot be found.',
-          })
-      } catch (error) {
-        next(error)
-      }
-    },
   }
 }
 
@@ -202,25 +147,6 @@ export default (): Router => {
       }),
     }),
     api('get')
-  )
-  router.post(
-    '/',
-    api('authenticate'),
-    celebrate({
-      [Segments.BODY]: Joi.object().keys({
-        symbol: Joi.string().required().max(20),
-        open: Joi.number().required(),
-        close: Joi.number().required(),
-        high: Joi.number().required(),
-        low: Joi.number().required(),
-        latestPrice: Joi.number().required(),
-        latestPriceTime: Joi.date().required(),
-        delayedPrice: Joi.number().required(),
-        delayedPriceTime: Joi.date().required(),
-        previousClosePrice: Joi.number().required(),
-      }),
-    }),
-    api('create')
   )
   router.put(
     '/:symbol/',
@@ -242,16 +168,6 @@ export default (): Router => {
       }),
     }),
     api('update')
-  )
-  router.delete(
-    '/:symbol',
-    api('authenticate'),
-    celebrate({
-      [Segments.PARAMS]: Joi.object().keys({
-        symbol: Joi.string().required().max(20),
-      }),
-    }),
-    api('delete')
   )
 
   return router

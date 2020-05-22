@@ -18,13 +18,12 @@ export default class CreateStockService implements CreateStockServiceInterface {
 
   async execute(body: Stock): Promise<Stock> {
     const { symbol, name, exchange, website } = body
-    const newStock = new Stock(symbol, name, exchange, website)
+
+    const stockPrice = new StockPrice(symbol, 0, 0, 0, 0, 0, new Date(), 0, new Date(), 0)
+    const newStock = new Stock(symbol, name, exchange, website, stockPrice)
 
     const result = await this.database.transaction(async (t) => {
-      const stock = await this.stockDomain.create(newStock, { transaction: t })
-
-      const newStockPrice = new StockPrice(symbol, 0, 0, 0, 0, 0, new Date(), 0, new Date(), 0)
-      await this.stockPriceDomain.create(newStockPrice, { transaction: t })
+      const stock = await this.stockDomain.create(newStock, { include: ['stockPrice'], transaction: t })
 
       return stock
     })

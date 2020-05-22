@@ -15,28 +15,34 @@ export function toEntity(values: UserInterface): User {
 
       const userStock = new UserStock(id, userId, symbol, qty, avgPrice, createdAt, updatedAt)
 
-      const { website, name, exchange, stockPrices } = stock
-      const stockD = new Stock(symbol, name, exchange, website)
+      const { website, name, exchange, stockPrice } = stock
 
-      const stockPricesD: StockPrice[] =
-        stockPrices &&
-        stockPrices.map((sp) => {
-          const { open, close, high, low, latestPrice, latestPriceTime, delayedPrice, delayedPriceTime, previousClosePrice } = sp
-          const stockPrice = new StockPrice(
-            symbol,
-            open,
-            close,
-            high,
-            low,
-            latestPrice,
-            latestPriceTime,
-            delayedPrice,
-            delayedPriceTime,
-            previousClosePrice
-          )
-          return stockPrice
-        })
-      stockD.stockPrices = stockPricesD
+      const {
+        open,
+        close,
+        high,
+        low,
+        latestPrice,
+        latestPriceTime,
+        delayedPrice,
+        delayedPriceTime,
+        previousClosePrice,
+      } = stockPrice
+
+      const stockPriceD = new StockPrice(
+        symbol,
+        open,
+        close,
+        high,
+        low,
+        latestPrice,
+        latestPriceTime,
+        delayedPrice,
+        delayedPriceTime,
+        previousClosePrice
+      )
+
+      const stockD = new Stock(symbol, name, exchange, website, stockPriceD)
 
       userStock.stock = stockD
 

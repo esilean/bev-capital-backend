@@ -1,6 +1,7 @@
 import Stock from '../../../d-domain/entities/stock'
 import { StockDomainInterface } from '../../../d-domain/interfaces/stock.domain.interface'
 import { GetAllStockServiceInterface } from '../../interfaces/stock.service.interface'
+import { optStockPrice } from './options'
 
 export default class GetAllStockService implements GetAllStockServiceInterface {
   private readonly stockDomain: StockDomainInterface
@@ -10,7 +11,7 @@ export default class GetAllStockService implements GetAllStockServiceInterface {
   }
 
   async execute(): Promise<Stock[]> {
-    const stocks = await this.stockDomain.getAll()
+    const stocks = await this.stockDomain.getAll(optStockPrice)
     return stocks
   }
 }

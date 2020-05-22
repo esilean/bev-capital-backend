@@ -23,7 +23,7 @@ export default class Stock {
   private _userStocks: UserStock[] = []
 
   @ValidateNested()
-  private _stockPrices: StockPrice[] = []
+  private _stockPrice: StockPrice
 
   @IsDate()
   private _createdAt: Date
@@ -31,11 +31,20 @@ export default class Stock {
   @IsDate()
   private _updatedAt: Date
 
-  constructor(symbol: string, name: string, exchange: string, website: string, createdAt?: Date, updatedAt?: Date) {
+  constructor(
+    symbol: string,
+    name: string,
+    exchange: string,
+    website: string,
+    stockPrice: StockPrice,
+    createdAt?: Date,
+    updatedAt?: Date
+  ) {
     this._symbol = symbol
     this._name = name
     this._exchange = exchange
     this._website = website
+    this._stockPrice = stockPrice
     this._createdAt = createdAt || new Date()
     this._updatedAt = updatedAt || new Date()
   }
@@ -64,12 +73,8 @@ export default class Stock {
     return this._userStocks
   }
 
-  set stockPrices(stockPrices: StockPrice[]) {
-    this._stockPrices = stockPrices
-  }
-
-  get stockPrices(): StockPrice[] {
-    return this._stockPrices
+  get stockPrice(): StockPrice {
+    return this._stockPrice
   }
 
   set createdAt(createdAt: Date) {

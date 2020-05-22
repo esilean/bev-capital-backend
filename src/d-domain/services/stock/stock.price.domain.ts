@@ -61,7 +61,7 @@ export default class StockPriceDomain implements StockPriceDomainInterface {
       throw error
     }
 
-    await this.stockRepository.getBySymbol(newStockPrice.symbol)
+    await this.stockRepository.getBySymbol(newStockPrice.symbol, { include: ['stockPrice'] })
 
     return this.stockPriceRepository
       .update(toDB(newStockPrice), options)
