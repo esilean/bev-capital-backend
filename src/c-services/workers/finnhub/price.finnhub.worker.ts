@@ -30,7 +30,7 @@ export default class PriceFinnhubWorker implements PriceFinnhubWorkerInterface {
         this.logger.error(err)
       }
 
-      this.stockPriceDomain.update(stockPrice, { where: { symbol: stockPrice.symbol } })
+      await this.stockPriceDomain.update(stockPrice, { where: { symbol: stockPrice.symbol } })
     })
   }
 }

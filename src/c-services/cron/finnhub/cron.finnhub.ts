@@ -53,14 +53,14 @@ export default class CronFinnhub implements CronFinnHubInterface {
         if (now > startTime && now < stopTime) {
           // get stocks from user
           const stocks = await this.userStockDomain.getAll()
-          const symbols = stocks.map((s) => s.symbol)
+          let symbols = stocks.map((s) => s.symbol)
 
-          symbols.forEach(async (s) => {
-            async.series([
-              (): void => {
-                this.priceFinnhubWorker.generatePriceFinnhub(s)
-              },
-            ])
+          //remove duplicated symbols
+          const symbolsSet = new Set(symbols)
+          symbols = [...symbolsSet]
+
+          async.each(symbols, (s) => {
+            this.priceFinnhubWorker.generatePriceFinnhub(s)
           })
         }
       })
