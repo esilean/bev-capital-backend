@@ -7,6 +7,7 @@ import { AuthInterface } from '../e-infra/cross-cutting/authentication/interface
 import http from 'http'
 import { SocketIOInterface } from './socket'
 import socketio from 'socket.io'
+import { CronIEXInterface, CronFinnHubInterface } from '../c-services/cron/interfaces/cron.interfaces'
 
 export class Server implements ServerInterface {
   private server: http.Server
@@ -14,8 +15,18 @@ export class Server implements ServerInterface {
   private logger: Logger
   private sockio: SocketIOInterface
   private io: socketio.Server
+  private cronIex: CronIEXInterface
+  private cronFinnhub: CronFinnHubInterface
 
-  constructor(router: Router, sockio: SocketIOInterface, auth: AuthInterface, config: ConfigInterface, logger: Logger) {
+  constructor(
+    router: Router,
+    sockio: SocketIOInterface,
+    cronIex: CronIEXInterface,
+    cronFinnhub: CronFinnHubInterface,
+    auth: AuthInterface,
+    config: ConfigInterface,
+    logger: Logger
+  ) {
     this.config = config
     this.logger = logger
 
@@ -28,6 +39,9 @@ export class Server implements ServerInterface {
 
     this.sockio = sockio
     this.io = this.sockio.connect(this.server)
+
+    this.cronIex = cronIex
+    this.cronFinnhub = cronFinnhub
   }
 
   app(): http.Server {
@@ -39,7 +53,19 @@ export class Server implements ServerInterface {
       const { port } = http.address() as AddressInfo
       this.logger.info(`API is running on port: ${port}`)
 
+      //open socket
       this.sockio.start(this.io)
+
+      //choose a provider for "real-time prices"
+      if (this.config.provider.toLowerCase() === 'iex') {
+        this.logger.info('Using IEX')
+        //start cron for IEX provider
+        this.cronIex.getPriceFromIEX()
+      } else {
+        this.logger.info('Using Finnhub')
+        //start cron for Finnhub provider
+        this.cronFinnhub.getPriceFromFinnHub()
+      }
     })
   }
 }

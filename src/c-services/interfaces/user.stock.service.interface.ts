@@ -1,5 +1,9 @@
 import UserStock from '../../d-domain/entities/user.stock'
 
+export interface GetAllUserStockServiceInterface {
+  execute(): Promise<UserStock[]>
+}
+
 export interface GetUserStockServiceInterface {
   execute(id: string): Promise<UserStock>
 }

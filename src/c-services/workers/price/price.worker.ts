@@ -16,7 +16,7 @@ export default class PriceWorker implements PriceWorkerInterface {
     this.getStockPriceService = getStockPriceService
   }
 
-  getPrice(io: socketio.Server, symbol: string): void {
+  sendPriceToClient(io: socketio.Server, symbol: string): void {
     const interval = this.config.intervalSecSendClient
 
     const nsstock = io.of(`/${symbol}`)
@@ -33,8 +33,6 @@ export default class PriceWorker implements PriceWorkerInterface {
               }
             })
             .catch((error: Error) => that.logger.error(error))
-
-          //setTimeout(run, 1000 * parseInt(interval), that, socket, symbol)
         },
         1000 * parseInt(interval),
         this,

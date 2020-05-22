@@ -1,4 +1,4 @@
 import socketio from 'socket.io'
 export interface PriceWorkerInterface {
-  getPrice(io: socketio.Server, symbol: string): void
+  sendPriceToClient(io: socketio.Server, symbol: string): void
 }

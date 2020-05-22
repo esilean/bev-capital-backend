@@ -17,6 +17,10 @@ export default class UserStockDomain implements UserStockDomainInterface {
     this.stockRepository = stockRepository
   }
 
+  async getAll(options?: FindOptions): Promise<UserStock[]> {
+    return await this.userStockRepository.getAll(options)
+  }
+
   async getById(id: string, options?: FindOptions): Promise<UserStock> {
     return await this.userStockRepository.getById(id, options)
   }

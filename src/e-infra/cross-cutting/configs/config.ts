@@ -46,6 +46,11 @@ export const configs = (env: string): ConfigInterface => {
       },
     },
     authSecret: process.env.SECRET,
+    //MARKET_TIME- miliseconds
+    marketOpen: process.env.MARKET_OPEN_HHMMSS || '08:55:55',
+    marketClose: process.env.MARKET_CLOSE_HHMMSS || '18:30:01',
+
+    provider: process.env.PROVIDER || 'finnhub',
     //FINNHUB
     finnHubBaseURL: process.env.FINNHUB_BASEURL,
     finnHubToken: process.env.FINNHUB_TOKEN,
@@ -53,9 +58,12 @@ export const configs = (env: string): ConfigInterface => {
     iexBaseURL: process.env.IEX_BASEURL,
     iexToken: process.env.IEX_TOKEN,
     //INTERVALS
-    intervalSecSendClient: process.env.INTERVAL_SEC_SENDCLIENT || '3600',
-    intervalSecGetFromIex: process.env.INTERVAL_SEC_GETFROMIEX || '7200',
     intervalSecCacheRedis: process.env.INTERVAL_SEC_CACHEREDIS || '3600',
+    intervalSecSendClient: process.env.INTERVAL_SEC_SENDCLIENT || '3600',
+    //IEX
+    intervalSecGetFromIex: process.env.INTERVAL_SEC_GETFROMIEX || '3600',
+    //Finnhub
+    intervalSecGetFromFinnhub: process.env.INTERVAL_SEC_GETFROMFINNHUB || '3600',
   }
 
   return config

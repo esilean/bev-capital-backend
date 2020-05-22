@@ -68,4 +68,11 @@ container.loadModules([['../../../c-services/workers/**/*.*(ts|js)', { register:
   },
 })
 
+container.loadModules([['../../../c-services/cron/**/*.*(ts|js)', { register: asClass, lifetime: Lifetime.SINGLETON }]], {
+  cwd: __dirname,
+  formatName: function (name) {
+    return camelize(name)
+  },
+})
+
 export { container }
