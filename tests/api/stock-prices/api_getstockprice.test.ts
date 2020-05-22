@@ -1,6 +1,5 @@
 import { app } from '../../setup'
 import { stockFactory } from '../../support/factory/stock.factory'
-import { stockPriceFactory } from '../../support/factory/stock.price.factory'
 import { getToken } from '../../support/getToken'
 import faker from 'faker'
 
@@ -13,7 +12,6 @@ describe('API -> GET /api/stocksprice/:symbol', () => {
 
       symbol = faker.random.alphaNumeric(15)
       await stockFactory({ symbol })
-      await stockPriceFactory({ symbol })
     })
 
     it('when there is stock price', async (done) => {

@@ -2,7 +2,6 @@ import { app } from '../../setup'
 import { stockFactory } from '../../support/factory/stock.factory'
 import faker from 'faker'
 import { getToken } from '../../support/getToken'
-import { stockPriceFactory } from '../../support/factory/stock.price.factory'
 
 describe('API -> PUST /api/stocksprice', () => {
   describe('#updateStockPrice', () => {
@@ -13,7 +12,6 @@ describe('API -> PUST /api/stocksprice', () => {
 
       symbol = faker.random.alphaNumeric(15)
       await stockFactory({ symbol })
-      await stockPriceFactory({ symbol, previousClosePrice: 99 })
     })
 
     it('when updating stock price is ok', async (done) => {

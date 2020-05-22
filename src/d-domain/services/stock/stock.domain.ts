@@ -34,7 +34,7 @@ export default class StockDomain implements StockDomainInterface {
     }
 
     //validar stock dup
-    const opt: FindOptions = { limit: 1, attributes: ['symbol'], where: { symbol: newStock.symbol } }
+    const opt: FindOptions = { limit: 1, attributes: ['symbol'], where: { symbol: newStock.symbol }, include: ['stockPrice'] }
     const stockExists = await this.stockRepository.getAll(opt)
     if (stockExists.length > 0) {
       const error: Error = new ValidationError('Stock already exists')
